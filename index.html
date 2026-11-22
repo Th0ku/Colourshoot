@@ -10,7 +10,6 @@
       user-select: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
-      touch-action: none;
     }
 
     html, body {
@@ -21,7 +20,7 @@
       overflow: hidden;
       overscroll-behavior: none;
       background: radial-gradient(circle at top, #1e293b 0%, #090d16 100%);
-      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       color: #f8fafc;
     }
 
@@ -118,6 +117,7 @@
       width: 100%;
       height: 100%;
       display: block;
+      touch-action: none;
     }
 
     .flash-layer {
@@ -138,8 +138,8 @@
     .overlay {
       position: absolute;
       inset: 0;
-      z-index: 10;
-      background: rgba(9, 13, 22, 0.9);
+      z-index: 20;
+      background: rgba(9, 13, 22, 0.92);
       color: #ffffff;
       display: flex;
       flex-direction: column;
@@ -148,7 +148,7 @@
       text-align: center;
       padding: 18px;
       gap: 10px;
-      touch-action: auto;
+      touch-action: manipulation;
     }
 
     .overlay.hidden {
@@ -180,10 +180,11 @@
       color: #052e16;
       border: none;
       border-radius: 12px;
-      padding: 10px 16px;
-      font-size: 13px;
+      padding: 11px 18px;
+      font-size: 14px;
       font-weight: 800;
       cursor: pointer;
+      touch-action: manipulation;
     }
 
     .btn-tourney {
@@ -191,15 +192,16 @@
       color: #451a03;
       border: none;
       border-radius: 12px;
-      padding: 10px 16px;
-      font-size: 13px;
+      padding: 11px 18px;
+      font-size: 14px;
       font-weight: 800;
       cursor: pointer;
+      touch-action: manipulation;
     }
 
     .shop-box {
       width: 100%;
-      background: rgba(30, 41, 59, 0.9);
+      background: rgba(30, 41, 59, 0.92);
       border: 1px solid rgba(148, 163, 184, 0.2);
       border-radius: 12px;
       padding: 9px 10px;
@@ -227,6 +229,7 @@
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
+      touch-action: manipulation;
     }
 
     .shop-btn:disabled {
@@ -241,6 +244,7 @@
       align-items: center;
       padding: 4px 6px 2px;
       gap: 12px;
+      touch-action: none;
     }
 
     .joystick-base {
@@ -255,6 +259,7 @@
       justify-content: center;
       align-items: center;
       flex-shrink: 0;
+      touch-action: none;
     }
 
     .joystick-ring {
@@ -283,6 +288,7 @@
       flex-direction: column;
       align-items: flex-end;
       gap: 8px;
+      touch-action: none;
     }
 
     .boost-btn {
@@ -295,6 +301,7 @@
       font-weight: 800;
       cursor: pointer;
       min-width: 112px;
+      touch-action: none;
     }
 
     .boost-btn:disabled {
@@ -308,6 +315,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      touch-action: none;
     }
 
     .fine-btn {
@@ -320,6 +328,7 @@
       font-size: 13px;
       font-weight: 800;
       cursor: pointer;
+      touch-action: none;
     }
 
     .fine-btn.active {
@@ -338,6 +347,7 @@
       font-weight: 900;
       cursor: pointer;
       box-shadow: 0 5px 16px rgba(225, 29, 72, 0.45);
+      touch-action: none;
     }
   </style>
 </head>
@@ -422,7 +432,7 @@
     var joystickBase = document.getElementById("joystickBase");
     var joystickKnob = document.getElementById("joystickKnob");
 
-    var SHOT_LOCK_DURATION = 0.22; // short cooldown after any shot (manual or auto)
+    var SHOT_LOCK_DURATION = 0.22;
 
     var audioCtx = null;
     function ensureAudio() {
@@ -511,7 +521,7 @@
     };
 
     try {
-      var rawSave = localStorage.getItem("colourshoot_save_v6");
+      var rawSave = localStorage.getItem("colourshoot_save_v7");
       if (rawSave) {
         var parsed = JSON.parse(rawSave);
         save.coins = parsed.coins || 0;
@@ -523,7 +533,7 @@
 
     function persistSave() {
       try {
-        localStorage.setItem("colourshoot_save_v6", JSON.stringify(save));
+        localStorage.setItem("colourshoot_save_v7", JSON.stringify(save));
       } catch (e) {}
       refreshShopUI();
     }
@@ -666,7 +676,9 @@
     joystickBase.addEventListener("pointerdown", function (e) {
       e.preventDefault();
       ensureAudio();
-      joystickBase.setPointerCapture(e.pointerId);
+      if (joystickBase.setPointerCapture) {
+        try { joystickBase.setPointerCapture(e.pointerId); } catch (err) {}
+      }
       state.joy.active = true;
       state.joy.pointerId = e.pointerId;
       updateJoystickFromClient(e.clientX, e.clientY);
@@ -995,4 +1007,210 @@
         var ky = 0;
         if (state.keys.left) kx -= 1;
         if (state.keys.right) kx += 1;
-        if (state.keys.
+        if (state.keys.up) ky -= 1;
+        if (state.keys.down) ky += 1;
+        if (kx !== 0 && ky !== 0) {
+          var inv = 1 / Math.SQRT2;
+          kx *= inv;
+          ky *= inv;
+        }
+        ix = kx * 0.72;
+        iy = ky * 0.72;
+      }
+
+      var c = state.cursor;
+      var speedScale = 1.0;
+      if (state.boostActiveLeft > 0) {
+        speedScale = c.boostFactor;
+      } else if (state.fine) {
+        speedScale = c.fineFactor;
+      }
+
+      var targetVx = ix * c.maxSpeed * speedScale;
+      var targetVy = iy * c.maxSpeed * speedScale;
+
+      if (Math.abs(ix) > 0.01 || Math.abs(iy) > 0.01) {
+        var blend = 1 - Math.exp(-c.accelRate * dt);
+        c.vx += (targetVx - c.vx) * blend;
+        c.vy += (targetVy - c.vy) * blend;
+      } else {
+        var decay = Math.exp(-c.damping * dt);
+        c.vx *= decay;
+        c.vy *= decay;
+        if (Math.sqrt(c.vx * c.vx + c.vy * c.vy) < 1) {
+          c.vx = 0;
+          c.vy = 0;
+        }
+      }
+
+      var windOffset = (t.block.windX || 0) * dt;
+      c.x = Math.max(10, Math.min(canvas.width - 10, c.x + c.vx * dt + windOffset));
+      c.y = Math.max(10, Math.min(canvas.height - 10, c.y + c.vy * dt));
+
+      updateHud();
+    }
+
+    function draw() {
+      var theme = save.useRetro ? THEMES.retro : THEMES.modern;
+      var grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      grad.addColorStop(0, theme.bgTop);
+      grad.addColorStop(1, theme.bgBottom);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = theme.grid;
+      ctx.lineWidth = 1;
+      for (var i = 0; i <= canvas.width; i += 24) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, canvas.height);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(canvas.width, i);
+        ctx.stroke();
+      }
+
+      for (var j = 0; j < state.splatters.length; j++) {
+        var s = state.splatters[j];
+        ctx.save();
+        ctx.globalAlpha = 0.24;
+        ctx.fillStyle = s.color;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      ctx.save();
+      if (!save.useRetro) {
+        ctx.shadowColor = state.target.color;
+        ctx.shadowBlur = 14;
+      }
+      ctx.fillStyle = state.target.color;
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.arc(state.target.x, state.target.y, state.target.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(state.target.x, state.target.y, Math.max(4, state.target.radius * 0.22), 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      for (var p = 0; p < state.pulses.length; p++) {
+        var pulse = state.pulses[p];
+        var alpha = Math.max(0, pulse.life / pulse.maxLife);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = pulse.color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(pulse.x, pulse.y, pulse.currentRadius || pulse.radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      if (state.running && state.mode === "training" && save.hasGuide) {
+        ctx.save();
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.65)";
+        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(state.cursor.x, state.cursor.y);
+        ctx.lineTo(state.target.x, state.target.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      ctx.save();
+      var reticleColor = state.boostActiveLeft > 0
+        ? "#38bdf8"
+        : (state.fine ? "#fbbf24" : (save.useRetro ? "#0f380f" : "#ffffff"));
+      ctx.strokeStyle = reticleColor;
+      ctx.lineWidth = 2.5;
+      var rRadius = state.fine ? 8 : 12;
+      ctx.beginPath();
+      ctx.arc(state.cursor.x, state.cursor.y, rRadius, 0, Math.PI * 2);
+      ctx.moveTo(state.cursor.x - 18, state.cursor.y);
+      ctx.lineTo(state.cursor.x + 18, state.cursor.y);
+      ctx.moveTo(state.cursor.x, state.cursor.y - 18);
+      ctx.lineTo(state.cursor.x, state.cursor.y + 18);
+      ctx.stroke();
+      ctx.restore();
+
+      for (var q = 0; q < state.popups.length; q++) {
+        var pop = state.popups[q];
+        var pAlpha = Math.max(0, pop.life / pop.maxLife);
+        ctx.save();
+        ctx.globalAlpha = pAlpha;
+        ctx.font = "bold 13px Arial, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillStyle = pop.color;
+        ctx.fillText(pop.text, pop.x, pop.y);
+        ctx.restore();
+      }
+    }
+
+    function loop(now) {
+      if (!state.running) return;
+      var dt = Math.min(0.05, (now - state.lastFrame) / 1000);
+      state.lastFrame = now;
+
+      update(dt);
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    function setFine(active) {
+      state.fine = active;
+      fineBtn.className = active ? "fine-btn active" : "fine-btn";
+    }
+
+    fineBtn.addEventListener("pointerdown", function (e) {
+      e.preventDefault();
+      setFine(true);
+    });
+    fineBtn.addEventListener("pointerup", function () { setFine(false); });
+    fineBtn.addEventListener("pointerleave", function () { setFine(false); });
+    fineBtn.addEventListener("pointercancel", function () { setFine(false); });
+
+    fireBtn.addEventListener("pointerdown", function (e) {
+      e.preventDefault();
+      fireShot(true);
+    });
+
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") state.keys.up = true;
+      if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") state.keys.down = true;
+      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") state.keys.left = true;
+      if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") state.keys.right = true;
+      if (e.key === "Shift") setFine(true);
+      if (e.key === "e" || e.key === "E") triggerBoost();
+      if (e.key === " " || e.key === "Enter") {
+        if (!state.running && overlay.className.indexOf("hidden") === -1) {
+          startGame("training");
+        } else {
+          fireShot(true);
+        }
+      }
+    });
+
+    window.addEventListener("keyup", function (e) {
+      if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") state.keys.up = false;
+      if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") state.keys.down = false;
+      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") state.keys.left = false;
+      if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") state.keys.right = false;
+      if (e.key === "Shift") setFine(false);
+    });
+
+    refreshShopUI();
+    updateBoostButton();
+    draw();
+  </script>
+</body>
+</html>
