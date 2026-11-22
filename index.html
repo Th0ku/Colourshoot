@@ -291,15 +291,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 4px 6px 2px;
-      gap: 12px;
+      padding: 6px 10px 4px;
+      gap: 16px;
       touch-action: none;
     }
 
     .joystick-base {
       position: relative;
-      width: 124px;
-      height: 124px;
+      width: 132px;
+      height: 132px;
       border-radius: 50%;
       background: radial-gradient(circle at 35% 35%, #1e293b 0%, #0b101b 100%);
       border: 2px solid rgba(148, 163, 184, 0.32);
@@ -313,8 +313,8 @@
 
     .joystick-ring {
       position: absolute;
-      width: 76px;
-      height: 76px;
+      width: 82px;
+      height: 82px;
       border-radius: 50%;
       border: 1px dashed rgba(148, 163, 184, 0.22);
       pointer-events: none;
@@ -322,8 +322,8 @@
 
     .joystick-knob {
       position: relative;
-      width: 52px;
-      height: 52px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       background: radial-gradient(circle at 32% 28%, #60a5fa 0%, #2563eb 65%, #1d4ed8 100%);
       border: 2px solid rgba(191, 219, 254, 0.75);
@@ -332,70 +332,17 @@
       pointer-events: none;
     }
 
-    .right-cluster {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 8px;
-      touch-action: none;
-    }
-
-    .boost-btn {
-      background: #2563eb;
-      color: #ffffff;
-      border: 1px solid #93c5fd;
-      border-radius: 999px;
-      padding: 7px 14px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      min-width: 112px;
-      touch-action: none;
-    }
-
-    .boost-btn:disabled {
-      background: #334155;
-      color: #94a3b8;
-      border-color: transparent;
-      cursor: default;
-    }
-
-    .action-btns {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      touch-action: none;
-    }
-
-    .fine-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: #334155;
-      color: #e2e8f0;
-      border: 2px solid #64748b;
-      font-size: 13px;
-      font-weight: 800;
-      cursor: pointer;
-      touch-action: none;
-    }
-
-    .fine-btn.active {
-      background: #38bdf8;
-      color: #082f49;
-    }
-
     .fire-btn {
-      width: 82px;
-      height: 82px;
+      width: 92px;
+      height: 92px;
       border-radius: 50%;
       background: #e11d48;
       color: #ffffff;
       border: 2px solid #fda4af;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 5px 16px rgba(225, 29, 72, 0.45);
+      box-shadow: 0 6px 18px rgba(225, 29, 72, 0.45);
       touch-action: none;
     }
   </style>
@@ -409,9 +356,9 @@
 
     <div class="hud">
       <div><span>Score</span><b id="scoreEl">0</b></div>
-      <div><span>Round</span><b id="roundEl">1</b></div>
+      <div><span>Stage/Rnd</span><b id="roundEl">1</b></div>
       <div><span>Pattern</span><b id="patternEl">Static</b></div>
-      <div><span>Time</span><b id="timeEl">3.4s</b></div>
+      <div><span>Time</span><b id="timeEl">3.5s</b></div>
     </div>
 
     <div class="screen-wrap">
@@ -421,18 +368,18 @@
       <div id="overlay" class="overlay">
         <h2 id="overlayTitle">ColourShoot</h2>
         <p id="overlayText">
-          Train for free to earn Coins or enter a Tournament Run.<br />
-          Drag <b>Joystick</b> to aim, <b>BOOST</b> for burst, <b>B</b> for precision, <b>A</b> to fire.
+          Train for free to earn Coins or enter a Tournament Run with stages.<br />
+          Drag the <b>Joystick</b> to aim (farther = faster) and tap <b>A</b> to fire.
         </p>
 
         <div class="preset-bar">
-          <div class="preset-label">Tournament Preset (Modular Sequence)</div>
+          <div class="preset-label">Tournament Preset</div>
           <div class="preset-buttons">
             <button id="preset_classic" class="preset-btn active" type="button" onclick="selectPreset('classic')">Classic Cup</button>
-            <button id="preset_pulse" class="preset-btn" type="button" onclick="selectPreset('pulse')">Pulse & Jump</button>
-            <button id="preset_storm" class="preset-btn" type="button" onclick="selectPreset('storm')">Storm Sprint</button>
+            <button id="preset_variety" class="preset-btn" type="button" onclick="selectPreset('variety')">Pattern Mix</button>
+            <button id="preset_fever" class="preset-btn" type="button" onclick="selectPreset('fever')">Fever Circuit</button>
           </div>
-          <div id="presetMeta" class="preset-meta">Jackpot Goal: 1,800 pts | Start Time: 3.4s</div>
+          <div id="presetMeta" class="preset-meta">Jackpot Goal: 1,800 pts | Stages: 3</div>
         </div>
 
         <div class="btn-row">
@@ -459,13 +406,7 @@
         <div id="joystickKnob" class="joystick-knob"></div>
       </div>
 
-      <div class="right-cluster">
-        <button id="boostBtn" class="boost-btn" type="button" onclick="triggerBoost()">BOOST (E)</button>
-        <div class="action-btns">
-          <button id="fineBtn" class="fine-btn" type="button" title="Precision (Shift)">B</button>
-          <button id="fireBtn" class="fire-btn" type="button" title="Fire (Space)">A</button>
-        </div>
-      </div>
+      <button id="fireBtn" class="fire-btn" type="button" title="Fire (Space)">A</button>
     </div>
   </div>
 
@@ -486,58 +427,60 @@
     var presetMeta = document.getElementById("presetMeta");
     var buyGuideBtn = document.getElementById("buyGuideBtn");
     var buyRetroBtn = document.getElementById("buyRetroBtn");
-    var boostBtn = document.getElementById("boostBtn");
     var fireBtn = document.getElementById("fireBtn");
-    var fineBtn = document.getElementById("fineBtn");
     var joystickBase = document.getElementById("joystickBase");
     var joystickKnob = document.getElementById("joystickKnob");
 
     var SHOT_LOCK_DURATION = 0.22;
+    var FEVER_STREAK_REQUIRED = 3;
 
-    // MODULAR TOURNAMENT PRESETS
-    // Block types: "static", "moveX", "moveY", "orbit", "wind", "pulse", "jump"
+    // Supported block types:
+    // "static", "moveX", "figureEight", "elasticBounce", "telegraphJump", "ringTarget", "colorLock", "shieldShot"
     var TOURNAMENT_PRESETS = {
       classic: {
         name: "Classic Cup",
         jackpotGoal: 1800,
-        startTime: 3.4,
-        timeDecay: 0.035,
-        minTime: 1.3,
+        stages: [600, 1200], // Checkpoints before Golden Shot at jackpotGoal
+        startTime: 3.5,
+        timeDecay: 0.03,
+        minTime: 1.4,
         sequence: [
-          { untilRound: 3,  type: "static", label: "Static",     speed: 0,    windX: 0 },
-          { untilRound: 6,  type: "moveX",  label: "Sweep X",    speed: 42,   windX: 0 },
-          { untilRound: 9,  type: "pulse",  label: "Pulse",      speed: 3.2,  pulseAmp: 14 },
-          { untilRound: 12, type: "orbit",  label: "Orbit",      speed: 1.15, windX: 0 },
-          { untilRound: 15, type: "jump",   label: "Jump",       jumpInterval: 1.35 },
-          { untilRound: 99, type: "wind",   label: "Orbit+Drft", speed: 1.35, windX: 14 }
+          { untilRound: 3,  type: "static",        label: "Static",   speed: 0 },
+          { untilRound: 6,  type: "moveX",         label: "Sweep X",  speed: 40 },
+          { untilRound: 9,  type: "ringTarget",    label: "DualRing", speed: 0 },
+          { untilRound: 12, type: "figureEight",   label: "Fig-8",    speed: 1.05 },
+          { untilRound: 15, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.65, jumpInterval: 1.75 },
+          { untilRound: 99, type: "elasticBounce", label: "Elastic",  speed: 55 }
         ]
       },
-      pulse: {
-        name: "Pulse & Jump",
+      variety: {
+        name: "Pattern Mix",
         jackpotGoal: 2000,
-        startTime: 3.8,
-        timeDecay: 0.03,
+        stages: [650, 1300],
+        startTime: 3.6,
+        timeDecay: 0.028,
         minTime: 1.45,
         sequence: [
-          { untilRound: 3,  type: "static", label: "Static",     speed: 0 },
-          { untilRound: 7,  type: "pulse",  label: "Pulse",      speed: 3.6,  pulseAmp: 17 },
-          { untilRound: 11, type: "jump",   label: "Jump",       jumpInterval: 1.25 },
-          { untilRound: 15, type: "moveY",  label: "Sweep Y",    speed: 48 },
-          { untilRound: 99, type: "pulse",  label: "TurboPulse", speed: 4.4,  pulseAmp: 20 }
+          { untilRound: 3,  type: "shieldShot",    label: "Shield",   speed: 0 },
+          { untilRound: 6,  type: "colorLock",     label: "ColorLock",colorCycle: 1.1 },
+          { untilRound: 9,  type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.7,  jumpInterval: 1.8 },
+          { untilRound: 12, type: "elasticBounce", label: "Elastic",  speed: 58 },
+          { untilRound: 99, type: "figureEight",   label: "Fig-8",    speed: 1.15 }
         ]
       },
-      storm: {
-        name: "Storm Sprint",
+      fever: {
+        name: "Fever Circuit",
         jackpotGoal: 2200,
-        startTime: 2.9,
-        timeDecay: 0.04,
-        minTime: 1.2,
+        stages: [700, 1450],
+        startTime: 3.4,
+        timeDecay: 0.032,
+        minTime: 1.35,
         sequence: [
-          { untilRound: 2,  type: "moveX",  label: "Sweep X",    speed: 52 },
-          { untilRound: 5,  type: "jump",   label: "Jump",       jumpInterval: 1.15 },
-          { untilRound: 8,  type: "orbit",  label: "Orbit",      speed: 1.35 },
-          { untilRound: 11, type: "pulse",  label: "Pulse",      speed: 4.0,  pulseAmp: 16 },
-          { untilRound: 99, type: "wind",   label: "Storm+Drft", speed: 1.5,  windX: 18 }
+          { untilRound: 3,  type: "ringTarget",    label: "DualRing", speed: 0 },
+          { untilRound: 6,  type: "colorLock",     label: "ColorLock",colorCycle: 1.0 },
+          { untilRound: 9,  type: "figureEight",   label: "Fig-8",    speed: 1.1 },
+          { untilRound: 12, type: "shieldShot",    label: "Shield",   speed: 36 },
+          { untilRound: 99, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.65, jumpInterval: 1.7 }
         ]
       }
     };
@@ -551,7 +494,7 @@
     function selectPreset(key) {
       if (!TOURNAMENT_PRESETS[key]) return;
       selectedPresetKey = key;
-      var keys = ["classic", "pulse", "storm"];
+      var keys = ["classic", "variety", "fever"];
       for (var i = 0; i < keys.length; i++) {
         var btn = document.getElementById("preset_" + keys[i]);
         if (btn) {
@@ -559,7 +502,8 @@
         }
       }
       var p = getActivePreset();
-      presetMeta.textContent = "Jackpot Goal: " + p.jackpotGoal.toLocaleString("en-US") + " pts | Start Time: " + p.startTime.toFixed(1) + "s";
+      var totalStages = (p.stages ? p.stages.length : 0) + 1;
+      presetMeta.textContent = "Jackpot Goal: " + p.jackpotGoal.toLocaleString("en-US") + " pts | Stages: " + totalStages;
     }
 
     var audioCtx = null;
@@ -608,10 +552,6 @@
       }, 65);
     }
 
-    function playBoostSound() {
-      playTone(260, 620, 0.14, "sawtooth", 0.1);
-    }
-
     function playJumpSound() {
       playTone(440, 680, 0.07, "sine", 0.08);
     }
@@ -643,7 +583,7 @@
     };
 
     try {
-      var rawSave = localStorage.getItem("colourshoot_save_v8");
+      var rawSave = localStorage.getItem("colourshoot_save_v9");
       if (rawSave) {
         var parsed = JSON.parse(rawSave);
         save.coins = parsed.coins || 0;
@@ -655,7 +595,7 @@
 
     function persistSave() {
       try {
-        localStorage.setItem("colourshoot_save_v8", JSON.stringify(save));
+        localStorage.setItem("colourshoot_save_v9", JSON.stringify(save));
       } catch (e) {}
       refreshShopUI();
     }
@@ -708,23 +648,21 @@
       mode: "training",
       score: 0,
       round: 1,
+      stageIndex: 1,
       combo: 0,
+      feverLeft: 0,
       runCoins: 0,
-      maxTime: 3.4,
-      timeLeft: 3.4,
+      maxTime: 3.5,
+      timeLeft: 3.5,
       shotLockLeft: 0,
       jackpotStage: false,
-      boostActiveLeft: 0,
-      boostCooldownLeft: 0,
       cursor: {
         x: 190,
         y: 190,
         vx: 0,
         vy: 0,
-        maxSpeed: 150,
-        boostFactor: 1.85,
-        fineFactor: 0.42,
-        accelRate: 10,
+        maxSpeed: 155,
+        accelRate: 11,
         damping: 16
       },
       target: {
@@ -732,10 +670,14 @@
         y: 190,
         baseX: 190,
         baseY: 190,
+        vx: 40,
+        vy: 30,
         angle: 0,
-        pulsePhase: 0,
-        jumpTimer: 0,
-        baseRadius: 75,
+        jumpTimer: 1.75,
+        nextX: null,
+        nextY: null,
+        colorTimer: 0,
+        lockColor: "#06b6d4",
         radius: 75,
         color: "#f43f5e",
         block: TOURNAMENT_PRESETS.classic.sequence[0],
@@ -751,7 +693,6 @@
         ay: 0
       },
       keys: { up: false, down: false, left: false, right: false },
-      fine: false,
       lastFrame: 0
     };
 
@@ -763,7 +704,7 @@
       var rect = joystickBase.getBoundingClientRect();
       var cx = rect.left + rect.width / 2;
       var cy = rect.top + rect.height / 2;
-      var maxStick = rect.width * 0.5 - 24;
+      var maxStick = rect.width * 0.5 - 26;
 
       var dx = clientX - cx;
       var dy = clientY - cy;
@@ -778,11 +719,11 @@
       setKnobPosition(dx, dy);
 
       var norm = maxStick > 0 ? dist / maxStick : 0;
-      if (norm < 0.1) {
+      if (norm < 0.09) {
         state.joy.ax = 0;
         state.joy.ay = 0;
       } else {
-        var curved = Math.pow((norm - 0.1) / 0.9, 1.45);
+        var curved = Math.pow((norm - 0.09) / 0.91, 1.35);
         curved = Math.min(1, Math.max(0, curved));
         var angle = Math.atan2(dy, dx);
         state.joy.ax = Math.cos(angle) * curved;
@@ -858,30 +799,6 @@
       });
     }
 
-    function triggerBoost() {
-      if (!state.running) return;
-      if (state.boostCooldownLeft > 0 || state.boostActiveLeft > 0) return;
-      ensureAudio();
-      state.boostActiveLeft = 0.75;
-      state.boostCooldownLeft = 2.4;
-      playBoostSound();
-      addPopup(state.cursor.x, state.cursor.y - 16, "BOOST!", "#38bdf8");
-      updateBoostButton();
-    }
-
-    function updateBoostButton() {
-      if (state.boostActiveLeft > 0) {
-        boostBtn.textContent = "BOOSTING!";
-        boostBtn.disabled = true;
-      } else if (state.boostCooldownLeft > 0) {
-        boostBtn.textContent = "BOOST (" + state.boostCooldownLeft.toFixed(1) + "s)";
-        boostBtn.disabled = true;
-      } else {
-        boostBtn.textContent = "BOOST (E)";
-        boostBtn.disabled = false;
-      }
-    }
-
     function getBlockForRound(round) {
       var seq = getActivePreset().sequence;
       for (var i = 0; i < seq.length; i++) {
@@ -893,7 +810,7 @@
     }
 
     function randomTargetPos(radius) {
-      var margin = Math.max(55, radius + 28);
+      var margin = Math.max(58, radius + 30);
       return {
         x: margin + Math.random() * Math.max(20, canvas.width - margin * 2),
         y: margin + Math.random() * Math.max(20, canvas.height - margin * 2)
@@ -902,22 +819,30 @@
 
     function pickTargetForRound(round, currentRadius, isGoldenFinal) {
       var theme = save.useRetro ? THEMES.retro : THEMES.modern;
-      var color = isGoldenFinal ? "#facc15" : theme.colors[(round - 1) % theme.colors.length];
+      var colorIdx = (round - 1) % theme.colors.length;
+      var color = isGoldenFinal ? "#facc15" : theme.colors[colorIdx];
+      var lockColor = theme.colors[(colorIdx + 1) % theme.colors.length];
       var block = isGoldenFinal
-        ? { type: "orbit", label: "GOLDEN SHOT", speed: 1.65, windX: 0 }
+        ? { type: "figureEight", label: "GOLDEN SHOT", speed: 1.35 }
         : getBlockForRound(round);
 
       var pos = randomTargetPos(currentRadius);
+      var spd = block.speed || 48;
+      var ang = Math.random() * Math.PI * 2;
 
       return {
         x: pos.x,
         y: pos.y,
         baseX: pos.x,
         baseY: pos.y,
-        angle: Math.random() * Math.PI * 2,
-        pulsePhase: 0,
-        jumpTimer: block.jumpInterval || 1.3,
-        baseRadius: currentRadius,
+        vx: Math.cos(ang) * spd,
+        vy: Math.sin(ang) * spd,
+        angle: ang,
+        jumpTimer: block.jumpInterval || 1.75,
+        nextX: null,
+        nextY: null,
+        colorTimer: 0,
+        lockColor: lockColor,
         radius: currentRadius,
         color: color,
         block: block,
@@ -925,12 +850,22 @@
       };
     }
 
+    function computeStageIndex(score, preset) {
+      if (!preset.stages || preset.stages.length === 0) return 1;
+      var idx = 1;
+      for (var i = 0; i < preset.stages.length; i++) {
+        if (score >= preset.stages[i]) idx += 1;
+      }
+      return idx;
+    }
+
     function updateHud() {
       scoreEl.textContent = state.score;
-      roundEl.textContent = state.round;
-      patternEl.textContent = state.target.block.label;
+      roundEl.textContent = state.mode === "tournament"
+        ? ("S" + state.stageIndex + "/R" + state.round)
+        : state.round;
+      patternEl.textContent = state.feverLeft > 0 ? "FEVER!" : state.target.block.label;
       timeEl.textContent = state.timeLeft.toFixed(1) + "s";
-      updateBoostButton();
     }
 
     function startGame(selectedMode) {
@@ -941,11 +876,11 @@
       state.running = true;
       state.score = 0;
       state.round = 1;
+      state.stageIndex = 1;
       state.combo = 0;
+      state.feverLeft = 0;
       state.runCoins = 0;
       state.jackpotStage = false;
-      state.boostActiveLeft = 0;
-      state.boostCooldownLeft = 0;
       state.shotLockLeft = 0;
       state.maxTime = preset.startTime;
       state.timeLeft = preset.startTime;
@@ -986,12 +921,11 @@
       overlayTitle.textContent = wonJackpot ? "JACKPOT CRACKED!" : "Run Over!";
       var extra = state.mode === "training"
         ? "<br />Coins earned: <b>+" + state.runCoins + "</b>"
-        : "<br />Preset: <b>" + preset.name + "</b> | Goal: " + preset.jackpotGoal + " pts";
+        : "<br />Preset: <b>" + preset.name + "</b> | Reached Stage <b>" + state.stageIndex + "</b> (Goal: " + preset.jackpotGoal + ")";
 
       overlayText.innerHTML = reason + "<br />Final Score: <b>" + state.score + "</b> (Round " + state.round + ")" + extra;
       overlay.className = "overlay";
       refreshShopUI();
-      updateBoostButton();
     }
 
     function fireShot(isManual) {
@@ -1025,10 +959,17 @@
         return;
       }
 
-      var isBullseye = dist <= 4;
-      var accuracy = Math.max(0, 1 - dist / state.target.radius);
+      var innerCoreRadius = Math.max(5, state.target.radius * 0.25);
+      var isBullseye = dist <= innerCoreRadius;
+      var isColorMatch = state.target.block.type !== "colorLock" || state.target.color === state.target.lockColor;
+
       if (isBullseye) {
         state.combo += 1;
+        if (state.combo >= FEVER_STREAK_REQUIRED) {
+          state.feverLeft = 3; // 3 shots of fever boost
+          state.combo = 0;
+          addPopup(state.cursor.x, state.cursor.y - 26, "FEVER MODE!", "#f97316");
+        }
         playBullseyeSound();
         triggerScreenFlash();
         addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#facc15", true);
@@ -1038,41 +979,60 @@
         addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#34d399", false);
       }
 
-      var multiplier = 1 + state.combo * 0.25;
-      var timeBonus = Math.round(state.timeLeft * 20);
-      var shotPoints = Math.round((40 + accuracy * 80) * multiplier + timeBonus);
+      var accuracy = Math.max(0, 1 - dist / state.target.radius);
+      var feverMult = state.feverLeft > 0 ? 1.45 : 1.0;
+      var colorMult = isColorMatch ? 1.15 : 0.85;
+      var timeBonus = Math.round(state.timeLeft * 18);
+      var shotPoints = Math.round((45 + accuracy * 75) * feverMult * colorMult + timeBonus);
       state.score += shotPoints;
 
+      if (state.feverLeft > 0) {
+        state.feverLeft -= 1;
+      }
+
       if (isBullseye) {
-        addPopup(state.cursor.x, state.cursor.y - 12, "100% BULLSEYE! +" + shotPoints, "#fde047");
+        addPopup(state.cursor.x, state.cursor.y - 12, "CORE HIT! +" + shotPoints, "#fde047");
+      } else if (!isColorMatch) {
+        addPopup(state.cursor.x, state.cursor.y - 12, "OFF-COLOR +" + shotPoints, "#cbd5e1");
       } else {
         addPopup(state.cursor.x, state.cursor.y - 12, "HIT +" + shotPoints, "#4ade80");
       }
 
       if (state.mode === "training") {
-        state.runCoins += isBullseye ? 5 : 2;
+        state.runCoins += isBullseye ? 5 : (isColorMatch ? 2 : 1);
       }
 
       var preset = getActivePreset();
-      if (state.mode === "tournament" && state.score >= preset.jackpotGoal) {
-        state.jackpotStage = true;
-        state.round += 1;
-        state.maxTime = 1.8;
-        state.timeLeft = 1.8;
-        state.target = pickTargetForRound(state.round, 28, true);
-        updateHud();
-        return;
+      if (state.mode === "tournament") {
+        var newStage = computeStageIndex(state.score, preset);
+        if (newStage > state.stageIndex) {
+          state.stageIndex = newStage;
+          addPopup(canvas.width / 2, 42, "STAGE " + state.stageIndex + " REACHED!", "#38bdf8");
+        }
+        if (state.score >= preset.jackpotGoal) {
+          state.jackpotStage = true;
+          state.round += 1;
+          state.maxTime = 2.0;
+          state.timeLeft = 2.0;
+          state.target = pickTargetForRound(state.round, 30, true);
+          updateHud();
+          return;
+        }
       }
 
-      // Base radius updates cleanly; pulse applies temporary oscillation on top
-      var nextBaseRadius = state.target.baseRadius;
-      if (isBullseye && state.combo % 2 === 0) {
-        nextBaseRadius = Math.min(85, nextBaseRadius + 6);
-      } else if (!isBullseye) {
-        nextBaseRadius = nextBaseRadius - dist * 0.35;
+      // Shrink/grow rules (2.1 DualRing shrinks more on outer hit; 2.3 ShieldShot protects against shrink)
+      var nextRadius = state.target.radius;
+      if (isBullseye) {
+        nextRadius = Math.min(82, nextRadius + 4);
+      } else if (state.target.block.type === "shieldShot") {
+        // Shield protects target size on hit
+        addPopup(state.cursor.x, state.cursor.y + 14, "SHIELD SAVED", "#38bdf8");
+      } else {
+        var shrinkFactor = state.target.block.type === "ringTarget" ? 0.55 : 0.35;
+        nextRadius = nextRadius - dist * shrinkFactor;
       }
 
-      if (nextBaseRadius < 12) {
+      if (nextRadius < 13) {
         endGame("Target became too small!", false);
         return;
       }
@@ -1080,7 +1040,7 @@
       state.round += 1;
       state.maxTime = Math.max(preset.minTime, preset.startTime - (state.round - 1) * preset.timeDecay);
       state.timeLeft = state.maxTime;
-      state.target = pickTargetForRound(state.round, nextBaseRadius, false);
+      state.target = pickTargetForRound(state.round, nextRadius, false);
       updateHud();
     }
 
@@ -1088,12 +1048,6 @@
       state.timeLeft -= dt;
       if (state.shotLockLeft > 0) {
         state.shotLockLeft = Math.max(0, state.shotLockLeft - dt);
-      }
-      if (state.boostActiveLeft > 0) {
-        state.boostActiveLeft = Math.max(0, state.boostActiveLeft - dt);
-      }
-      if (state.boostCooldownLeft > 0) {
-        state.boostCooldownLeft = Math.max(0, state.boostCooldownLeft - dt);
       }
 
       if (state.timeLeft <= 0) {
@@ -1122,35 +1076,67 @@
       }
 
       var t = state.target;
-      var pad = t.baseRadius + 14;
-      t.radius = t.baseRadius;
+      var pad = t.radius + 14;
+      var theme = save.useRetro ? THEMES.retro : THEMES.modern;
 
       if (t.block.type === "moveX") {
-        t.x += t.dir * t.block.speed * dt;
+        t.x += t.dir * (t.block.speed || 40) * dt;
         if (t.x < pad) { t.x = pad; t.dir = 1; }
         if (t.x > canvas.width - pad) { t.x = canvas.width - pad; t.dir = -1; }
-      } else if (t.block.type === "moveY") {
-        t.y += t.dir * t.block.speed * dt;
-        if (t.y < pad) { t.y = pad; t.dir = 1; }
-        if (t.y > canvas.height - pad) { t.y = canvas.height - pad; t.dir = -1; }
-      } else if (t.block.type === "orbit" || t.block.type === "wind") {
-        t.angle += t.block.speed * dt;
-        var orbitR = 32;
-        t.x = Math.max(pad, Math.min(canvas.width - pad, t.baseX + Math.cos(t.angle) * orbitR));
-        t.y = Math.max(pad, Math.min(canvas.height - pad, t.baseY + Math.sin(t.angle) * orbitR));
-      } else if (t.block.type === "pulse") {
-        t.pulsePhase += (t.block.speed || 3.2) * dt;
-        var amp = t.block.pulseAmp || 14;
-        t.radius = Math.max(14, t.baseRadius + Math.sin(t.pulsePhase) * amp);
-      } else if (t.block.type === "jump") {
+      } else if (t.block.type === "figureEight") {
+        t.angle += (t.block.speed || 1.05) * dt;
+        var ampX = Math.min(72, canvas.width * 0.5 - pad - 10);
+        var ampY = Math.min(44, canvas.height * 0.5 - pad - 10);
+        t.x = Math.max(pad, Math.min(canvas.width - pad, t.baseX + Math.sin(t.angle) * Math.max(20, ampX)));
+        t.y = Math.max(pad, Math.min(canvas.height - pad, t.baseY + Math.sin(t.angle * 2) * 0.5 * Math.max(16, ampY)));
+      } else if (t.block.type === "elasticBounce") {
+        t.x += t.vx * dt;
+        t.y += t.vy * dt;
+        var bounced = false;
+        if (t.x < pad) { t.x = pad; t.vx = Math.abs(t.vx); bounced = true; }
+        if (t.x > canvas.width - pad) { t.x = canvas.width - pad; t.vx = -Math.abs(t.vx); bounced = true; }
+        if (t.y < pad) { t.y = pad; t.vy = Math.abs(t.vy); bounced = true; }
+        if (t.y > canvas.height - pad) { t.y = canvas.height - pad; t.vy = -Math.abs(t.vy); bounced = true; }
+        if (bounced) {
+          // Elastic tempo shift: alternate between lively and calm speed
+          var curSpd = Math.sqrt(t.vx * t.vx + t.vy * t.vy) || 50;
+          var baseSpd = t.block.speed || 55;
+          var nextSpd = curSpd > baseSpd ? baseSpd * 0.72 : baseSpd * 1.38;
+          var ang = Math.atan2(t.vy, t.vx);
+          t.vx = Math.cos(ang) * nextSpd;
+          t.vy = Math.sin(ang) * nextSpd;
+        }
+      } else if (t.block.type === "telegraphJump") {
+        var interval = t.block.jumpInterval || 1.75;
+        var teleTime = t.block.telegraphTime || 0.65;
         t.jumpTimer -= dt;
+        if (t.jumpTimer <= teleTime && t.nextX === null) {
+          var cand = randomTargetPos(t.radius);
+          t.nextX = cand.x;
+          t.nextY = cand.y;
+        }
         if (t.jumpTimer <= 0) {
-          t.jumpTimer = t.block.jumpInterval || 1.3;
           addPulse(t.x, t.y, t.radius, "#38bdf8", false);
-          var nextPos = randomTargetPos(t.baseRadius);
-          t.x = nextPos.x;
-          t.y = nextPos.y;
+          if (t.nextX !== null) {
+            t.x = t.nextX;
+            t.y = t.nextY;
+          } else {
+            var fallback = randomTargetPos(t.radius);
+            t.x = fallback.x;
+            t.y = fallback.y;
+          }
+          t.nextX = null;
+          t.nextY = null;
+          t.jumpTimer = interval;
           playJumpSound();
+        }
+      } else if (t.block.type === "colorLock") {
+        t.colorTimer += dt;
+        var cycle = t.block.colorCycle || 1.1;
+        if (t.colorTimer >= cycle) {
+          t.colorTimer = 0;
+          var idx = theme.colors.indexOf(t.color);
+          t.color = theme.colors[(idx + 1) % theme.colors.length];
         }
       }
 
@@ -1169,20 +1155,13 @@
           kx *= inv;
           ky *= inv;
         }
-        ix = kx * 0.72;
-        iy = ky * 0.72;
+        ix = kx * 0.75;
+        iy = ky * 0.75;
       }
 
       var c = state.cursor;
-      var speedScale = 1.0;
-      if (state.boostActiveLeft > 0) {
-        speedScale = c.boostFactor;
-      } else if (state.fine) {
-        speedScale = c.fineFactor;
-      }
-
-      var targetVx = ix * c.maxSpeed * speedScale;
-      var targetVy = iy * c.maxSpeed * speedScale;
+      var targetVx = ix * c.maxSpeed;
+      var targetVy = iy * c.maxSpeed;
 
       if (Math.abs(ix) > 0.01 || Math.abs(iy) > 0.01) {
         var blend = 1 - Math.exp(-c.accelRate * dt);
@@ -1198,8 +1177,7 @@
         }
       }
 
-      var windOffset = (t.block.windX || 0) * dt;
-      c.x = Math.max(10, Math.min(canvas.width - 10, c.x + c.vx * dt + windOffset));
+      c.x = Math.max(10, Math.min(canvas.width - 10, c.x + c.vx * dt));
       c.y = Math.max(10, Math.min(canvas.height - 10, c.y + c.vy * dt));
 
       updateHud();
@@ -1238,6 +1216,18 @@
         ctx.restore();
       }
 
+      // Telegraph ghost outline before jump
+      if (state.running && state.target.block.type === "telegraphJump" && state.target.nextX !== null) {
+        ctx.save();
+        ctx.strokeStyle = save.useRetro ? "#0f380f" : "#7dd3fc";
+        ctx.setLineDash([5, 4]);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(state.target.nextX, state.target.nextY, state.target.radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
       ctx.save();
       if (!save.useRetro) {
         ctx.shadowColor = state.target.color;
@@ -1249,13 +1239,39 @@
       ctx.arc(state.target.x, state.target.y, state.target.radius, 0, Math.PI * 2);
       ctx.fill();
 
+      // Inner core ring (extra clear on ringTarget)
       ctx.shadowBlur = 0;
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
-      ctx.lineWidth = 2;
+      var coreR = Math.max(5, state.target.radius * 0.25);
+      ctx.strokeStyle = state.target.block.type === "ringTarget" ? "#fde047" : "rgba(255, 255, 255, 0.85)";
+      ctx.lineWidth = state.target.block.type === "ringTarget" ? 2.5 : 2;
       ctx.beginPath();
-      ctx.arc(state.target.x, state.target.y, Math.max(4, state.target.radius * 0.22), 0, Math.PI * 2);
+      ctx.arc(state.target.x, state.target.y, coreR, 0, Math.PI * 2);
       ctx.stroke();
+
+      // Shield indicator ring
+      if (state.target.block.type === "shieldShot") {
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(state.target.x, state.target.y, state.target.radius + 4, 0, Math.PI * 2);
+        ctx.stroke();
+      }
       ctx.restore();
+
+      // ColorLock indicator badge in top-left of canvas
+      if (state.running && state.target.block.type === "colorLock") {
+        ctx.save();
+        ctx.fillStyle = "rgba(15, 23, 42, 0.78)";
+        ctx.fillRect(8, 8, 92, 22);
+        ctx.fillStyle = state.target.lockColor;
+        ctx.beginPath();
+        ctx.arc(20, 19, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#f8fafc";
+        ctx.font = "bold 11px Arial, sans-serif";
+        ctx.fillText("MATCH COLOR", 31, 23);
+        ctx.restore();
+      }
 
       for (var p = 0; p < state.pulses.length; p++) {
         var pulse = state.pulses[p];
@@ -1283,18 +1299,14 @@
       }
 
       ctx.save();
-      var reticleColor = state.boostActiveLeft > 0
-        ? "#38bdf8"
-        : (state.fine ? "#fbbf24" : (save.useRetro ? "#0f380f" : "#ffffff"));
-      ctx.strokeStyle = reticleColor;
+      ctx.strokeStyle = state.feverLeft > 0 ? "#fb923c" : (save.useRetro ? "#0f380f" : "#ffffff");
       ctx.lineWidth = 2.5;
-      var rRadius = state.fine ? 8 : 12;
       ctx.beginPath();
-      ctx.arc(state.cursor.x, state.cursor.y, rRadius, 0, Math.PI * 2);
-      ctx.moveTo(state.cursor.x - 18, state.cursor.y);
-      ctx.lineTo(state.cursor.x + 18, state.cursor.y);
-      ctx.moveTo(state.cursor.x, state.cursor.y - 18);
-      ctx.lineTo(state.cursor.x, state.cursor.y + 18);
+      ctx.arc(state.cursor.x, state.cursor.y, 11, 0, Math.PI * 2);
+      ctx.moveTo(state.cursor.x - 17, state.cursor.y);
+      ctx.lineTo(state.cursor.x + 17, state.cursor.y);
+      ctx.moveTo(state.cursor.x, state.cursor.y - 17);
+      ctx.lineTo(state.cursor.x, state.cursor.y + 17);
       ctx.stroke();
       ctx.restore();
 
@@ -1321,19 +1333,6 @@
       requestAnimationFrame(loop);
     }
 
-    function setFine(active) {
-      state.fine = active;
-      fineBtn.className = active ? "fine-btn active" : "fine-btn";
-    }
-
-    fineBtn.addEventListener("pointerdown", function (e) {
-      e.preventDefault();
-      setFine(true);
-    });
-    fineBtn.addEventListener("pointerup", function () { setFine(false); });
-    fineBtn.addEventListener("pointerleave", function () { setFine(false); });
-    fineBtn.addEventListener("pointercancel", function () { setFine(false); });
-
     fireBtn.addEventListener("pointerdown", function (e) {
       e.preventDefault();
       fireShot(true);
@@ -1344,8 +1343,6 @@
       if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") state.keys.down = true;
       if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") state.keys.left = true;
       if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") state.keys.right = true;
-      if (e.key === "Shift") setFine(true);
-      if (e.key === "e" || e.key === "E") triggerBoost();
       if (e.key === " " || e.key === "Enter") {
         if (!state.running && overlay.className.indexOf("hidden") === -1) {
           startGame("training");
@@ -1360,12 +1357,10 @@
       if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") state.keys.down = false;
       if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") state.keys.left = false;
       if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") state.keys.right = false;
-      if (e.key === "Shift") setFine(false);
     });
 
     selectPreset("classic");
     refreshShopUI();
-    updateBoostButton();
     draw();
   </script>
 </body>
