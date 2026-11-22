@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>ColourShoot – Arcade & Tournament</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #1e293b 0%, #090d16 100%);
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      color: #f8fafc;
+      padding: 12px;
+    }
+
+    .gb-shell {
+      width: 100%;
+      max-width: 440px;
+      background: linear-gradient(165deg, #242b3d 0%, #151924 100%);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 28px;
+      padding: 16px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      padding: 0 4px;
+      gap: 8px;
+    }
+
+    .mode-badge {
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      background: rgba(56, 189, 248, 0.18);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+
+    .mode-badge.tournament {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.45);
+    }
+
+    .coin-box {
+      background: rgba(15, 23, 42, 0.75);
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(250, 204, 21, 0.45);
+      color: #fde047;
+      font-weight: 700;
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      background: rgba(9, 13, 22, 0.72);
+      padding: 9px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .hud div span {
+      display: block;
+      color: #94a3b8;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .hud div b {
+      color: #34d399;
+      font-size: 13px;
+    }
+
+    .screen-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 2px solid rgba(148, 163, 184, 0.25);
+      background: #0f172a;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .flash-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(circle, rgba(250, 204, 21, 0.85) 0%, rgba(255, 255, 255, 0.55) 60%, transparent 100%);
+      transition: opacity 0.16s ease-out;
+    }
+
+    .flash-layer.active {
+      opacity: 1;
+      transition: none;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      background: rgba(9, 13, 22, 0.9);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 18px;
+      gap: 10px;
+    }
+
+    .overlay.hidden {
+      display: none;
+    }
+
+    .overlay h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .overlay p {
+      margin: 0;
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 4px;
+    }
+
+    .btn-train {
+      background: #22c55e;
+      color: #052e16;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-tourney {
+      background: #f59e0b;
+      color: #451a03;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .shop-box {
+      width: 100%;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 12px;
+      padding: 9px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    .shop-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .shop-btn {
+      background: #38bdf8;
+      color: #082f49;
+      border: none;
+      border-radius: 8px;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .shop-btn:disabled {
+      background: #475569;
+      color: #cbd5e1;
+      cursor: default;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 2px 2px;
+      gap: 10px;
+    }
+
+    .dpad {
+      display: grid;
+      grid-template-columns: repeat(3, 46px);
+      grid-template-rows: repeat(3, 46px);
+      gap: 4px;
+    }
+
+    .gb-btn {
+      background: #1e2636;
+      color: #e2e8f0;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .gb-btn:active,
+    .gb-btn.active {
+      background: #38bdf8;
+      color: #082f49;
+    }
+
+    .dpad .empty {
+      visibility: hidden;
+    }
+
+    .right-cluster {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .boost-btn {
+      background: #2563eb;
+      color: #ffffff;
+      border: 1px solid #93c5fd;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      min-width: 112px;
+    }
+
+    .boost-btn:disabled {
+      background: #334155;
+      color: #94a3b8;
+      border-color: transparent;
+      cursor: default;
+    }
+
+    .action-btns {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .fine-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #334155;
+      color: #e2e8f0;
+      border: 2px solid #64748b;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .fine-btn.active {
+      background: #38bdf8;
+      color: #082f49;
+    }
+
+    .fire-btn {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      background: #e11d48;
+      color: #ffffff;
+      border: 2px solid #fda4af;
+      font-size: 17px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="gb-shell">
+    <div class="top-bar">
+      <span id="modeBadge" class="mode-badge">MODE: TRAINING</span>
+      <span class="coin-box">Coins: <span id="coinsEl">0</span></span>
+    </div>
+
+    <div class="hud">
+      <div><span>Score</span><b id="scoreEl">0</b></div>
+      <div><span>Round</span><b id="roundEl">1</b></div>
+      <div><span>Pattern</span><b id="patternEl">Static</b></div>
+      <div><span>Time</span><b id="timeEl">3.0s</b></div>
+    </div>
+
+    <div class="screen-wrap">
+      <canvas id="gameCanvas" width="380" height="380"></canvas>
+      <div id="flashLayer" class="flash-layer"></div>
+
+      <div id="overlay" class="overlay">
+        <h2 id="overlayTitle">ColourShoot</h2>
+        <p id="overlayText">
+          Train for free to earn Coins or enter a Tournament Run (Jackpot goal: <b>1,800 pts</b>).<br />
+          Controls: <b>D-Pad / Arrows</b>, <b>B / Shift</b> = Precision, <b>BOOST / E</b> = Speed burst, <b>A / Space</b> = Fire.
+        </p>
+
+        <div class="btn-row">
+          <button id="trainBtn" class="btn-train" type="button" onclick="startGame('training')">Start Training</button>
+          <button id="tourneyBtn" class="btn-tourney" type="button" onclick="startGame('tournament')">Tournament Run</button>
+        </div>
+
+        <div class="shop-box">
+          <div class="shop-item">
+            <span><b>Training Aid:</b> Aim Line (training only)</span>
+            <button id="buyGuideBtn" class="shop-btn" type="button" onclick="buyGuide()">30 Coins</button>
+          </div>
+          <div class="shop-item">
+            <span><b>Cosmetic Theme:</b> Retro Handheld</span>
+            <button id="buyRetroBtn" class="shop-btn" type="button" onclick="toggleRetro()">50 Coins</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="dpad">
+        <div class="empty"></div>
+        <button class="gb-btn" type="button" data-dir="up">U</button>
+        <div class="empty"></div>
+
+        <button class="gb-btn" type="button" data-dir="left">L</button>
+        <div class="empty"></div>
+        <button class="gb-btn" type="button" data-dir="right">R</button>
+
+        <div class="empty"></div>
+        <button class="gb-btn" type="button" data-dir="down">D</button>
+        <div class="empty"></div>
+      </div>
+
+      <div class="right-cluster">
+        <button id="boostBtn" class="boost-btn" type="button" onclick="triggerBoost()">BOOST (E)</button>
+        <div class="action-btns">
+          <button id="fineBtn" class="fine-btn" type="button" title="Precision (Shift)">B</button>
+          <button id="fireBtn" class="fire-btn" type="button" title="Fire (Space)">A</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var canvas = document.getElementById("gameCanvas");
+    var ctx = canvas.getContext("2d");
+    var flashLayer = document.getElementById("flashLayer");
+
+    var modeBadge = document.getElementById("modeBadge");
+    var coinsEl = document.getElementById("coinsEl");
+    var scoreEl = document.getElementById("scoreEl");
+    var roundEl = document.getElementById("roundEl");
+    var patternEl = document.getElementById("patternEl");
+    var timeEl = document.getElementById("timeEl");
+    var overlay = document.getElementById("overlay");
+    var overlayTitle = document.getElementById("overlayTitle");
+    var overlayText = document.getElementById("overlayText");
+    var buyGuideBtn = document.getElementById("buyGuideBtn");
+    var buyRetroBtn = document.getElementById("buyRetroBtn");
+    var boostBtn = document.getElementById("boostBtn");
+    var fireBtn = document.getElementById("fireBtn");
+    var fineBtn = document.getElementById("fineBtn");
+
+    var audioCtx = null;
+    function ensureAudio() {
+      try {
+        if (!audioCtx) {
+          var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+        }
+        if (audioCtx && audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+      } catch (e) {}
+    }
+
+    function playTone(freq, endFreq, duration, type, gainVal) {
+      try {
+        if (!audioCtx) return;
+        var now = audioCtx.currentTime;
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        osc.type = type || "sine";
+        osc.frequency.setValueAtTime(freq, now);
+        if (endFreq) {
+          osc.frequency.exponentialRampToValueAtTime(Math.max(40, endFreq), now + duration);
+        }
+        gain.gain.setValueAtTime(gainVal || 0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + duration);
+      } catch (e) {}
+    }
+
+    function playHitSound() {
+      playTone(520, 760, 0.11, "triangle", 0.16);
+    }
+
+    function playBullseyeSound() {
+      playTone(660, 990, 0.09, "sine", 0.2);
+      setTimeout(function () {
+        playTone(990, 1320, 0.14, "triangle", 0.22);
+      }, 65);
+    }
+
+    function playBoostSound() {
+      playTone(260, 620, 0.14, "sawtooth", 0.1);
+    }
+
+    function playMissSound() {
+      playTone(240, 95, 0.28, "sawtooth", 0.16);
+    }
+
+    var THEMES = {
+      modern: {
+        bgTop: "#0f172a",
+        bgBottom: "#1e293b",
+        grid: "rgba(148, 163, 184, 0.12)",
+        colors: ["#f43f5e", "#a855f7", "#06b6d4", "#f59e0b", "#10b981", "#ec4899"]
+      },
+      retro: {
+        bgTop: "#9bbc0f",
+        bgBottom: "#8bac0f",
+        grid: "rgba(15, 56, 15, 0.16)",
+        colors: ["#0f380f", "#306230", "#0f380f", "#306230"]
+      }
+    };
+
+    var TOURNAMENT_SEQUENCE = [
+      { untilRound: 3,  type: "static", label: "Static",     speed: 0,   windX: 0 },
+      { untilRound: 6,  type: "moveX",  label: "Sweep X",    speed: 68,  windX: 0 },
+      { untilRound: 9,  type: "moveY",  label: "Sweep Y",    speed: 78,  windX: 0 },
+      { untilRound: 12, type: "orbit",  label: "Orbit",      speed: 1.6, windX: 0 },
+      { untilRound: 99, type: "wind",   label: "Orbit+Drft", speed: 2.0, windX: 28 }
+    ];
+
+    var JACKPOT_SCORE_GOAL = 1800;
+
+    var save = {
+      coins: 0,
+      hasGuide: false,
+      hasRetro: false,
+      useRetro: false
+    };
+
+    try {
+      var rawSave = localStorage.getItem("colourshoot_save_v3");
+      if (rawSave) {
+        var parsed = JSON.parse(rawSave);
+        save.coins = parsed.coins || 0;
+        save.hasGuide = !!parsed.hasGuide;
+        save.hasRetro = !!parsed.hasRetro;
+        save.useRetro = !!parsed.useRetro;
+      }
+    } catch (e) {}
+
+    function persistSave() {
+      try {
+        localStorage.setItem("colourshoot_save_v3", JSON.stringify(save));
+      } catch (e) {}
+      refreshShopUI();
+    }
+
+    function refreshShopUI() {
+      coinsEl.textContent = save.coins;
+
+      if (save.hasGuide) {
+        buyGuideBtn.textContent = "Owned (Train)";
+        buyGuideBtn.disabled = true;
+      } else {
+        buyGuideBtn.textContent = "30 Coins";
+        buyGuideBtn.disabled = save.coins < 30;
+      }
+
+      if (save.hasRetro) {
+        buyRetroBtn.textContent = save.useRetro ? "Active (Tap: Modern)" : "Enable";
+        buyRetroBtn.disabled = false;
+      } else {
+        buyRetroBtn.textContent = "50 Coins";
+        buyRetroBtn.disabled = save.coins < 50;
+      }
+    }
+
+    function buyGuide() {
+      if (!save.hasGuide && save.coins >= 30) {
+        save.coins -= 30;
+        save.hasGuide = true;
+        persistSave();
+      }
+    }
+
+    function toggleRetro() {
+      if (!save.hasRetro) {
+        if (save.coins >= 50) {
+          save.coins -= 50;
+          save.hasRetro = true;
+          save.useRetro = true;
+          persistSave();
+        }
+      } else {
+        save.useRetro = !save.useRetro;
+        persistSave();
+        draw();
+      }
+    }
+
+    var state = {
+      running: false,
+      mode: "training",
+      score: 0,
+      round: 1,
+      combo: 0,
+      runCoins: 0,
+      maxTime: 3.0,
+      timeLeft: 3.0,
+      jackpotStage: false,
+      boostActiveLeft: 0,
+      boostCooldownLeft: 0,
+      cursor: {
+        x: 190,
+        y: 190,
+        vx: 0,
+        vy: 0,
+        maxSpeed: 135,
+        boostFactor: 2.15,
+        fineFactor: 0.38,
+        accelRate: 11,
+        damping: 16
+      },
+      target: {
+        x: 190,
+        y: 190,
+        baseX: 190,
+        baseY: 190,
+        angle: 0,
+        radius: 75,
+        color: "#f43f5e",
+        block: TOURNAMENT_SEQUENCE[0],
+        dir: 1
+      },
+      splatters: [],
+      pulses: [],
+      popups: [],
+      input: { up: false, down: false, left: false, right: false, fine: false },
+      lastFrame: 0
+    };
+
+    function triggerScreenFlash() {
+      flashLayer.className = "flash-layer active";
+      setTimeout(function () {
+        flashLayer.className = "flash-layer";
+      }, 30);
+    }
+
+    function addPopup(x, y, text, color) {
+      state.popups.push({
+        x: x,
+        y: y,
+        text: text,
+        color: color,
+        life: 0.75,
+        maxLife: 0.75
+      });
+    }
+
+    function addPulse(x, y, radius, color, isBullseye) {
+      state.pulses.push({
+        x: x,
+        y: y,
+        radius: isBullseye ? 10 : Math.max(14, radius * 0.4),
+        currentRadius: isBullseye ? 10 : Math.max(14, radius * 0.4),
+        maxRadius: isBullseye ? 75 : Math.max(42, radius * 1.15),
+        color: color,
+        life: 0.35,
+        maxLife: 0.35
+      });
+    }
+
+    function triggerBoost() {
+      if (!state.running) return;
+      if (state.boostCooldownLeft > 0 || state.boostActiveLeft > 0) return;
+      ensureAudio();
+      state.boostActiveLeft = 0.75;
+      state.boostCooldownLeft = 2.4;
+      playBoostSound();
+      addPopup(state.cursor.x, state.cursor.y - 16, "BOOST!", "#38bdf8");
+      updateBoostButton();
+    }
+
+    function updateBoostButton() {
+      if (state.boostActiveLeft > 0) {
+        boostBtn.textContent = "BOOSTING!";
+        boostBtn.disabled = true;
+      } else if (state.boostCooldownLeft > 0) {
+        boostBtn.textContent = "BOOST (" + state.boostCooldownLeft.toFixed(1) + "s)";
+        boostBtn.disabled = true;
+      } else {
+        boostBtn.textContent = "BOOST (E)";
+        boostBtn.disabled = false;
+      }
+    }
+
+    function getBlockForRound(round) {
+      for (var i = 0; i < TOURNAMENT_SEQUENCE.length; i++) {
+        if (round <= TOURNAMENT_SEQUENCE[i].untilRound) {
+          return TOURNAMENT_SEQUENCE[i];
+        }
+      }
+      return TOURNAMENT_SEQUENCE[TOURNAMENT_SEQUENCE.length - 1];
+    }
+
+    function pickTargetForRound(round, currentRadius, isGoldenFinal) {
+      var theme = save.useRetro ? THEMES.retro : THEMES.modern;
+      var color = isGoldenFinal ? "#facc15" : theme.colors[(round - 1) % theme.colors.length];
+      var block = isGoldenFinal
+        ? { type: "orbit", label: "GOLDEN SHOT", speed: 2.3, windX: 0 }
+        : getBlockForRound(round);
+
+      var margin = Math.max(55, currentRadius + 25);
+      var bx = margin + Math.random() * (canvas.width - margin * 2);
+      var by = margin + Math.random() * (canvas.height - margin * 2);
+
+      return {
+        x: bx,
+        y: by,
+        baseX: bx,
+        baseY: by,
+        angle: Math.random() * Math.PI * 2,
+        radius: currentRadius,
+        color: color,
+        block: block,
+        dir: Math.random() < 0.5 ? -1 : 1
+      };
+    }
+
+    function updateHud() {
+      scoreEl.textContent = state.score;
+      roundEl.textContent = state.round;
+      patternEl.textContent = state.target.block.label;
+      timeEl.textContent = state.timeLeft.toFixed(1) + "s";
+      updateBoostButton();
+    }
+
+    function startGame(selectedMode) {
+      ensureAudio();
+      state.mode = selectedMode || "training";
+      state.running = true;
+      state.score = 0;
+      state.round = 1;
+      state.combo = 0;
+      state.runCoins = 0;
+      state.jackpotStage = false;
+      state.boostActiveLeft = 0;
+      state.boostCooldownLeft = 0;
+      state.maxTime = 3.0;
+      state.timeLeft = 3.0;
+      state.splatters = [];
+      state.pulses = [];
+      state.popups = [];
+      state.cursor.x = canvas.width / 2;
+      state.cursor.y = canvas.height / 2;
+      state.cursor.vx = 0;
+      state.cursor.vy = 0;
+      state.target = pickTargetForRound(1, 75, false);
+
+      if (state.mode === "tournament") {
+        modeBadge.textContent = "MODE: TOURNAMENT (NO AIDS)";
+        modeBadge.className = "mode-badge tournament";
+      } else {
+        modeBadge.textContent = "MODE: TRAINING";
+        modeBadge.className = "mode-badge";
+      }
+
+      overlay.className = "overlay hidden";
+      updateHud();
+      state.lastFrame = performance.now();
+      requestAnimationFrame(loop);
+    }
+
+    function endGame(reason, wonJackpot) {
+      state.running = false;
+      playMissSound();
+      if (state.mode === "training" && state.runCoins > 0) {
+        save.coins += state.runCoins;
+        persistSave();
+      }
+
+      overlayTitle.textContent = wonJackpot ? "JACKPOT CRACKED!" : "Run Over!";
+      var extra = state.mode === "training"
+        ? "<br />Coins earned: <b>+" + state.runCoins + "</b>"
+        : "<br />Tournament Score: <b>" + state.score + "</b> (Jackpot goal: " + JACKPOT_SCORE_GOAL + ")";
+
+      overlayText.innerHTML = reason + "<br />Final Score: <b>" + state.score + "</b> (Round " + state.round + ")" + extra;
+      overlay.className = "overlay";
+      refreshShopUI();
+      updateBoostButton();
+    }
+
+    function fireShot() {
+      if (!state.running) return;
+      ensureAudio();
+
+      var dx = state.cursor.x - state.target.x;
+      var dy = state.cursor.y - state.target.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+
+      state.splatters.push({
+        x: state.cursor.x,
+        y: state.cursor.y,
+        radius: Math.max(12, state.target.radius * 0.35),
+        color: state.target.color
+      });
+
+      if (dist > state.target.radius) {
+        endGame(state.jackpotStage ? "Missed the Golden Jackpot Shot!" : "Missed the target!", false);
+        return;
+      }
+
+      if (state.jackpotStage) {
+        state.score += 500;
+        playBullseyeSound();
+        triggerScreenFlash();
+        endGame("You nailed the final Golden Shot!", true);
+        return;
+      }
+
+      var isBullseye = dist <= 4;
+      var accuracy = Math.max(0, 1 - dist / state.target.radius);
+      if (isBullseye) {
+        state.combo += 1;
+        playBullseyeSound();
+        triggerScreenFlash();
+        addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#facc15", true);
+      } else {
+        state.combo = 0;
+        playHitSound();
+        addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#34d399", false);
+      }
+
+      var multiplier = 1 + state.combo * 0.25;
+      var timeBonus = Math.round(state.timeLeft * 20);
+      var shotPoints = Math.round((40 + accuracy * 80) * multiplier + timeBonus);
+      state.score += shotPoints;
+
+      if (isBullseye) {
+        addPopup(state.cursor.x, state.cursor.y - 12, "100% BULLSEYE! +" + shotPoints, "#fde047");
+      } else {
+        addPopup(state.cursor.x, state.cursor.y - 12, "HIT +" + shotPoints, "#4ade80");
+      }
+
+      if (state.mode === "training") {
+        state.runCoins += isBullseye ? 5 : 2;
+      }
+
+      if (state.mode === "tournament" && state.score >= JACKPOT_SCORE_GOAL) {
+        state.jackpotStage = true;
+        state.round += 1;
+        state.maxTime = 1.4;
+        state.timeLeft = 1.4;
+        state.target = pickTargetForRound(state.round, 26, true);
+        updateHud();
+        return;
+      }
+
+      var nextRadius = state.target.radius;
+      if (isBullseye && state.combo % 2 === 0) {
+        nextRadius = Math.min(85, nextRadius + 6);
+      } else if (!isBullseye) {
+        nextRadius = nextRadius - dist * 0.45;
+      }
+
+      if (nextRadius < 12) {
+        endGame("Target became too small!", false);
+        return;
+      }
+
+      state.round += 1;
+      state.maxTime = Math.max(1.0, 3.0 - (state.round - 1) * 0.07);
+      state.timeLeft = state.maxTime;
+      state.target = pickTargetForRound(state.round, nextRadius, false);
+      updateHud();
+    }
+
+    function update(dt) {
+      state.timeLeft -= dt;
+      if (state.boostActiveLeft > 0) {
+        state.boostActiveLeft = Math.max(0, state.boostActiveLeft - dt);
+      }
+      if (state.boostCooldownLeft > 0) {
+        state.boostCooldownLeft = Math.max(0, state.boostCooldownLeft - dt);
+      }
+
+      if (state.timeLeft <= 0) {
+        state.timeLeft = 0;
+        fireShot();
+        if (!state.running) return;
+      }
+
+      for (var p = state.pulses.length - 1; p >= 0; p--) {
+        var pulse = state.pulses[p];
+        pulse.life -= dt;
+        var progress = 1 - Math.max(0, pulse.life / pulse.maxLife);
+        pulse.currentRadius = pulse.radius + (pulse.maxRadius - pulse.radius) * progress;
+        if (pulse.life <= 0) {
+          state.pulses.splice(p, 1);
+        }
+      }
+
+      for (var q = state.popups.length - 1; q >= 0; q--) {
+        var pop = state.popups[q];
+        pop.life -= dt;
+        pop.y -= 26 * dt;
+        if (pop.life <= 0) {
+          state.popups.splice(q, 1);
+        }
+      }
+
+      var t = state.target;
+      var pad = t.radius + 12;
+      if (t.block.type === "moveX") {
+        t.x += t.dir * t.block.speed * dt;
+        if (t.x < pad) { t.x = pad; t.dir = 1; }
+        if (t.x > canvas.width - pad) { t.x = canvas.width - pad; t.dir = -1; }
+      } else if (t.block.type === "moveY") {
+        t.y += t.dir * t.block.speed * dt;
+        if (t.y < pad) { t.y = pad; t.dir = 1; }
+        if (t.y > canvas.height - pad) { t.y = canvas.height - pad; t.dir = -1; }
+      } else if (t.block.type === "orbit" || t.block.type === "wind") {
+        t.angle += t.block.speed * dt;
+        var orbitR = 36;
+        t.x = Math.max(pad, Math.min(canvas.width - pad, t.baseX + Math.cos(t.angle) * orbitR));
+        t.y = Math.max(pad, Math.min(canvas.height - pad, t.baseY + Math.sin(t.angle) * orbitR));
+      }
+
+      var ix = 0;
+      var iy = 0;
+      if (state.input.left) ix -= 1;
+      if (state.input.right) ix += 1;
+      if (state.input.up) iy -= 1;
+      if (state.input.down) iy += 1;
+
+      if (ix !== 0 && iy !== 0) {
+        var inv = 1 / Math.SQRT2;
+        ix *= inv;
+        iy *= inv;
+      }
+
+      var c = state.cursor;
+      var speedScale = 1.0;
+      if (state.boostActiveLeft > 0) {
+        speedScale = c.boostFactor;
+      } else if (state.input.fine) {
+        speedScale = c.fineFactor;
+      }
+
+      var targetVx = ix * c.maxSpeed * speedScale;
+      var targetVy = iy * c.maxSpeed * speedScale;
+
+      if (ix !== 0 || iy !== 0) {
+        var blend = 1 - Math.exp(-c.accelRate * dt);
+        c.vx += (targetVx - c.vx) * blend;
+        c.vy += (targetVy - c.vy) * blend;
+      } else {
+        var decay = Math.exp(-c.damping * dt);
+        c.vx *= decay;
+        c.vy *= decay;
+        if (Math.sqrt(c.vx * c.vx + c.vy * c.vy) < 1) {
+          c.vx = 0;
+          c.vy = 0;
+        }
+      }
+
+      var windOffset = (t.block.windX || 0) * dt;
+      c.x = Math.max(10, Math.min(canvas.width - 10, c.x + c.vx * dt + windOffset));
+      c.y = Math.max(10, Math.min(canvas.height - 10, c.y + c.vy * dt));
+
+      updateHud();
+    }
+
+    function draw() {
+      var theme = save.useRetro ? THEMES.retro : THEMES.modern;
+      var grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      grad.addColorStop(0, theme.bgTop);
+      grad.addColorStop(1, theme.bgBottom);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = theme.grid;
+      ctx.lineWidth = 1;
+      for (var i = 0; i <= canvas.width; i += 24) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, canvas.height);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(canvas.width, i);
+        ctx.stroke();
+      }
+
+      for (var j = 0; j < state.splatters.length; j++) {
+        var s = state.splatters[j];
+        ctx.save();
+        ctx.globalAlpha = 0.24;
+        ctx.fillStyle = s.color;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      ctx.save();
+      if (!save.useRetro) {
+        ctx.shadowColor = state.target.color;
+        ctx.shadowBlur = 14;
+      }
+      ctx.fillStyle = state.target.color;
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.arc(state.target.x, state.target.y, state.target.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(state.target.x, state.target.y, Math.max(4, state.target.radius * 0.22), 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      for (var p = 0; p < state.pulses.length; p++) {
+        var pulse = state.pulses[p];
+        var alpha = Math.max(0, pulse.life / pulse.maxLife);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = pulse.color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(pulse.x, pulse.y, pulse.currentRadius || pulse.radius, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      if (state.running && state.mode === "training" && save.hasGuide) {
+        ctx.save();
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.65)";
+        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(state.cursor.x, state.cursor.y);
+        ctx.lineTo(state.target.x, state.target.y);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      ctx.save();
+      var reticleColor = state.boostActiveLeft > 0
+        ? "#38bdf8"
+        : (state.input.fine ? "#fbbf24" : (save.useRetro ? "#0f380f" : "#ffffff"));
+      ctx.strokeStyle = reticleColor;
+      ctx.lineWidth = 2.5;
+      var rRadius = state.input.fine ? 8 : 12;
+      ctx.beginPath();
+      ctx.arc(state.cursor.x, state.cursor.y, rRadius, 0, Math.PI * 2);
+      ctx.moveTo(state.cursor.x - 18, state.cursor.y);
+      ctx.lineTo(state.cursor.x + 18, state.cursor.y);
+      ctx.moveTo(state.cursor.x, state.cursor.y - 18);
+      ctx.lineTo(state.cursor.x, state.cursor.y + 18);
+      ctx.stroke();
+      ctx.restore();
+
+      for (var q = 0; q < state.popups.length; q++) {
+        var pop = state.popups[q];
+        var pAlpha = Math.max(0, pop.life / pop.maxLife);
+        ctx.save();
+        ctx.globalAlpha = pAlpha;
+        ctx.font = "bold 13px Arial, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillStyle = pop.color;
+        ctx.fillText(pop.text, pop.x, pop.y);
+        ctx.restore();
+      }
+    }
+
+    function loop(now) {
+      if (!state.running) return;
+      var dt = Math.min(0.05, (now - state.lastFrame) / 1000);
+      state.lastFrame = now;
+
+      update(dt);
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    var dirButtons = document.querySelectorAll(".gb-btn[data-dir]");
+    for (var k = 0; k < dirButtons.length; k++) {
+      (function (btn) {
+        var dir = btn.getAttribute("data-dir");
+        btn.addEventListener("pointerdown", function (e) {
+          e.preventDefault();
+          state.input[dir] = true;
+          btn.className = "gb-btn active";
+        });
+        btn.addEventListener("pointerup", function () {
+          state.input[dir] = false;
+          btn.className = "gb-btn";
+        });
+        btn.addEventListener("pointerleave", function () {
+          state.input[dir] = false;
+          btn.className = "gb-btn";
+        });
+        btn.addEventListener("pointercancel", function () {
+          state.input[dir] = false;
+          btn.className = "gb-btn";
+        });
+      })(dirButtons[k]);
+    }
+
+    function setFine(active) {
+      state.input.fine = active;
+      fineBtn.className = active ? "fine-btn active" : "fine-btn";
+    }
+
+    fineBtn.addEventListener("pointerdown", function (e) {
+      e.preventDefault();
+      setFine(true);
+    });
+    fineBtn.addEventListener("pointerup", function () { setFine(false); });
+    fineBtn.addEventListener("pointerleave", function () { setFine(false); });
+    fineBtn.addEventListener("pointercancel", function () { setFine(false); });
+
+    fireBtn.addEventListener("pointerdown", function (e) {
+      e.preventDefault();
+      fireBtn.className = "fire-btn active";
+      fireShot();
+    });
+    fireBtn.addEventListener("pointerup", function () { fireBtn.className = "fire-btn"; });
+    fireBtn.addEventListener("pointerleave", function () { fireBtn.className = "fire-btn"; });
+
+    window.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") state.input.up = true;
+      if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") state.input.down = true;
+      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") state.input.left = true;
+      if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") state.input.right = true;
+      if (e.key === "Shift") setFine(true);
+      if (e.key === "e" || e.key === "E") triggerBoost();
+      if (e.key === " " || e.key === "Enter") {
+        if (!state.running && overlay.className.indexOf("hidden") === -1) {
+          startGame("training");
+        } else {
+          fireShot();
+        }
+      }
+    });
+
+    window.addEventListener("keyup", function (e) {
+      if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") state.input.up = false;
+      if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") state.input.down = false;
+      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") state.input.left = false;
+      if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") state.input.right = false;
+      if (e.key === "Shift") setFine(false);
+    });
+
+    refreshShopUI();
+    updateBoostButton();
+    draw();
+  </script>
+</body>
+</html>
