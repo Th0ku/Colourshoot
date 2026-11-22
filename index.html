@@ -139,15 +139,15 @@
       position: absolute;
       inset: 0;
       z-index: 20;
-      background: rgba(9, 13, 22, 0.92);
+      background: rgba(9, 13, 22, 0.93);
       color: #ffffff;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 18px;
-      gap: 10px;
+      padding: 14px;
+      gap: 8px;
       touch-action: manipulation;
     }
 
@@ -157,14 +157,63 @@
 
     .overlay h2 {
       margin: 0;
-      font-size: 22px;
+      font-size: 20px;
     }
 
     .overlay p {
       margin: 0;
-      font-size: 13px;
+      font-size: 12px;
       color: #cbd5e1;
-      line-height: 1.45;
+      line-height: 1.38;
+    }
+
+    .preset-bar {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 10px;
+      padding: 7px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 11px;
+    }
+
+    .preset-label {
+      color: #94a3b8;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .preset-buttons {
+      display: flex;
+      gap: 5px;
+      justify-content: space-between;
+    }
+
+    .preset-btn {
+      flex: 1;
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 6px 4px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .preset-btn.active {
+      background: rgba(56, 189, 248, 0.22);
+      color: #7dd3fc;
+      border-color: #38bdf8;
+    }
+
+    .preset-meta {
+      color: #fbbf24;
+      font-size: 11px;
     }
 
     .btn-row {
@@ -172,7 +221,7 @@
       gap: 8px;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
     .btn-train {
@@ -180,8 +229,8 @@
       color: #052e16;
       border: none;
       border-radius: 12px;
-      padding: 11px 18px;
-      font-size: 14px;
+      padding: 9px 15px;
+      font-size: 13px;
       font-weight: 800;
       cursor: pointer;
       touch-action: manipulation;
@@ -192,8 +241,8 @@
       color: #451a03;
       border: none;
       border-radius: 12px;
-      padding: 11px 18px;
-      font-size: 14px;
+      padding: 9px 15px;
+      font-size: 13px;
       font-weight: 800;
       cursor: pointer;
       touch-action: manipulation;
@@ -204,11 +253,11 @@
       background: rgba(30, 41, 59, 0.92);
       border: 1px solid rgba(148, 163, 184, 0.2);
       border-radius: 12px;
-      padding: 9px 10px;
+      padding: 8px 10px;
       display: flex;
       flex-direction: column;
-      gap: 7px;
-      font-size: 12px;
+      gap: 6px;
+      font-size: 11px;
       text-align: left;
     }
 
@@ -224,7 +273,7 @@
       color: #082f49;
       border: none;
       border-radius: 8px;
-      padding: 5px 9px;
+      padding: 4px 8px;
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
@@ -372,9 +421,19 @@
       <div id="overlay" class="overlay">
         <h2 id="overlayTitle">ColourShoot</h2>
         <p id="overlayText">
-          Train for free to earn Coins or enter a Tournament Run (Jackpot goal: <b>1,800 pts</b>).<br />
-          Drag the <b>Joystick</b> to aim (farther = faster), <b>BOOST</b> for speed, <b>A</b> to fire.
+          Train for free to earn Coins or enter a Tournament Run.<br />
+          Drag <b>Joystick</b> to aim, <b>BOOST</b> for burst, <b>B</b> for precision, <b>A</b> to fire.
         </p>
+
+        <div class="preset-bar">
+          <div class="preset-label">Tournament Preset (Modular Sequence)</div>
+          <div class="preset-buttons">
+            <button id="preset_classic" class="preset-btn active" type="button" onclick="selectPreset('classic')">Classic Cup</button>
+            <button id="preset_pulse" class="preset-btn" type="button" onclick="selectPreset('pulse')">Pulse & Jump</button>
+            <button id="preset_storm" class="preset-btn" type="button" onclick="selectPreset('storm')">Storm Sprint</button>
+          </div>
+          <div id="presetMeta" class="preset-meta">Jackpot Goal: 1,800 pts | Start Time: 3.4s</div>
+        </div>
 
         <div class="btn-row">
           <button id="trainBtn" class="btn-train" type="button" onclick="startGame('training')">Start Training</button>
@@ -424,6 +483,7 @@
     var overlay = document.getElementById("overlay");
     var overlayTitle = document.getElementById("overlayTitle");
     var overlayText = document.getElementById("overlayText");
+    var presetMeta = document.getElementById("presetMeta");
     var buyGuideBtn = document.getElementById("buyGuideBtn");
     var buyRetroBtn = document.getElementById("buyRetroBtn");
     var boostBtn = document.getElementById("boostBtn");
@@ -433,6 +493,74 @@
     var joystickKnob = document.getElementById("joystickKnob");
 
     var SHOT_LOCK_DURATION = 0.22;
+
+    // MODULAR TOURNAMENT PRESETS
+    // Block types: "static", "moveX", "moveY", "orbit", "wind", "pulse", "jump"
+    var TOURNAMENT_PRESETS = {
+      classic: {
+        name: "Classic Cup",
+        jackpotGoal: 1800,
+        startTime: 3.4,
+        timeDecay: 0.035,
+        minTime: 1.3,
+        sequence: [
+          { untilRound: 3,  type: "static", label: "Static",     speed: 0,    windX: 0 },
+          { untilRound: 6,  type: "moveX",  label: "Sweep X",    speed: 42,   windX: 0 },
+          { untilRound: 9,  type: "pulse",  label: "Pulse",      speed: 3.2,  pulseAmp: 14 },
+          { untilRound: 12, type: "orbit",  label: "Orbit",      speed: 1.15, windX: 0 },
+          { untilRound: 15, type: "jump",   label: "Jump",       jumpInterval: 1.35 },
+          { untilRound: 99, type: "wind",   label: "Orbit+Drft", speed: 1.35, windX: 14 }
+        ]
+      },
+      pulse: {
+        name: "Pulse & Jump",
+        jackpotGoal: 2000,
+        startTime: 3.8,
+        timeDecay: 0.03,
+        minTime: 1.45,
+        sequence: [
+          { untilRound: 3,  type: "static", label: "Static",     speed: 0 },
+          { untilRound: 7,  type: "pulse",  label: "Pulse",      speed: 3.6,  pulseAmp: 17 },
+          { untilRound: 11, type: "jump",   label: "Jump",       jumpInterval: 1.25 },
+          { untilRound: 15, type: "moveY",  label: "Sweep Y",    speed: 48 },
+          { untilRound: 99, type: "pulse",  label: "TurboPulse", speed: 4.4,  pulseAmp: 20 }
+        ]
+      },
+      storm: {
+        name: "Storm Sprint",
+        jackpotGoal: 2200,
+        startTime: 2.9,
+        timeDecay: 0.04,
+        minTime: 1.2,
+        sequence: [
+          { untilRound: 2,  type: "moveX",  label: "Sweep X",    speed: 52 },
+          { untilRound: 5,  type: "jump",   label: "Jump",       jumpInterval: 1.15 },
+          { untilRound: 8,  type: "orbit",  label: "Orbit",      speed: 1.35 },
+          { untilRound: 11, type: "pulse",  label: "Pulse",      speed: 4.0,  pulseAmp: 16 },
+          { untilRound: 99, type: "wind",   label: "Storm+Drft", speed: 1.5,  windX: 18 }
+        ]
+      }
+    };
+
+    var selectedPresetKey = "classic";
+
+    function getActivePreset() {
+      return TOURNAMENT_PRESETS[selectedPresetKey] || TOURNAMENT_PRESETS.classic;
+    }
+
+    function selectPreset(key) {
+      if (!TOURNAMENT_PRESETS[key]) return;
+      selectedPresetKey = key;
+      var keys = ["classic", "pulse", "storm"];
+      for (var i = 0; i < keys.length; i++) {
+        var btn = document.getElementById("preset_" + keys[i]);
+        if (btn) {
+          btn.className = keys[i] === key ? "preset-btn active" : "preset-btn";
+        }
+      }
+      var p = getActivePreset();
+      presetMeta.textContent = "Jackpot Goal: " + p.jackpotGoal.toLocaleString("en-US") + " pts | Start Time: " + p.startTime.toFixed(1) + "s";
+    }
 
     var audioCtx = null;
     function ensureAudio() {
@@ -484,6 +612,10 @@
       playTone(260, 620, 0.14, "sawtooth", 0.1);
     }
 
+    function playJumpSound() {
+      playTone(440, 680, 0.07, "sine", 0.08);
+    }
+
     function playMissSound() {
       playTone(240, 95, 0.28, "sawtooth", 0.16);
     }
@@ -503,16 +635,6 @@
       }
     };
 
-    var TOURNAMENT_SEQUENCE = [
-      { untilRound: 4,  type: "static", label: "Static",     speed: 0,    windX: 0 },
-      { untilRound: 8,  type: "moveX",  label: "Sweep X",    speed: 42,   windX: 0 },
-      { untilRound: 12, type: "moveY",  label: "Sweep Y",    speed: 48,   windX: 0 },
-      { untilRound: 16, type: "orbit",  label: "Orbit",      speed: 1.15, windX: 0 },
-      { untilRound: 99, type: "wind",   label: "Orbit+Drft", speed: 1.35, windX: 14 }
-    ];
-
-    var JACKPOT_SCORE_GOAL = 1800;
-
     var save = {
       coins: 0,
       hasGuide: false,
@@ -521,7 +643,7 @@
     };
 
     try {
-      var rawSave = localStorage.getItem("colourshoot_save_v7");
+      var rawSave = localStorage.getItem("colourshoot_save_v8");
       if (rawSave) {
         var parsed = JSON.parse(rawSave);
         save.coins = parsed.coins || 0;
@@ -533,7 +655,7 @@
 
     function persistSave() {
       try {
-        localStorage.setItem("colourshoot_save_v7", JSON.stringify(save));
+        localStorage.setItem("colourshoot_save_v8", JSON.stringify(save));
       } catch (e) {}
       refreshShopUI();
     }
@@ -611,9 +733,12 @@
         baseX: 190,
         baseY: 190,
         angle: 0,
+        pulsePhase: 0,
+        jumpTimer: 0,
+        baseRadius: 75,
         radius: 75,
         color: "#f43f5e",
-        block: TOURNAMENT_SEQUENCE[0],
+        block: TOURNAMENT_PRESETS.classic.sequence[0],
         dir: 1
       },
       splatters: [],
@@ -758,12 +883,21 @@
     }
 
     function getBlockForRound(round) {
-      for (var i = 0; i < TOURNAMENT_SEQUENCE.length; i++) {
-        if (round <= TOURNAMENT_SEQUENCE[i].untilRound) {
-          return TOURNAMENT_SEQUENCE[i];
+      var seq = getActivePreset().sequence;
+      for (var i = 0; i < seq.length; i++) {
+        if (round <= seq[i].untilRound) {
+          return seq[i];
         }
       }
-      return TOURNAMENT_SEQUENCE[TOURNAMENT_SEQUENCE.length - 1];
+      return seq[seq.length - 1];
+    }
+
+    function randomTargetPos(radius) {
+      var margin = Math.max(55, radius + 28);
+      return {
+        x: margin + Math.random() * Math.max(20, canvas.width - margin * 2),
+        y: margin + Math.random() * Math.max(20, canvas.height - margin * 2)
+      };
     }
 
     function pickTargetForRound(round, currentRadius, isGoldenFinal) {
@@ -773,16 +907,17 @@
         ? { type: "orbit", label: "GOLDEN SHOT", speed: 1.65, windX: 0 }
         : getBlockForRound(round);
 
-      var margin = Math.max(55, currentRadius + 25);
-      var bx = margin + Math.random() * (canvas.width - margin * 2);
-      var by = margin + Math.random() * (canvas.height - margin * 2);
+      var pos = randomTargetPos(currentRadius);
 
       return {
-        x: bx,
-        y: by,
-        baseX: bx,
-        baseY: by,
+        x: pos.x,
+        y: pos.y,
+        baseX: pos.x,
+        baseY: pos.y,
         angle: Math.random() * Math.PI * 2,
+        pulsePhase: 0,
+        jumpTimer: block.jumpInterval || 1.3,
+        baseRadius: currentRadius,
         radius: currentRadius,
         color: color,
         block: block,
@@ -801,6 +936,7 @@
     function startGame(selectedMode) {
       ensureAudio();
       resetJoystick();
+      var preset = getActivePreset();
       state.mode = selectedMode || "training";
       state.running = true;
       state.score = 0;
@@ -811,8 +947,8 @@
       state.boostActiveLeft = 0;
       state.boostCooldownLeft = 0;
       state.shotLockLeft = 0;
-      state.maxTime = 3.4;
-      state.timeLeft = 3.4;
+      state.maxTime = preset.startTime;
+      state.timeLeft = preset.startTime;
       state.splatters = [];
       state.pulses = [];
       state.popups = [];
@@ -823,7 +959,7 @@
       state.target = pickTargetForRound(1, 75, false);
 
       if (state.mode === "tournament") {
-        modeBadge.textContent = "MODE: TOURNAMENT (NO AIDS)";
+        modeBadge.textContent = "TOURNEY: " + preset.name.toUpperCase();
         modeBadge.className = "mode-badge tournament";
       } else {
         modeBadge.textContent = "MODE: TRAINING";
@@ -846,10 +982,11 @@
         persistSave();
       }
 
+      var preset = getActivePreset();
       overlayTitle.textContent = wonJackpot ? "JACKPOT CRACKED!" : "Run Over!";
       var extra = state.mode === "training"
         ? "<br />Coins earned: <b>+" + state.runCoins + "</b>"
-        : "<br />Tournament Score: <b>" + state.score + "</b> (Jackpot goal: " + JACKPOT_SCORE_GOAL + ")";
+        : "<br />Preset: <b>" + preset.name + "</b> | Goal: " + preset.jackpotGoal + " pts";
 
       overlayText.innerHTML = reason + "<br />Final Score: <b>" + state.score + "</b> (Round " + state.round + ")" + extra;
       overlay.className = "overlay";
@@ -916,7 +1053,8 @@
         state.runCoins += isBullseye ? 5 : 2;
       }
 
-      if (state.mode === "tournament" && state.score >= JACKPOT_SCORE_GOAL) {
+      var preset = getActivePreset();
+      if (state.mode === "tournament" && state.score >= preset.jackpotGoal) {
         state.jackpotStage = true;
         state.round += 1;
         state.maxTime = 1.8;
@@ -926,22 +1064,23 @@
         return;
       }
 
-      var nextRadius = state.target.radius;
+      // Base radius updates cleanly; pulse applies temporary oscillation on top
+      var nextBaseRadius = state.target.baseRadius;
       if (isBullseye && state.combo % 2 === 0) {
-        nextRadius = Math.min(85, nextRadius + 6);
+        nextBaseRadius = Math.min(85, nextBaseRadius + 6);
       } else if (!isBullseye) {
-        nextRadius = nextRadius - dist * 0.35;
+        nextBaseRadius = nextBaseRadius - dist * 0.35;
       }
 
-      if (nextRadius < 12) {
+      if (nextBaseRadius < 12) {
         endGame("Target became too small!", false);
         return;
       }
 
       state.round += 1;
-      state.maxTime = Math.max(1.3, 3.4 - (state.round - 1) * 0.035);
+      state.maxTime = Math.max(preset.minTime, preset.startTime - (state.round - 1) * preset.timeDecay);
       state.timeLeft = state.maxTime;
-      state.target = pickTargetForRound(state.round, nextRadius, false);
+      state.target = pickTargetForRound(state.round, nextBaseRadius, false);
       updateHud();
     }
 
@@ -983,7 +1122,9 @@
       }
 
       var t = state.target;
-      var pad = t.radius + 12;
+      var pad = t.baseRadius + 14;
+      t.radius = t.baseRadius;
+
       if (t.block.type === "moveX") {
         t.x += t.dir * t.block.speed * dt;
         if (t.x < pad) { t.x = pad; t.dir = 1; }
@@ -997,6 +1138,20 @@
         var orbitR = 32;
         t.x = Math.max(pad, Math.min(canvas.width - pad, t.baseX + Math.cos(t.angle) * orbitR));
         t.y = Math.max(pad, Math.min(canvas.height - pad, t.baseY + Math.sin(t.angle) * orbitR));
+      } else if (t.block.type === "pulse") {
+        t.pulsePhase += (t.block.speed || 3.2) * dt;
+        var amp = t.block.pulseAmp || 14;
+        t.radius = Math.max(14, t.baseRadius + Math.sin(t.pulsePhase) * amp);
+      } else if (t.block.type === "jump") {
+        t.jumpTimer -= dt;
+        if (t.jumpTimer <= 0) {
+          t.jumpTimer = t.block.jumpInterval || 1.3;
+          addPulse(t.x, t.y, t.radius, "#38bdf8", false);
+          var nextPos = randomTargetPos(t.baseRadius);
+          t.x = nextPos.x;
+          t.y = nextPos.y;
+          playJumpSound();
+        }
       }
 
       var ix = state.joy.ax;
@@ -1208,6 +1363,7 @@
       if (e.key === "Shift") setFine(false);
     });
 
+    selectPreset("classic");
     refreshShopUI();
     updateBoostButton();
     draw();
