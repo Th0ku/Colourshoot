@@ -139,15 +139,15 @@
       position: absolute;
       inset: 0;
       z-index: 20;
-      background: rgba(9, 13, 22, 0.94);
+      background: rgba(9, 13, 22, 0.95);
       color: #ffffff;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 12px;
-      gap: 7px;
+      padding: 14px;
+      gap: 9px;
       touch-action: manipulation;
     }
 
@@ -155,16 +155,112 @@
       display: none;
     }
 
+    .subview {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .subview.active {
+      display: flex;
+    }
+
     .overlay h2 {
       margin: 0;
-      font-size: 19px;
+      font-size: 20px;
     }
 
     .overlay p {
       margin: 0;
-      font-size: 11.5px;
+      font-size: 12px;
       color: #cbd5e1;
-      line-height: 1.35;
+      line-height: 1.38;
+    }
+
+    .profile-card {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 12px;
+      padding: 9px 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .profile-info {
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .profile-name {
+      font-weight: 800;
+      color: #f8fafc;
+      font-size: 13px;
+    }
+
+    .profile-points {
+      color: #34d399;
+      font-weight: 700;
+      font-size: 11.5px;
+      margin-top: 2px;
+    }
+
+    .small-btn {
+      background: #334155;
+      color: #f8fafc;
+      border: 1px solid #64748b;
+      border-radius: 8px;
+      padding: 6px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .hub-menu {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .hub-btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      touch-action: manipulation;
+    }
+
+    .hub-btn.train {
+      background: #22c55e;
+      color: #052e16;
+    }
+
+    .hub-btn.tourney {
+      background: #f59e0b;
+      color: #451a03;
+    }
+
+    .hub-btn.skins {
+      background: #38bdf8;
+      color: #082f49;
+    }
+
+    .hub-sub {
+      font-size: 11px;
+      font-weight: 700;
+      opacity: 0.85;
     }
 
     .panel-box {
@@ -172,10 +268,10 @@
       background: rgba(15, 23, 42, 0.88);
       border: 1px solid rgba(148, 163, 184, 0.22);
       border-radius: 10px;
-      padding: 7px 8px;
+      padding: 8px 9px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
       font-size: 11px;
       text-align: left;
     }
@@ -200,7 +296,7 @@
       color: #cbd5e1;
       border: 1px solid #475569;
       border-radius: 8px;
-      padding: 5px 4px;
+      padding: 6px 4px;
       font-size: 10.5px;
       font-weight: 700;
       cursor: pointer;
@@ -253,52 +349,44 @@
 
     .preset-meta {
       color: #fbbf24;
-      font-size: 10.5px;
+      font-size: 11px;
     }
 
     .btn-row {
       display: flex;
       gap: 8px;
-      flex-wrap: wrap;
       justify-content: center;
       margin-top: 2px;
     }
 
-    .btn-train {
+    .btn-go {
+      flex: 1;
       background: #22c55e;
       color: #052e16;
       border: none;
-      border-radius: 11px;
-      padding: 8px 14px;
+      border-radius: 10px;
+      padding: 9px 12px;
       font-size: 12.5px;
       font-weight: 800;
       cursor: pointer;
       touch-action: manipulation;
     }
 
-    .btn-tourney {
+    .btn-go.amber {
       background: #f59e0b;
       color: #451a03;
-      border: none;
-      border-radius: 11px;
-      padding: 8px 14px;
-      font-size: 12.5px;
-      font-weight: 800;
-      cursor: pointer;
-      touch-action: manipulation;
     }
 
-    .shop-box {
-      width: 100%;
-      background: rgba(30, 41, 59, 0.92);
-      border: 1px solid rgba(148, 163, 184, 0.2);
+    .btn-back {
+      background: #334155;
+      color: #f8fafc;
+      border: 1px solid #64748b;
       border-radius: 10px;
-      padding: 6px 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      font-size: 10.5px;
-      text-align: left;
+      padding: 9px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
     }
 
     .shop-item {
@@ -306,15 +394,16 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
+      padding: 3px 0;
     }
 
     .shop-btn {
       background: #38bdf8;
       color: #082f49;
       border: none;
-      border-radius: 7px;
-      padding: 4px 8px;
-      font-size: 10.5px;
+      border-radius: 8px;
+      padding: 5px 9px;
+      font-size: 11px;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
@@ -406,41 +495,83 @@
       <div id="flashLayer" class="flash-layer"></div>
 
       <div id="overlay" class="overlay">
-        <h2 id="overlayTitle">ColourShoot</h2>
-        <p id="overlayText">
-          Pick a single Training Level with briefing to earn Coins, or enter a Tournament Run.<br />
-          Drag <b>Joystick</b> to aim (farther = faster) and tap <b>A</b> to fire.
-        </p>
+        <!-- 1. MAIN HUB VIEW -->
+        <div id="view_home" class="subview active">
+          <h2>ColourShoot</h2>
+          <p id="homeSummary">Drag <b>Joystick</b> to aim and tap <b>A</b> to fire.</p>
 
-        <div class="panel-box">
-          <div class="panel-label">Training Levels (Single Variant + Briefing)</div>
-          <div id="levelGrid" class="level-grid"></div>
-          <div id="trainingBriefing" class="briefing-box"></div>
-        </div>
-
-        <div class="panel-box">
-          <div class="panel-label">Tournament Preset</div>
-          <div class="preset-buttons">
-            <button id="preset_classic" class="preset-btn active" type="button" onclick="selectPreset('classic')">Classic Cup</button>
-            <button id="preset_variety" class="preset-btn" type="button" onclick="selectPreset('variety')">Pattern Mix</button>
-            <button id="preset_fever" class="preset-btn" type="button" onclick="selectPreset('fever')">Fever Circuit</button>
+          <div class="profile-card">
+            <div class="profile-info">
+              <div id="playerNameEl" class="profile-name">Player1</div>
+              <div id="bestScoreEl" class="profile-points">Best Points: 0</div>
+            </div>
+            <button class="small-btn" type="button" onclick="editPlayerName()">Edit Name</button>
           </div>
-          <div id="presetMeta" class="preset-meta">Jackpot Goal: 1,800 pts | Stages: 3</div>
-        </div>
 
-        <div class="btn-row">
-          <button id="trainBtn" class="btn-train" type="button" onclick="startGame('training')">Start Training Level</button>
-          <button id="tourneyBtn" class="btn-tourney" type="button" onclick="startGame('tournament')">Tournament Run</button>
-        </div>
-
-        <div class="shop-box">
-          <div class="shop-item">
-            <span><b>Training Aid:</b> Aim Line (training only)</span>
-            <button id="buyGuideBtn" class="shop-btn" type="button" onclick="buyGuide()">30 Coins</button>
+          <div class="hub-menu">
+            <button class="hub-btn train" type="button" onclick="openView('training')">
+              <span>Training</span>
+              <span class="hub-sub">Single Levels &amp; Briefings →</span>
+            </button>
+            <button class="hub-btn tourney" type="button" onclick="openView('tournament')">
+              <span>Tournament</span>
+              <span class="hub-sub">Presets &amp; Jackpot →</span>
+            </button>
+            <button class="hub-btn skins" type="button" onclick="openView('skins')">
+              <span>Skins &amp; Shop</span>
+              <span class="hub-sub">Themes &amp; Aids →</span>
+            </button>
           </div>
-          <div class="shop-item">
-            <span><b>Cosmetic Theme:</b> Retro Handheld</span>
-            <button id="buyRetroBtn" class="shop-btn" type="button" onclick="toggleRetro()">50 Coins</button>
+        </div>
+
+        <!-- 2. TRAINING SUBVIEW -->
+        <div id="view_training" class="subview">
+          <h2>Training</h2>
+          <div class="panel-box">
+            <div class="panel-label">Select Single Variant</div>
+            <div id="levelGrid" class="level-grid"></div>
+            <div id="trainingBriefing" class="briefing-box"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-back" type="button" onclick="openView('home')">← Main Menu</button>
+            <button class="btn-go" type="button" onclick="startGame('training')">Start Training</button>
+          </div>
+        </div>
+
+        <!-- 3. TOURNAMENT SUBVIEW -->
+        <div id="view_tournament" class="subview">
+          <h2>Tournament</h2>
+          <div class="panel-box">
+            <div class="panel-label">Select Tournament Preset</div>
+            <div class="preset-buttons">
+              <button id="preset_classic" class="preset-btn active" type="button" onclick="selectPreset('classic')">Classic Cup</button>
+              <button id="preset_variety" class="preset-btn" type="button" onclick="selectPreset('variety')">Pattern Mix</button>
+              <button id="preset_fever" class="preset-btn" type="button" onclick="selectPreset('fever')">Fever Circuit</button>
+            </div>
+            <div id="presetMeta" class="preset-meta">Jackpot Goal: 1,800 pts | Stages: 3</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-back" type="button" onclick="openView('home')">← Main Menu</button>
+            <button class="btn-go amber" type="button" onclick="startGame('tournament')">Start Tournament</button>
+          </div>
+        </div>
+
+        <!-- 4. SKINS & SHOP SUBVIEW -->
+        <div id="view_skins" class="subview">
+          <h2>Skins &amp; Shop</h2>
+          <div class="panel-box">
+            <div class="panel-label">Cosmetics &amp; Training Aids (No Pay-to-Win)</div>
+            <div class="shop-item">
+              <span><b>Skin:</b> Retro Handheld</span>
+              <button id="buyRetroBtn" class="shop-btn" type="button" onclick="toggleRetro()">50 Coins</button>
+            </div>
+            <div class="shop-item">
+              <span><b>Training Aid:</b> Aim Line (training only)</span>
+              <button id="buyGuideBtn" class="shop-btn" type="button" onclick="buyGuide()">30 Coins</button>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn-back" type="button" onclick="openView('home')">← Main Menu</button>
           </div>
         </div>
       </div>
@@ -468,8 +599,9 @@
     var patternEl = document.getElementById("patternEl");
     var timeEl = document.getElementById("timeEl");
     var overlay = document.getElementById("overlay");
-    var overlayTitle = document.getElementById("overlayTitle");
-    var overlayText = document.getElementById("overlayText");
+    var playerNameEl = document.getElementById("playerNameEl");
+    var bestScoreEl = document.getElementById("bestScoreEl");
+    var homeSummary = document.getElementById("homeSummary");
     var levelGrid = document.getElementById("levelGrid");
     var trainingBriefing = document.getElementById("trainingBriefing");
     var presetMeta = document.getElementById("presetMeta");
@@ -482,56 +614,71 @@
     var SHOT_LOCK_DURATION = 0.22;
     var FEVER_STREAK_REQUIRED = 3;
 
-    // SINGLE TRAINING VARIANTS (each has its own training level + clear briefing)
+    var VIEWS = ["home", "training", "tournament", "skins"];
+    var currentView = "home";
+
+    function openView(viewName) {
+      if (VIEWS.indexOf(viewName) === -1) viewName = "home";
+      currentView = viewName;
+      for (var i = 0; i < VIEWS.length; i++) {
+        var el = document.getElementById("view_" + VIEWS[i]);
+        if (el) {
+          el.className = VIEWS[i] === viewName ? "subview active" : "subview";
+        }
+      }
+      refreshProfileUI();
+      refreshShopUI();
+    }
+
     var TRAINING_LEVELS = [
       {
         id: "static",
         shortLabel: "1. Static",
         block: { type: "static", label: "Static", speed: 0 },
-        does: "The target stays in place so you can master core accuracy and timing.",
-        spotBy: "A single solid circle with a thin inner core ring and no movement."
+        does: "The target stays in place so you can practice steady aiming and timing.",
+        spotBy: "A solid target circle with a thin inner core ring and no movement."
       },
       {
         id: "moveX",
         shortLabel: "2. Sweep X",
         block: { type: "moveX", label: "Sweep X", speed: 40 },
-        does: "The target glides back and forth horizontally between the left and right edges.",
-        spotBy: "Horizontal travel along a steady line; lead slightly ahead of the center."
+        does: "The target glides back and forth horizontally between left and right.",
+        spotBy: "Horizontal side-to-side travel along a straight line."
       },
       {
         id: "ringTarget",
         shortLabel: "3. DualRing",
         block: { type: "ringTarget", label: "DualRing", speed: 0 },
-        does: "Hitting the inner core gives bonus points & combo; outer edge shrinks the target faster.",
-        spotBy: "A bright golden inner core ring inside the main target circle."
+        does: "Hitting the inner core gives extra points & combo; outer edge shrinks faster.",
+        spotBy: "A golden inner core ring inside the main target."
       },
       {
         id: "figureEight",
         shortLabel: "4. Fig-8",
         block: { type: "figureEight", label: "Fig-8", speed: 1.05 },
         does: "The target smoothly traces a figure-eight curve across the arena.",
-        spotBy: "Curved looping motion that crosses itself in a smooth figure-eight."
+        spotBy: "Curved looping path crossing itself like a figure eight."
       },
       {
         id: "telegraphJump",
         shortLabel: "5. JumpPlan",
         block: { type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.7, jumpInterval: 1.85 },
-        does: "Before jumping, the target previews its next spot so you can reposition early.",
-        spotBy: "A dashed outline ('ghost' circle) appearing at the upcoming jump spot."
+        does: "Before jumping, the target previews its next spot so you can move early.",
+        spotBy: "A dashed outline ('ghost' circle) showing the upcoming jump position."
       },
       {
         id: "elasticBounce",
         shortLabel: "6. Elastic",
         block: { type: "elasticBounce", label: "Elastic", speed: 54 },
-        does: "The target bounces off walls and shifts its pace between brisk and calm.",
-        spotBy: "Diagonal wall rebounds paired with noticeable speed changes after a bounce."
+        does: "The target bounces off walls and shifts speed between brisk and calm.",
+        spotBy: "Diagonal wall rebounds followed by a noticeable pace shift."
       },
       {
         id: "shieldShot",
         shortLabel: "7. Shield",
         block: { type: "shieldShot", label: "Shield", speed: 32 },
-        does: "Protects your target radius from shrinking on a non-core hit once per round.",
-        spotBy: "An extra outer ring around the target circle."
+        does: "Protects your target radius from shrinking on a non-core hit.",
+        spotBy: "A bright blue outer ring around the target."
       }
     ];
 
@@ -568,7 +715,6 @@
         "<br /><b>How to spot it:</b> " + active.spotBy;
     }
 
-    // MODULAR TOURNAMENT PRESETS (colorLock removed)
     var TOURNAMENT_PRESETS = {
       classic: {
         name: "Classic Cup",
@@ -698,17 +844,21 @@
         bgTop: "#0f172a",
         bgBottom: "#1e293b",
         grid: "rgba(148, 163, 184, 0.12)",
+        reticle: "#ffffff",
         colors: ["#f43f5e", "#a855f7", "#06b6d4", "#f59e0b", "#10b981", "#ec4899"]
       },
       retro: {
         bgTop: "#9bbc0f",
         bgBottom: "#8bac0f",
         grid: "rgba(15, 56, 15, 0.16)",
+        reticle: "#0f380f",
         colors: ["#0f380f", "#306230", "#0f380f", "#306230"]
       }
     };
 
     var save = {
+      playerName: "Player1",
+      bestScore: 0,
       coins: 0,
       hasGuide: false,
       hasRetro: false,
@@ -716,9 +866,11 @@
     };
 
     try {
-      var rawSave = localStorage.getItem("colourshoot_save_v10");
+      var rawSave = localStorage.getItem("colourshoot_save_v11");
       if (rawSave) {
         var parsed = JSON.parse(rawSave);
+        if (parsed.playerName) save.playerName = String(parsed.playerName).slice(0, 16);
+        save.bestScore = parsed.bestScore || 0;
         save.coins = parsed.coins || 0;
         save.hasGuide = !!parsed.hasGuide;
         save.hasRetro = !!parsed.hasRetro;
@@ -728,21 +880,30 @@
 
     function persistSave() {
       try {
-        localStorage.setItem("colourshoot_save_v10", JSON.stringify(save));
+        localStorage.setItem("colourshoot_save_v11", JSON.stringify(save));
       } catch (e) {}
+      refreshProfileUI();
       refreshShopUI();
+    }
+
+    function refreshProfileUI() {
+      playerNameEl.textContent = save.playerName;
+      bestScoreEl.textContent = "Best Points: " + save.bestScore.toLocaleString("en-US");
+    }
+
+    function editPlayerName() {
+      var nextName = window.prompt("Enter your player name (max 16 chars):", save.playerName);
+      if (nextName !== null) {
+        var trimmed = nextName.trim().slice(0, 16);
+        if (trimmed.length > 0) {
+          save.playerName = trimmed;
+          persistSave();
+        }
+      }
     }
 
     function refreshShopUI() {
       coinsEl.textContent = save.coins;
-
-      if (save.hasGuide) {
-        buyGuideBtn.textContent = "Owned (Train)";
-        buyGuideBtn.disabled = true;
-      } else {
-        buyGuideBtn.textContent = "30 Coins";
-        buyGuideBtn.disabled = save.coins < 30;
-      }
 
       if (save.hasRetro) {
         buyRetroBtn.textContent = save.useRetro ? "Active (Tap: Modern)" : "Enable";
@@ -750,6 +911,14 @@
       } else {
         buyRetroBtn.textContent = "50 Coins";
         buyRetroBtn.disabled = save.coins < 50;
+      }
+
+      if (save.hasGuide) {
+        buyGuideBtn.textContent = "Owned (Train)";
+        buyGuideBtn.disabled = true;
+      } else {
+        buyGuideBtn.textContent = "30 Coins";
+        buyGuideBtn.disabled = save.coins < 30;
       }
     }
 
@@ -1044,22 +1213,28 @@
       state.shotLockLeft = 0;
       resetJoystick();
       playMissSound();
+
+      if (state.score > save.bestScore) {
+        save.bestScore = state.score;
+      }
       if (state.mode === "training" && state.runCoins > 0) {
         save.coins += state.runCoins;
-        persistSave();
       }
+      persistSave();
 
       var preset = getActivePreset();
       var trainLvl = getSelectedTrainingLevel();
-      overlayTitle.textContent = wonJackpot ? "JACKPOT CRACKED!" : "Run Over!";
+      var headline = wonJackpot ? "JACKPOT CRACKED!" : "Run Over!";
       var extra = state.mode === "training"
-        ? "<br />Level: <b>" + trainLvl.shortLabel + "</b> | Coins earned: <b>+" + state.runCoins + "</b>"
-        : "<br />Preset: <b>" + preset.name + "</b> | Reached Stage <b>" + state.stageIndex + "</b> (Goal: " + preset.jackpotGoal + ")";
+        ? "Level: <b>" + trainLvl.shortLabel + "</b> | Coins: <b>+" + state.runCoins + "</b>"
+        : "Preset: <b>" + preset.name + "</b> | Stage <b>" + state.stageIndex + "</b> (Goal: " + preset.jackpotGoal + ")";
 
-      overlayText.innerHTML = reason + "<br />Final Score: <b>" + state.score + "</b> (Round " + state.round + ")" + extra;
+      homeSummary.innerHTML =
+        "<b>" + headline + "</b> – " + reason + "<br />" +
+        "Score: <b>" + state.score + "</b> | " + extra;
+
       overlay.className = "overlay";
-      renderTrainingLevels();
-      refreshShopUI();
+      openView("home");
     }
 
     function fireShot(isManual) {
@@ -1392,7 +1567,8 @@
 
       if (state.running && state.mode === "training" && save.hasGuide) {
         ctx.save();
-        ctx.strokeStyle = "rgba(56, 189, 248, 0.65)";
+        ctx.strokeStyle = theme.reticle;
+        ctx.globalAlpha = 0.55;
         ctx.setLineDash([4, 4]);
         ctx.lineWidth = 1.5;
         ctx.beginPath();
@@ -1402,8 +1578,9 @@
         ctx.restore();
       }
 
+      // Fixed high-contrast reticle color per theme (never yellow-on-yellow)
       ctx.save();
-      ctx.strokeStyle = state.feverLeft > 0 ? "#fb923c" : (save.useRetro ? "#0f380f" : "#ffffff");
+      ctx.strokeStyle = theme.reticle;
       ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.arc(state.cursor.x, state.cursor.y, 11, 0, Math.PI * 2);
@@ -1448,7 +1625,7 @@
       if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") state.keys.left = true;
       if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") state.keys.right = true;
       if (e.key === " " || e.key === "Enter") {
-        if (!state.running && overlay.className.indexOf("hidden") === -1) {
+        if (!state.running && overlay.className.indexOf("hidden") === -1 && currentView === "home") {
           startGame("training");
         } else {
           fireShot(true);
@@ -1465,7 +1642,7 @@
 
     renderTrainingLevels();
     selectPreset("classic");
-    refreshShopUI();
+    openView("home");
     draw();
   </script>
 </body>
