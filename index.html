@@ -139,15 +139,15 @@
       position: absolute;
       inset: 0;
       z-index: 20;
-      background: rgba(9, 13, 22, 0.93);
+      background: rgba(9, 13, 22, 0.94);
       color: #ffffff;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 14px;
-      gap: 8px;
+      padding: 12px;
+      gap: 7px;
       touch-action: manipulation;
     }
 
@@ -157,33 +157,35 @@
 
     .overlay h2 {
       margin: 0;
-      font-size: 20px;
+      font-size: 19px;
     }
 
     .overlay p {
       margin: 0;
-      font-size: 12px;
+      font-size: 11.5px;
       color: #cbd5e1;
-      line-height: 1.38;
+      line-height: 1.35;
     }
 
-    .preset-bar {
+    .panel-box {
       width: 100%;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.22);
       border-radius: 10px;
       padding: 7px 8px;
       display: flex;
       flex-direction: column;
       gap: 5px;
       font-size: 11px;
+      text-align: left;
     }
 
-    .preset-label {
+    .panel-label {
       color: #94a3b8;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.4px;
+      font-size: 10px;
     }
 
     .preset-buttons {
@@ -198,8 +200,8 @@
       color: #cbd5e1;
       border: 1px solid #475569;
       border-radius: 8px;
-      padding: 6px 4px;
-      font-size: 11px;
+      padding: 5px 4px;
+      font-size: 10.5px;
       font-weight: 700;
       cursor: pointer;
       touch-action: manipulation;
@@ -211,9 +213,47 @@
       border-color: #38bdf8;
     }
 
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+
+    .level-btn {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #475569;
+      border-radius: 7px;
+      padding: 5px 3px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .level-btn.active {
+      background: rgba(34, 197, 94, 0.24);
+      color: #86efac;
+      border-color: #22c55e;
+    }
+
+    .briefing-box {
+      background: rgba(30, 41, 59, 0.72);
+      border-left: 3px solid #38bdf8;
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 11px;
+      line-height: 1.35;
+      color: #e2e8f0;
+    }
+
+    .briefing-box b {
+      color: #7dd3fc;
+    }
+
     .preset-meta {
       color: #fbbf24;
-      font-size: 11px;
+      font-size: 10.5px;
     }
 
     .btn-row {
@@ -228,9 +268,9 @@
       background: #22c55e;
       color: #052e16;
       border: none;
-      border-radius: 12px;
-      padding: 9px 15px;
-      font-size: 13px;
+      border-radius: 11px;
+      padding: 8px 14px;
+      font-size: 12.5px;
       font-weight: 800;
       cursor: pointer;
       touch-action: manipulation;
@@ -240,9 +280,9 @@
       background: #f59e0b;
       color: #451a03;
       border: none;
-      border-radius: 12px;
-      padding: 9px 15px;
-      font-size: 13px;
+      border-radius: 11px;
+      padding: 8px 14px;
+      font-size: 12.5px;
       font-weight: 800;
       cursor: pointer;
       touch-action: manipulation;
@@ -252,12 +292,12 @@
       width: 100%;
       background: rgba(30, 41, 59, 0.92);
       border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 12px;
-      padding: 8px 10px;
+      border-radius: 10px;
+      padding: 6px 8px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      font-size: 11px;
+      gap: 5px;
+      font-size: 10.5px;
       text-align: left;
     }
 
@@ -272,9 +312,9 @@
       background: #38bdf8;
       color: #082f49;
       border: none;
-      border-radius: 8px;
+      border-radius: 7px;
       padding: 4px 8px;
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
@@ -368,12 +408,18 @@
       <div id="overlay" class="overlay">
         <h2 id="overlayTitle">ColourShoot</h2>
         <p id="overlayText">
-          Train for free to earn Coins or enter a Tournament Run with stages.<br />
-          Drag the <b>Joystick</b> to aim (farther = faster) and tap <b>A</b> to fire.
+          Pick a single Training Level with briefing to earn Coins, or enter a Tournament Run.<br />
+          Drag <b>Joystick</b> to aim (farther = faster) and tap <b>A</b> to fire.
         </p>
 
-        <div class="preset-bar">
-          <div class="preset-label">Tournament Preset</div>
+        <div class="panel-box">
+          <div class="panel-label">Training Levels (Single Variant + Briefing)</div>
+          <div id="levelGrid" class="level-grid"></div>
+          <div id="trainingBriefing" class="briefing-box"></div>
+        </div>
+
+        <div class="panel-box">
+          <div class="panel-label">Tournament Preset</div>
           <div class="preset-buttons">
             <button id="preset_classic" class="preset-btn active" type="button" onclick="selectPreset('classic')">Classic Cup</button>
             <button id="preset_variety" class="preset-btn" type="button" onclick="selectPreset('variety')">Pattern Mix</button>
@@ -383,7 +429,7 @@
         </div>
 
         <div class="btn-row">
-          <button id="trainBtn" class="btn-train" type="button" onclick="startGame('training')">Start Training</button>
+          <button id="trainBtn" class="btn-train" type="button" onclick="startGame('training')">Start Training Level</button>
           <button id="tourneyBtn" class="btn-tourney" type="button" onclick="startGame('tournament')">Tournament Run</button>
         </div>
 
@@ -424,6 +470,8 @@
     var overlay = document.getElementById("overlay");
     var overlayTitle = document.getElementById("overlayTitle");
     var overlayText = document.getElementById("overlayText");
+    var levelGrid = document.getElementById("levelGrid");
+    var trainingBriefing = document.getElementById("trainingBriefing");
     var presetMeta = document.getElementById("presetMeta");
     var buyGuideBtn = document.getElementById("buyGuideBtn");
     var buyRetroBtn = document.getElementById("buyRetroBtn");
@@ -434,13 +482,98 @@
     var SHOT_LOCK_DURATION = 0.22;
     var FEVER_STREAK_REQUIRED = 3;
 
-    // Supported block types:
-    // "static", "moveX", "figureEight", "elasticBounce", "telegraphJump", "ringTarget", "colorLock", "shieldShot"
+    // SINGLE TRAINING VARIANTS (each has its own training level + clear briefing)
+    var TRAINING_LEVELS = [
+      {
+        id: "static",
+        shortLabel: "1. Static",
+        block: { type: "static", label: "Static", speed: 0 },
+        does: "The target stays in place so you can master core accuracy and timing.",
+        spotBy: "A single solid circle with a thin inner core ring and no movement."
+      },
+      {
+        id: "moveX",
+        shortLabel: "2. Sweep X",
+        block: { type: "moveX", label: "Sweep X", speed: 40 },
+        does: "The target glides back and forth horizontally between the left and right edges.",
+        spotBy: "Horizontal travel along a steady line; lead slightly ahead of the center."
+      },
+      {
+        id: "ringTarget",
+        shortLabel: "3. DualRing",
+        block: { type: "ringTarget", label: "DualRing", speed: 0 },
+        does: "Hitting the inner core gives bonus points & combo; outer edge shrinks the target faster.",
+        spotBy: "A bright golden inner core ring inside the main target circle."
+      },
+      {
+        id: "figureEight",
+        shortLabel: "4. Fig-8",
+        block: { type: "figureEight", label: "Fig-8", speed: 1.05 },
+        does: "The target smoothly traces a figure-eight curve across the arena.",
+        spotBy: "Curved looping motion that crosses itself in a smooth figure-eight."
+      },
+      {
+        id: "telegraphJump",
+        shortLabel: "5. JumpPlan",
+        block: { type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.7, jumpInterval: 1.85 },
+        does: "Before jumping, the target previews its next spot so you can reposition early.",
+        spotBy: "A dashed outline ('ghost' circle) appearing at the upcoming jump spot."
+      },
+      {
+        id: "elasticBounce",
+        shortLabel: "6. Elastic",
+        block: { type: "elasticBounce", label: "Elastic", speed: 54 },
+        does: "The target bounces off walls and shifts its pace between brisk and calm.",
+        spotBy: "Diagonal wall rebounds paired with noticeable speed changes after a bounce."
+      },
+      {
+        id: "shieldShot",
+        shortLabel: "7. Shield",
+        block: { type: "shieldShot", label: "Shield", speed: 32 },
+        does: "Protects your target radius from shrinking on a non-core hit once per round.",
+        spotBy: "An extra outer ring around the target circle."
+      }
+    ];
+
+    var selectedTrainingId = "static";
+
+    function getSelectedTrainingLevel() {
+      for (var i = 0; i < TRAINING_LEVELS.length; i++) {
+        if (TRAINING_LEVELS[i].id === selectedTrainingId) {
+          return TRAINING_LEVELS[i];
+        }
+      }
+      return TRAINING_LEVELS[0];
+    }
+
+    function renderTrainingLevels() {
+      levelGrid.innerHTML = "";
+      for (var i = 0; i < TRAINING_LEVELS.length; i++) {
+        (function (lvl) {
+          var btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = lvl.id === selectedTrainingId ? "level-btn active" : "level-btn";
+          btn.textContent = lvl.shortLabel;
+          btn.onclick = function () {
+            selectedTrainingId = lvl.id;
+            renderTrainingLevels();
+          };
+          levelGrid.appendChild(btn);
+        })(TRAINING_LEVELS[i]);
+      }
+
+      var active = getSelectedTrainingLevel();
+      trainingBriefing.innerHTML =
+        "<b>" + active.shortLabel + " – What it does:</b> " + active.does +
+        "<br /><b>How to spot it:</b> " + active.spotBy;
+    }
+
+    // MODULAR TOURNAMENT PRESETS (colorLock removed)
     var TOURNAMENT_PRESETS = {
       classic: {
         name: "Classic Cup",
         jackpotGoal: 1800,
-        stages: [600, 1200], // Checkpoints before Golden Shot at jackpotGoal
+        stages: [600, 1200],
         startTime: 3.5,
         timeDecay: 0.03,
         minTime: 1.4,
@@ -449,8 +582,8 @@
           { untilRound: 6,  type: "moveX",         label: "Sweep X",  speed: 40 },
           { untilRound: 9,  type: "ringTarget",    label: "DualRing", speed: 0 },
           { untilRound: 12, type: "figureEight",   label: "Fig-8",    speed: 1.05 },
-          { untilRound: 15, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.65, jumpInterval: 1.75 },
-          { untilRound: 99, type: "elasticBounce", label: "Elastic",  speed: 55 }
+          { untilRound: 15, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.68, jumpInterval: 1.8 },
+          { untilRound: 99, type: "elasticBounce", label: "Elastic",  speed: 54 }
         ]
       },
       variety: {
@@ -461,11 +594,11 @@
         timeDecay: 0.028,
         minTime: 1.45,
         sequence: [
-          { untilRound: 3,  type: "shieldShot",    label: "Shield",   speed: 0 },
-          { untilRound: 6,  type: "colorLock",     label: "ColorLock",colorCycle: 1.1 },
-          { untilRound: 9,  type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.7,  jumpInterval: 1.8 },
-          { untilRound: 12, type: "elasticBounce", label: "Elastic",  speed: 58 },
-          { untilRound: 99, type: "figureEight",   label: "Fig-8",    speed: 1.15 }
+          { untilRound: 3,  type: "shieldShot",    label: "Shield",   speed: 32 },
+          { untilRound: 6,  type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.72, jumpInterval: 1.85 },
+          { untilRound: 9,  type: "ringTarget",    label: "DualRing", speed: 0 },
+          { untilRound: 12, type: "elasticBounce", label: "Elastic",  speed: 56 },
+          { untilRound: 99, type: "figureEight",   label: "Fig-8",    speed: 1.12 }
         ]
       },
       fever: {
@@ -477,10 +610,10 @@
         minTime: 1.35,
         sequence: [
           { untilRound: 3,  type: "ringTarget",    label: "DualRing", speed: 0 },
-          { untilRound: 6,  type: "colorLock",     label: "ColorLock",colorCycle: 1.0 },
-          { untilRound: 9,  type: "figureEight",   label: "Fig-8",    speed: 1.1 },
-          { untilRound: 12, type: "shieldShot",    label: "Shield",   speed: 36 },
-          { untilRound: 99, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.65, jumpInterval: 1.7 }
+          { untilRound: 6,  type: "figureEight",   label: "Fig-8",    speed: 1.1 },
+          { untilRound: 9,  type: "shieldShot",    label: "Shield",   speed: 36 },
+          { untilRound: 12, type: "elasticBounce", label: "Elastic",  speed: 58 },
+          { untilRound: 99, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.68, jumpInterval: 1.75 }
         ]
       }
     };
@@ -583,7 +716,7 @@
     };
 
     try {
-      var rawSave = localStorage.getItem("colourshoot_save_v9");
+      var rawSave = localStorage.getItem("colourshoot_save_v10");
       if (rawSave) {
         var parsed = JSON.parse(rawSave);
         save.coins = parsed.coins || 0;
@@ -595,7 +728,7 @@
 
     function persistSave() {
       try {
-        localStorage.setItem("colourshoot_save_v9", JSON.stringify(save));
+        localStorage.setItem("colourshoot_save_v10", JSON.stringify(save));
       } catch (e) {}
       refreshShopUI();
     }
@@ -673,14 +806,12 @@
         vx: 40,
         vy: 30,
         angle: 0,
-        jumpTimer: 1.75,
+        jumpTimer: 1.85,
         nextX: null,
         nextY: null,
-        colorTimer: 0,
-        lockColor: "#06b6d4",
         radius: 75,
         color: "#f43f5e",
-        block: TOURNAMENT_PRESETS.classic.sequence[0],
+        block: TRAINING_LEVELS[0].block,
         dir: 1
       },
       splatters: [],
@@ -800,6 +931,9 @@
     }
 
     function getBlockForRound(round) {
+      if (state.mode === "training") {
+        return getSelectedTrainingLevel().block;
+      }
       var seq = getActivePreset().sequence;
       for (var i = 0; i < seq.length; i++) {
         if (round <= seq[i].untilRound) {
@@ -821,7 +955,6 @@
       var theme = save.useRetro ? THEMES.retro : THEMES.modern;
       var colorIdx = (round - 1) % theme.colors.length;
       var color = isGoldenFinal ? "#facc15" : theme.colors[colorIdx];
-      var lockColor = theme.colors[(colorIdx + 1) % theme.colors.length];
       var block = isGoldenFinal
         ? { type: "figureEight", label: "GOLDEN SHOT", speed: 1.35 }
         : getBlockForRound(round);
@@ -838,11 +971,9 @@
         vx: Math.cos(ang) * spd,
         vy: Math.sin(ang) * spd,
         angle: ang,
-        jumpTimer: block.jumpInterval || 1.75,
+        jumpTimer: block.jumpInterval || 1.85,
         nextX: null,
         nextY: null,
-        colorTimer: 0,
-        lockColor: lockColor,
         radius: currentRadius,
         color: color,
         block: block,
@@ -872,6 +1003,7 @@
       ensureAudio();
       resetJoystick();
       var preset = getActivePreset();
+      var trainLvl = getSelectedTrainingLevel();
       state.mode = selectedMode || "training";
       state.running = true;
       state.score = 0;
@@ -882,8 +1014,8 @@
       state.runCoins = 0;
       state.jackpotStage = false;
       state.shotLockLeft = 0;
-      state.maxTime = preset.startTime;
-      state.timeLeft = preset.startTime;
+      state.maxTime = state.mode === "training" ? 3.8 : preset.startTime;
+      state.timeLeft = state.maxTime;
       state.splatters = [];
       state.pulses = [];
       state.popups = [];
@@ -897,7 +1029,7 @@
         modeBadge.textContent = "TOURNEY: " + preset.name.toUpperCase();
         modeBadge.className = "mode-badge tournament";
       } else {
-        modeBadge.textContent = "MODE: TRAINING";
+        modeBadge.textContent = "TRAIN: " + trainLvl.block.label.toUpperCase();
         modeBadge.className = "mode-badge";
       }
 
@@ -918,13 +1050,15 @@
       }
 
       var preset = getActivePreset();
+      var trainLvl = getSelectedTrainingLevel();
       overlayTitle.textContent = wonJackpot ? "JACKPOT CRACKED!" : "Run Over!";
       var extra = state.mode === "training"
-        ? "<br />Coins earned: <b>+" + state.runCoins + "</b>"
+        ? "<br />Level: <b>" + trainLvl.shortLabel + "</b> | Coins earned: <b>+" + state.runCoins + "</b>"
         : "<br />Preset: <b>" + preset.name + "</b> | Reached Stage <b>" + state.stageIndex + "</b> (Goal: " + preset.jackpotGoal + ")";
 
       overlayText.innerHTML = reason + "<br />Final Score: <b>" + state.score + "</b> (Round " + state.round + ")" + extra;
       overlay.className = "overlay";
+      renderTrainingLevels();
       refreshShopUI();
     }
 
@@ -961,12 +1095,11 @@
 
       var innerCoreRadius = Math.max(5, state.target.radius * 0.25);
       var isBullseye = dist <= innerCoreRadius;
-      var isColorMatch = state.target.block.type !== "colorLock" || state.target.color === state.target.lockColor;
 
       if (isBullseye) {
         state.combo += 1;
         if (state.combo >= FEVER_STREAK_REQUIRED) {
-          state.feverLeft = 3; // 3 shots of fever boost
+          state.feverLeft = 3;
           state.combo = 0;
           addPopup(state.cursor.x, state.cursor.y - 26, "FEVER MODE!", "#f97316");
         }
@@ -981,9 +1114,8 @@
 
       var accuracy = Math.max(0, 1 - dist / state.target.radius);
       var feverMult = state.feverLeft > 0 ? 1.45 : 1.0;
-      var colorMult = isColorMatch ? 1.15 : 0.85;
       var timeBonus = Math.round(state.timeLeft * 18);
-      var shotPoints = Math.round((45 + accuracy * 75) * feverMult * colorMult + timeBonus);
+      var shotPoints = Math.round((45 + accuracy * 75) * feverMult + timeBonus);
       state.score += shotPoints;
 
       if (state.feverLeft > 0) {
@@ -992,14 +1124,12 @@
 
       if (isBullseye) {
         addPopup(state.cursor.x, state.cursor.y - 12, "CORE HIT! +" + shotPoints, "#fde047");
-      } else if (!isColorMatch) {
-        addPopup(state.cursor.x, state.cursor.y - 12, "OFF-COLOR +" + shotPoints, "#cbd5e1");
       } else {
         addPopup(state.cursor.x, state.cursor.y - 12, "HIT +" + shotPoints, "#4ade80");
       }
 
       if (state.mode === "training") {
-        state.runCoins += isBullseye ? 5 : (isColorMatch ? 2 : 1);
+        state.runCoins += isBullseye ? 5 : 2;
       }
 
       var preset = getActivePreset();
@@ -1020,12 +1150,10 @@
         }
       }
 
-      // Shrink/grow rules (2.1 DualRing shrinks more on outer hit; 2.3 ShieldShot protects against shrink)
       var nextRadius = state.target.radius;
       if (isBullseye) {
         nextRadius = Math.min(82, nextRadius + 4);
       } else if (state.target.block.type === "shieldShot") {
-        // Shield protects target size on hit
         addPopup(state.cursor.x, state.cursor.y + 14, "SHIELD SAVED", "#38bdf8");
       } else {
         var shrinkFactor = state.target.block.type === "ringTarget" ? 0.55 : 0.35;
@@ -1038,7 +1166,11 @@
       }
 
       state.round += 1;
-      state.maxTime = Math.max(preset.minTime, preset.startTime - (state.round - 1) * preset.timeDecay);
+      if (state.mode === "training") {
+        state.maxTime = Math.max(1.8, 3.8 - (state.round - 1) * 0.02);
+      } else {
+        state.maxTime = Math.max(preset.minTime, preset.startTime - (state.round - 1) * preset.timeDecay);
+      }
       state.timeLeft = state.maxTime;
       state.target = pickTargetForRound(state.round, nextRadius, false);
       updateHud();
@@ -1077,7 +1209,6 @@
 
       var t = state.target;
       var pad = t.radius + 14;
-      var theme = save.useRetro ? THEMES.retro : THEMES.modern;
 
       if (t.block.type === "moveX") {
         t.x += t.dir * (t.block.speed || 40) * dt;
@@ -1098,17 +1229,16 @@
         if (t.y < pad) { t.y = pad; t.vy = Math.abs(t.vy); bounced = true; }
         if (t.y > canvas.height - pad) { t.y = canvas.height - pad; t.vy = -Math.abs(t.vy); bounced = true; }
         if (bounced) {
-          // Elastic tempo shift: alternate between lively and calm speed
           var curSpd = Math.sqrt(t.vx * t.vx + t.vy * t.vy) || 50;
-          var baseSpd = t.block.speed || 55;
+          var baseSpd = t.block.speed || 54;
           var nextSpd = curSpd > baseSpd ? baseSpd * 0.72 : baseSpd * 1.38;
           var ang = Math.atan2(t.vy, t.vx);
           t.vx = Math.cos(ang) * nextSpd;
           t.vy = Math.sin(ang) * nextSpd;
         }
       } else if (t.block.type === "telegraphJump") {
-        var interval = t.block.jumpInterval || 1.75;
-        var teleTime = t.block.telegraphTime || 0.65;
+        var interval = t.block.jumpInterval || 1.85;
+        var teleTime = t.block.telegraphTime || 0.7;
         t.jumpTimer -= dt;
         if (t.jumpTimer <= teleTime && t.nextX === null) {
           var cand = randomTargetPos(t.radius);
@@ -1129,14 +1259,6 @@
           t.nextY = null;
           t.jumpTimer = interval;
           playJumpSound();
-        }
-      } else if (t.block.type === "colorLock") {
-        t.colorTimer += dt;
-        var cycle = t.block.colorCycle || 1.1;
-        if (t.colorTimer >= cycle) {
-          t.colorTimer = 0;
-          var idx = theme.colors.indexOf(t.color);
-          t.color = theme.colors[(idx + 1) % theme.colors.length];
         }
       }
 
@@ -1216,7 +1338,6 @@
         ctx.restore();
       }
 
-      // Telegraph ghost outline before jump
       if (state.running && state.target.block.type === "telegraphJump" && state.target.nextX !== null) {
         ctx.save();
         ctx.strokeStyle = save.useRetro ? "#0f380f" : "#7dd3fc";
@@ -1239,7 +1360,6 @@
       ctx.arc(state.target.x, state.target.y, state.target.radius, 0, Math.PI * 2);
       ctx.fill();
 
-      // Inner core ring (extra clear on ringTarget)
       ctx.shadowBlur = 0;
       var coreR = Math.max(5, state.target.radius * 0.25);
       ctx.strokeStyle = state.target.block.type === "ringTarget" ? "#fde047" : "rgba(255, 255, 255, 0.85)";
@@ -1248,7 +1368,6 @@
       ctx.arc(state.target.x, state.target.y, coreR, 0, Math.PI * 2);
       ctx.stroke();
 
-      // Shield indicator ring
       if (state.target.block.type === "shieldShot") {
         ctx.strokeStyle = "#38bdf8";
         ctx.lineWidth = 3;
@@ -1257,21 +1376,6 @@
         ctx.stroke();
       }
       ctx.restore();
-
-      // ColorLock indicator badge in top-left of canvas
-      if (state.running && state.target.block.type === "colorLock") {
-        ctx.save();
-        ctx.fillStyle = "rgba(15, 23, 42, 0.78)";
-        ctx.fillRect(8, 8, 92, 22);
-        ctx.fillStyle = state.target.lockColor;
-        ctx.beginPath();
-        ctx.arc(20, 19, 6, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#f8fafc";
-        ctx.font = "bold 11px Arial, sans-serif";
-        ctx.fillText("MATCH COLOR", 31, 23);
-        ctx.restore();
-      }
 
       for (var p = 0; p < state.pulses.length; p++) {
         var pulse = state.pulses[p];
@@ -1359,6 +1463,7 @@
       if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") state.keys.right = false;
     });
 
+    renderTrainingLevels();
     selectPreset("classic");
     refreshShopUI();
     draw();
