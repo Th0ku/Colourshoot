@@ -146,8 +146,8 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 14px;
-      gap: 9px;
+      padding: 13px;
+      gap: 8px;
       touch-action: manipulation;
     }
 
@@ -159,7 +159,7 @@
       width: 100%;
       display: none;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
     }
 
     .subview.active {
@@ -168,14 +168,14 @@
 
     .overlay h2 {
       margin: 0;
-      font-size: 20px;
+      font-size: 19px;
     }
 
     .overlay p {
       margin: 0;
-      font-size: 12px;
+      font-size: 11.5px;
       color: #cbd5e1;
-      line-height: 1.38;
+      line-height: 1.35;
     }
 
     .profile-card {
@@ -183,7 +183,7 @@
       background: rgba(15, 23, 42, 0.9);
       border: 1px solid rgba(148, 163, 184, 0.22);
       border-radius: 12px;
-      padding: 9px 11px;
+      padding: 8px 11px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -232,7 +232,7 @@
       width: 100%;
       border: none;
       border-radius: 12px;
-      padding: 11px 14px;
+      padding: 10px 14px;
       font-size: 14px;
       font-weight: 800;
       cursor: pointer;
@@ -268,10 +268,10 @@
       background: rgba(15, 23, 42, 0.88);
       border: 1px solid rgba(148, 163, 184, 0.22);
       border-radius: 10px;
-      padding: 8px 9px;
+      padding: 7px 9px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
       font-size: 11px;
       text-align: left;
     }
@@ -296,7 +296,7 @@
       color: #cbd5e1;
       border: 1px solid #475569;
       border-radius: 8px;
-      padding: 6px 4px;
+      padding: 5px 4px;
       font-size: 10.5px;
       font-weight: 700;
       cursor: pointer;
@@ -338,7 +338,7 @@
       border-left: 3px solid #38bdf8;
       border-radius: 6px;
       padding: 6px 8px;
-      font-size: 11px;
+      font-size: 10.5px;
       line-height: 1.35;
       color: #e2e8f0;
     }
@@ -349,7 +349,8 @@
 
     .preset-meta {
       color: #fbbf24;
-      font-size: 11px;
+      font-size: 10.5px;
+      font-weight: 700;
     }
 
     .btn-row {
@@ -365,8 +366,8 @@
       color: #052e16;
       border: none;
       border-radius: 10px;
-      padding: 9px 12px;
-      font-size: 12.5px;
+      padding: 8px 12px;
+      font-size: 12px;
       font-weight: 800;
       cursor: pointer;
       touch-action: manipulation;
@@ -382,8 +383,8 @@
       color: #f8fafc;
       border: 1px solid #64748b;
       border-radius: 10px;
-      padding: 9px 12px;
-      font-size: 12px;
+      padding: 8px 12px;
+      font-size: 11.5px;
       font-weight: 700;
       cursor: pointer;
       touch-action: manipulation;
@@ -394,7 +395,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      padding: 3px 0;
+      padding: 2px 0;
     }
 
     .shop-btn {
@@ -402,8 +403,8 @@
       color: #082f49;
       border: none;
       border-radius: 8px;
-      padding: 5px 9px;
-      font-size: 11px;
+      padding: 4px 8px;
+      font-size: 10.5px;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
@@ -487,7 +488,7 @@
       <div><span>Score</span><b id="scoreEl">0</b></div>
       <div><span>Stage/Rnd</span><b id="roundEl">1</b></div>
       <div><span>Pattern</span><b id="patternEl">Static</b></div>
-      <div><span>Time</span><b id="timeEl">3.5s</b></div>
+      <div><span>Time</span><b id="timeEl">3.8s</b></div>
     </div>
 
     <div class="screen-wrap">
@@ -515,11 +516,11 @@
             </button>
             <button class="hub-btn tourney" type="button" onclick="openView('tournament')">
               <span>Tournament</span>
-              <span class="hub-sub">Presets &amp; Jackpot →</span>
+              <span class="hub-sub">Presets &amp; Checkpoints →</span>
             </button>
             <button class="hub-btn skins" type="button" onclick="openView('skins')">
-              <span>Skins &amp; Shop</span>
-              <span class="hub-sub">Themes &amp; Aids →</span>
+              <span>Skins &amp; Sounds</span>
+              <span class="hub-sub">Themes, Aids &amp; Sound Packs →</span>
             </button>
           </div>
         </div>
@@ -549,6 +550,7 @@
               <button id="preset_fever" class="preset-btn" type="button" onclick="selectPreset('fever')">Fever Circuit</button>
             </div>
             <div id="presetMeta" class="preset-meta">Jackpot Goal: 1,800 pts | Stages: 3</div>
+            <div id="presetBriefing" class="briefing-box"></div>
           </div>
           <div class="btn-row">
             <button class="btn-back" type="button" onclick="openView('home')">← Main Menu</button>
@@ -556,11 +558,11 @@
           </div>
         </div>
 
-        <!-- 4. SKINS & SHOP SUBVIEW -->
+        <!-- 4. SKINS & SOUNDS SUBVIEW -->
         <div id="view_skins" class="subview">
-          <h2>Skins &amp; Shop</h2>
+          <h2>Skins &amp; Sounds</h2>
           <div class="panel-box">
-            <div class="panel-label">Cosmetics &amp; Training Aids (No Pay-to-Win)</div>
+            <div class="panel-label">Skins &amp; Training Aids</div>
             <div class="shop-item">
               <span><b>Skin:</b> Retro Handheld</span>
               <button id="buyRetroBtn" class="shop-btn" type="button" onclick="toggleRetro()">50 Coins</button>
@@ -570,6 +572,23 @@
               <button id="buyGuideBtn" class="shop-btn" type="button" onclick="buyGuide()">30 Coins</button>
             </div>
           </div>
+
+          <div class="panel-box">
+            <div class="panel-label">Sound Packs (Double Shot · Triple Shot · Rampage · God-Like)</div>
+            <div class="shop-item">
+              <span><b>Arcade Synth</b> (Default)</span>
+              <button id="sound_synth_btn" class="shop-btn" type="button" onclick="selectSoundPack('synth')">Active</button>
+            </div>
+            <div class="shop-item">
+              <span><b>Arena Streak Pack</b> (Streak fanfares)</span>
+              <button id="sound_streak_btn" class="shop-btn" type="button" onclick="selectSoundPack('streak')">40 Coins</button>
+            </div>
+            <div class="shop-item">
+              <span><b>Retro Beep Pack</b> (8-bit chimes)</span>
+              <button id="sound_retro_btn" class="shop-btn" type="button" onclick="selectSoundPack('retro')">35 Coins</button>
+            </div>
+          </div>
+
           <div class="btn-row">
             <button class="btn-back" type="button" onclick="openView('home')">← Main Menu</button>
           </div>
@@ -605,8 +624,12 @@
     var levelGrid = document.getElementById("levelGrid");
     var trainingBriefing = document.getElementById("trainingBriefing");
     var presetMeta = document.getElementById("presetMeta");
+    var presetBriefing = document.getElementById("presetBriefing");
     var buyGuideBtn = document.getElementById("buyGuideBtn");
     var buyRetroBtn = document.getElementById("buyRetroBtn");
+    var soundSynthBtn = document.getElementById("sound_synth_btn");
+    var soundStreakBtn = document.getElementById("sound_streak_btn");
+    var soundRetroBtn = document.getElementById("sound_retro_btn");
     var fireBtn = document.getElementById("fireBtn");
     var joystickBase = document.getElementById("joystickBase");
     var joystickKnob = document.getElementById("joystickKnob");
@@ -662,14 +685,14 @@
       {
         id: "telegraphJump",
         shortLabel: "5. JumpPlan",
-        block: { type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.7, jumpInterval: 1.85 },
+        block: { type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.72, jumpInterval: 1.85 },
         does: "Before jumping, the target previews its next spot so you can move early.",
         spotBy: "A dashed outline ('ghost' circle) showing the upcoming jump position."
       },
       {
         id: "elasticBounce",
         shortLabel: "6. Elastic",
-        block: { type: "elasticBounce", label: "Elastic", speed: 54 },
+        block: { type: "elasticBounce", label: "Elastic", speed: 52 },
         does: "The target bounces off walls and shifts speed between brisk and calm.",
         spotBy: "Diagonal wall rebounds followed by a noticeable pace shift."
       },
@@ -715,51 +738,64 @@
         "<br /><b>How to spot it:</b> " + active.spotBy;
     }
 
+    // Smoother tournament progression + stage checkpoint refresh + non-lethal Golden Bonus Shot
     var TOURNAMENT_PRESETS = {
       classic: {
         name: "Classic Cup",
         jackpotGoal: 1800,
         stages: [600, 1200],
-        startTime: 3.5,
-        timeDecay: 0.03,
-        minTime: 1.4,
+        startTime: 3.9,
+        timeDecay: 0.02,
+        minTime: 1.8,
+        shrinkFactor: 0.26,
+        ringShrinkFactor: 0.42,
+        minRadius: 16,
+        summary: "Starts calm with Static & Sweep X, gradually adds DualRing, Fig-8, JumpPlan & Elastic. Each Stage refreshes +8px radius & gives +100 pts.",
         sequence: [
           { untilRound: 3,  type: "static",        label: "Static",   speed: 0 },
-          { untilRound: 6,  type: "moveX",         label: "Sweep X",  speed: 40 },
+          { untilRound: 6,  type: "moveX",         label: "Sweep X",  speed: 38 },
           { untilRound: 9,  type: "ringTarget",    label: "DualRing", speed: 0 },
-          { untilRound: 12, type: "figureEight",   label: "Fig-8",    speed: 1.05 },
-          { untilRound: 15, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.68, jumpInterval: 1.8 },
-          { untilRound: 99, type: "elasticBounce", label: "Elastic",  speed: 54 }
+          { untilRound: 12, type: "figureEight",   label: "Fig-8",    speed: 1.0 },
+          { untilRound: 15, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.72, jumpInterval: 1.85 },
+          { untilRound: 99, type: "elasticBounce", label: "Elastic",  speed: 50 }
         ]
       },
       variety: {
         name: "Pattern Mix",
         jackpotGoal: 2000,
         stages: [650, 1300],
-        startTime: 3.6,
-        timeDecay: 0.028,
-        minTime: 1.45,
+        startTime: 4.0,
+        timeDecay: 0.018,
+        minTime: 1.85,
+        shrinkFactor: 0.25,
+        ringShrinkFactor: 0.4,
+        minRadius: 16,
+        summary: "Balanced mix starting with Shield & JumpPlan before moving into DualRing, Elastic and Fig-8 with gentle timer decay.",
         sequence: [
-          { untilRound: 3,  type: "shieldShot",    label: "Shield",   speed: 32 },
-          { untilRound: 6,  type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.72, jumpInterval: 1.85 },
+          { untilRound: 3,  type: "shieldShot",    label: "Shield",   speed: 30 },
+          { untilRound: 6,  type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.75, jumpInterval: 1.9 },
           { untilRound: 9,  type: "ringTarget",    label: "DualRing", speed: 0 },
-          { untilRound: 12, type: "elasticBounce", label: "Elastic",  speed: 56 },
-          { untilRound: 99, type: "figureEight",   label: "Fig-8",    speed: 1.12 }
+          { untilRound: 12, type: "elasticBounce", label: "Elastic",  speed: 52 },
+          { untilRound: 99, type: "figureEight",   label: "Fig-8",    speed: 1.08 }
         ]
       },
       fever: {
         name: "Fever Circuit",
         jackpotGoal: 2200,
         stages: [700, 1450],
-        startTime: 3.4,
-        timeDecay: 0.032,
-        minTime: 1.35,
+        startTime: 3.8,
+        timeDecay: 0.022,
+        minTime: 1.75,
+        shrinkFactor: 0.26,
+        ringShrinkFactor: 0.42,
+        minRadius: 16,
+        summary: "Built around core streaks & Fever boosts across DualRing, Fig-8, Shield, Elastic and JumpPlan. Reaching the goal locks in your win!",
         sequence: [
           { untilRound: 3,  type: "ringTarget",    label: "DualRing", speed: 0 },
-          { untilRound: 6,  type: "figureEight",   label: "Fig-8",    speed: 1.1 },
-          { untilRound: 9,  type: "shieldShot",    label: "Shield",   speed: 36 },
-          { untilRound: 12, type: "elasticBounce", label: "Elastic",  speed: 58 },
-          { untilRound: 99, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.68, jumpInterval: 1.75 }
+          { untilRound: 6,  type: "figureEight",   label: "Fig-8",    speed: 1.05 },
+          { untilRound: 9,  type: "shieldShot",    label: "Shield",   speed: 34 },
+          { untilRound: 12, type: "elasticBounce", label: "Elastic",  speed: 54 },
+          { untilRound: 99, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.72, jumpInterval: 1.8 }
         ]
       }
     };
@@ -783,6 +819,7 @@
       var p = getActivePreset();
       var totalStages = (p.stages ? p.stages.length : 0) + 1;
       presetMeta.textContent = "Jackpot Goal: " + p.jackpotGoal.toLocaleString("en-US") + " pts | Stages: " + totalStages;
+      presetBriefing.innerHTML = "<b>How this tournament plays:</b> " + p.summary;
     }
 
     var audioCtx = null;
@@ -800,10 +837,10 @@
       } catch (e) {}
     }
 
-    function playTone(freq, endFreq, duration, type, gainVal) {
+    function playTone(freq, endFreq, duration, type, gainVal, delaySec) {
       try {
         if (!audioCtx) return;
-        var now = audioCtx.currentTime;
+        var now = audioCtx.currentTime + (delaySec || 0);
         var osc = audioCtx.createOscillator();
         var gain = audioCtx.createGain();
         osc.type = type || "sine";
@@ -820,23 +857,76 @@
       } catch (e) {}
     }
 
-    function playHitSound() {
-      playTone(520, 760, 0.11, "triangle", 0.16);
+    // Streak callouts: 2 = Double Shot, 3 = Triple Shot, 4 = Rampage, 5+ = God-Like
+    function getStreakCallout(streakCount) {
+      if (streakCount === 2) return "DOUBLE SHOT!";
+      if (streakCount === 3) return "TRIPLE SHOT!";
+      if (streakCount === 4) return "RAMPAGE!";
+      if (streakCount >= 5) return "GOD-LIKE!";
+      return null;
     }
 
-    function playBullseyeSound() {
-      playTone(660, 990, 0.09, "sine", 0.2);
-      setTimeout(function () {
-        playTone(990, 1320, 0.14, "triangle", 0.22);
-      }, 65);
+    function playStreakFanfare(streakCount, pack) {
+      if (pack === "streak") {
+        if (streakCount === 2) {
+          playTone(587, 880, 0.09, "sawtooth", 0.16, 0);
+          playTone(880, 1174, 0.11, "triangle", 0.18, 0.08);
+        } else if (streakCount === 3) {
+          playTone(659, 987, 0.08, "sawtooth", 0.17, 0);
+          playTone(880, 1318, 0.09, "triangle", 0.19, 0.08);
+          playTone(1318, 1760, 0.14, "sine", 0.22, 0.16);
+        } else if (streakCount === 4) {
+          playTone(440, 880, 0.08, "square", 0.15, 0);
+          playTone(659, 1318, 0.09, "sawtooth", 0.18, 0.07);
+          playTone(880, 1760, 0.14, "triangle", 0.22, 0.15);
+        } else {
+          playTone(523, 1046, 0.09, "sawtooth", 0.18, 0);
+          playTone(784, 1568, 0.1, "triangle", 0.2, 0.08);
+          playTone(1046, 2093, 0.18, "sine", 0.24, 0.17);
+        }
+      } else if (pack === "retro") {
+        var base = 520 + Math.min(400, streakCount * 90);
+        playTone(base, base * 1.25, 0.08, "square", 0.14, 0);
+        playTone(base * 1.5, base * 2, 0.12, "square", 0.15, 0.08);
+      } else {
+        playTone(660, 990, 0.09, "sine", 0.18, 0);
+        playTone(990, 1320, 0.13, "triangle", 0.2, 0.07);
+      }
+    }
+
+    function playHitSound() {
+      var pack = save.soundPack || "synth";
+      if (pack === "retro") {
+        playTone(480, 640, 0.09, "square", 0.12, 0);
+      } else if (pack === "streak") {
+        playTone(540, 820, 0.1, "triangle", 0.15, 0);
+      } else {
+        playTone(520, 760, 0.11, "triangle", 0.16, 0);
+      }
+    }
+
+    function playBullseyeSound(streakCount) {
+      var pack = save.soundPack || "synth";
+      if (streakCount >= 2) {
+        playStreakFanfare(streakCount, pack);
+        return;
+      }
+      if (pack === "retro") {
+        playTone(660, 990, 0.08, "square", 0.15, 0);
+        playTone(990, 1320, 0.12, "square", 0.16, 0.07);
+      } else {
+        playTone(660, 990, 0.09, "sine", 0.2, 0);
+        playTone(990, 1320, 0.14, "triangle", 0.22, 0.07);
+      }
     }
 
     function playJumpSound() {
-      playTone(440, 680, 0.07, "sine", 0.08);
+      playTone(440, 680, 0.07, "sine", 0.08, 0);
     }
 
     function playMissSound() {
-      playTone(240, 95, 0.28, "sawtooth", 0.16);
+      var pack = save.soundPack || "synth";
+      playTone(240, 95, 0.26, pack === "retro" ? "square" : "sawtooth", 0.15, 0);
     }
 
     var THEMES = {
@@ -862,11 +952,13 @@
       coins: 0,
       hasGuide: false,
       hasRetro: false,
-      useRetro: false
+      useRetro: false,
+      ownedSounds: { synth: true, streak: false, retro: false },
+      soundPack: "synth"
     };
 
     try {
-      var rawSave = localStorage.getItem("colourshoot_save_v11");
+      var rawSave = localStorage.getItem("colourshoot_save_v12");
       if (rawSave) {
         var parsed = JSON.parse(rawSave);
         if (parsed.playerName) save.playerName = String(parsed.playerName).slice(0, 16);
@@ -875,12 +967,20 @@
         save.hasGuide = !!parsed.hasGuide;
         save.hasRetro = !!parsed.hasRetro;
         save.useRetro = !!parsed.useRetro;
+        if (parsed.ownedSounds) {
+          save.ownedSounds.synth = true;
+          save.ownedSounds.streak = !!parsed.ownedSounds.streak;
+          save.ownedSounds.retro = !!parsed.ownedSounds.retro;
+        }
+        if (parsed.soundPack && save.ownedSounds[parsed.soundPack]) {
+          save.soundPack = parsed.soundPack;
+        }
       }
     } catch (e) {}
 
     function persistSave() {
       try {
-        localStorage.setItem("colourshoot_save_v11", JSON.stringify(save));
+        localStorage.setItem("colourshoot_save_v12", JSON.stringify(save));
       } catch (e) {}
       refreshProfileUI();
       refreshShopUI();
@@ -920,6 +1020,25 @@
         buyGuideBtn.textContent = "30 Coins";
         buyGuideBtn.disabled = save.coins < 30;
       }
+
+      soundSynthBtn.textContent = save.soundPack === "synth" ? "Active" : "Select";
+      soundSynthBtn.disabled = save.soundPack === "synth";
+
+      if (save.ownedSounds.streak) {
+        soundStreakBtn.textContent = save.soundPack === "streak" ? "Active" : "Select";
+        soundStreakBtn.disabled = save.soundPack === "streak";
+      } else {
+        soundStreakBtn.textContent = "40 Coins";
+        soundStreakBtn.disabled = save.coins < 40;
+      }
+
+      if (save.ownedSounds.retro) {
+        soundRetroBtn.textContent = save.soundPack === "retro" ? "Active" : "Select";
+        soundRetroBtn.disabled = save.soundPack === "retro";
+      } else {
+        soundRetroBtn.textContent = "35 Coins";
+        soundRetroBtn.disabled = save.coins < 35;
+      }
     }
 
     function buyGuide() {
@@ -945,6 +1064,39 @@
       }
     }
 
+    function selectSoundPack(packId) {
+      ensureAudio();
+      if (packId === "synth") {
+        save.soundPack = "synth";
+        persistSave();
+        playHitSound();
+        return;
+      }
+      if (packId === "streak") {
+        if (!save.ownedSounds.streak && save.coins >= 40) {
+          save.coins -= 40;
+          save.ownedSounds.streak = true;
+        }
+        if (save.ownedSounds.streak) {
+          save.soundPack = "streak";
+          persistSave();
+          playStreakFanfare(3, "streak");
+        }
+        return;
+      }
+      if (packId === "retro") {
+        if (!save.ownedSounds.retro && save.coins >= 35) {
+          save.coins -= 35;
+          save.ownedSounds.retro = true;
+        }
+        if (save.ownedSounds.retro) {
+          save.soundPack = "retro";
+          persistSave();
+          playStreakFanfare(2, "retro");
+        }
+      }
+    }
+
     var state = {
       running: false,
       mode: "training",
@@ -952,12 +1104,14 @@
       round: 1,
       stageIndex: 1,
       combo: 0,
+      streak: 0,
       feverLeft: 0,
       runCoins: 0,
-      maxTime: 3.5,
-      timeLeft: 3.5,
+      maxTime: 3.8,
+      timeLeft: 3.8,
       shotLockLeft: 0,
       jackpotStage: false,
+      jackpotUnlocked: false,
       cursor: {
         x: 190,
         y: 190,
@@ -1081,8 +1235,8 @@
         y: y,
         text: text,
         color: color,
-        life: 0.75,
-        maxLife: 0.75
+        life: 0.85,
+        maxLife: 0.85
       });
     }
 
@@ -1125,7 +1279,7 @@
       var colorIdx = (round - 1) % theme.colors.length;
       var color = isGoldenFinal ? "#facc15" : theme.colors[colorIdx];
       var block = isGoldenFinal
-        ? { type: "figureEight", label: "GOLDEN SHOT", speed: 1.35 }
+        ? { type: "figureEight", label: "GOLDEN BONUS", speed: 1.15 }
         : getBlockForRound(round);
 
       var pos = randomTargetPos(currentRadius);
@@ -1179,11 +1333,13 @@
       state.round = 1;
       state.stageIndex = 1;
       state.combo = 0;
+      state.streak = 0;
       state.feverLeft = 0;
       state.runCoins = 0;
       state.jackpotStage = false;
+      state.jackpotUnlocked = false;
       state.shotLockLeft = 0;
-      state.maxTime = state.mode === "training" ? 3.8 : preset.startTime;
+      state.maxTime = state.mode === "training" ? 4.0 : preset.startTime;
       state.timeLeft = state.maxTime;
       state.splatters = [];
       state.pulses = [];
@@ -1212,7 +1368,9 @@
       state.running = false;
       state.shotLockLeft = 0;
       resetJoystick();
-      playMissSound();
+      if (!wonJackpot) {
+        playMissSound();
+      }
 
       if (state.score > save.bestScore) {
         save.bestScore = state.score;
@@ -1224,7 +1382,7 @@
 
       var preset = getActivePreset();
       var trainLvl = getSelectedTrainingLevel();
-      var headline = wonJackpot ? "JACKPOT CRACKED!" : "Run Over!";
+      var headline = wonJackpot ? "JACKPOT GOAL CLEARED!" : "Run Complete";
       var extra = state.mode === "training"
         ? "Level: <b>" + trainLvl.shortLabel + "</b> | Coins: <b>+" + state.runCoins + "</b>"
         : "Preset: <b>" + preset.name + "</b> | Stage <b>" + state.stageIndex + "</b> (Goal: " + preset.jackpotGoal + ")";
@@ -1255,30 +1413,45 @@
         color: state.target.color
       });
 
-      if (dist > state.target.radius) {
-        endGame(state.jackpotStage ? "Missed the Golden Jackpot Shot!" : "Missed the target!", false);
-        return;
-      }
-
+      // Bonus Golden Shot after clearing the tournament goal never revokes the win
       if (state.jackpotStage) {
-        state.score += 500;
-        playBullseyeSound();
-        triggerScreenFlash();
-        endGame("You nailed the final Golden Shot!", true);
+        if (dist <= state.target.radius) {
+          state.score += 400;
+          playBullseyeSound(4);
+          triggerScreenFlash();
+          endGame("Bonus Golden Shot hit (+400 pts)!", true);
+        } else {
+          endGame("Jackpot goal already secured! Bonus shot missed.", true);
+        }
         return;
       }
 
-      var innerCoreRadius = Math.max(5, state.target.radius * 0.25);
+      if (dist > state.target.radius) {
+        if (state.jackpotUnlocked) {
+          endGame("Jackpot goal secured! Missed follow-up shot.", true);
+        } else {
+          endGame("Missed the target!", false);
+        }
+        return;
+      }
+
+      var innerCoreRadius = Math.max(6, state.target.radius * 0.26);
       var isBullseye = dist <= innerCoreRadius;
+
+      state.streak += 1;
+      var callout = getStreakCallout(state.streak);
+      if (callout) {
+        addPopup(state.cursor.x, state.cursor.y - 28, callout, "#38bdf8");
+      }
 
       if (isBullseye) {
         state.combo += 1;
         if (state.combo >= FEVER_STREAK_REQUIRED) {
           state.feverLeft = 3;
           state.combo = 0;
-          addPopup(state.cursor.x, state.cursor.y - 26, "FEVER MODE!", "#f97316");
+          addPopup(state.cursor.x, state.cursor.y - 42, "FEVER MODE!", "#f97316");
         }
-        playBullseyeSound();
+        playBullseyeSound(state.streak);
         triggerScreenFlash();
         addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#facc15", true);
       } else {
@@ -1289,8 +1462,9 @@
 
       var accuracy = Math.max(0, 1 - dist / state.target.radius);
       var feverMult = state.feverLeft > 0 ? 1.45 : 1.0;
+      var streakMult = 1 + Math.min(0.4, (state.streak - 1) * 0.05);
       var timeBonus = Math.round(state.timeLeft * 18);
-      var shotPoints = Math.round((45 + accuracy * 75) * feverMult + timeBonus);
+      var shotPoints = Math.round((45 + accuracy * 75) * feverMult * streakMult + timeBonus);
       state.score += shotPoints;
 
       if (state.feverLeft > 0) {
@@ -1308,41 +1482,49 @@
       }
 
       var preset = getActivePreset();
+      var nextRadius = state.target.radius;
+
       if (state.mode === "tournament") {
         var newStage = computeStageIndex(state.score, preset);
         if (newStage > state.stageIndex) {
           state.stageIndex = newStage;
-          addPopup(canvas.width / 2, 42, "STAGE " + state.stageIndex + " REACHED!", "#38bdf8");
+          state.score += 100;
+          nextRadius = Math.min(78, nextRadius + 8);
+          addPopup(canvas.width / 2, 42, "STAGE " + state.stageIndex + " (+100 & +SIZE)", "#38bdf8");
         }
+
         if (state.score >= preset.jackpotGoal) {
+          state.jackpotUnlocked = true;
           state.jackpotStage = true;
           state.round += 1;
-          state.maxTime = 2.0;
-          state.timeLeft = 2.0;
-          state.target = pickTargetForRound(state.round, 30, true);
+          state.maxTime = 2.8;
+          state.timeLeft = 2.8;
+          state.target = pickTargetForRound(state.round, Math.max(36, nextRadius), true);
           updateHud();
           return;
         }
       }
 
-      var nextRadius = state.target.radius;
       if (isBullseye) {
         nextRadius = Math.min(82, nextRadius + 4);
       } else if (state.target.block.type === "shieldShot") {
         addPopup(state.cursor.x, state.cursor.y + 14, "SHIELD SAVED", "#38bdf8");
       } else {
-        var shrinkFactor = state.target.block.type === "ringTarget" ? 0.55 : 0.35;
+        var shrinkFactor = state.target.block.type === "ringTarget"
+          ? (preset.ringShrinkFactor || 0.42)
+          : (preset.shrinkFactor || 0.26);
         nextRadius = nextRadius - dist * shrinkFactor;
       }
 
-      if (nextRadius < 13) {
+      var minAllowedRadius = state.mode === "tournament" ? (preset.minRadius || 16) : 14;
+      if (nextRadius < minAllowedRadius) {
         endGame("Target became too small!", false);
         return;
       }
 
       state.round += 1;
       if (state.mode === "training") {
-        state.maxTime = Math.max(1.8, 3.8 - (state.round - 1) * 0.02);
+        state.maxTime = Math.max(2.0, 4.0 - (state.round - 1) * 0.015);
       } else {
         state.maxTime = Math.max(preset.minTime, preset.startTime - (state.round - 1) * preset.timeDecay);
       }
@@ -1405,15 +1587,15 @@
         if (t.y > canvas.height - pad) { t.y = canvas.height - pad; t.vy = -Math.abs(t.vy); bounced = true; }
         if (bounced) {
           var curSpd = Math.sqrt(t.vx * t.vx + t.vy * t.vy) || 50;
-          var baseSpd = t.block.speed || 54;
-          var nextSpd = curSpd > baseSpd ? baseSpd * 0.72 : baseSpd * 1.38;
+          var baseSpd = t.block.speed || 52;
+          var nextSpd = curSpd > baseSpd ? baseSpd * 0.75 : baseSpd * 1.32;
           var ang = Math.atan2(t.vy, t.vx);
           t.vx = Math.cos(ang) * nextSpd;
           t.vy = Math.sin(ang) * nextSpd;
         }
       } else if (t.block.type === "telegraphJump") {
         var interval = t.block.jumpInterval || 1.85;
-        var teleTime = t.block.telegraphTime || 0.7;
+        var teleTime = t.block.telegraphTime || 0.72;
         t.jumpTimer -= dt;
         if (t.jumpTimer <= teleTime && t.nextX === null) {
           var cand = randomTargetPos(t.radius);
@@ -1515,7 +1697,7 @@
 
       if (state.running && state.target.block.type === "telegraphJump" && state.target.nextX !== null) {
         ctx.save();
-        ctx.strokeStyle = save.useRetro ? "#0f380f" : "#7dd3fc";
+        ctx.strokeStyle = theme.reticle;
         ctx.setLineDash([5, 4]);
         ctx.lineWidth = 2;
         ctx.beginPath();
@@ -1536,7 +1718,7 @@
       ctx.fill();
 
       ctx.shadowBlur = 0;
-      var coreR = Math.max(5, state.target.radius * 0.25);
+      var coreR = Math.max(6, state.target.radius * 0.26);
       ctx.strokeStyle = state.target.block.type === "ringTarget" ? "#fde047" : "rgba(255, 255, 255, 0.85)";
       ctx.lineWidth = state.target.block.type === "ringTarget" ? 2.5 : 2;
       ctx.beginPath();
@@ -1578,7 +1760,7 @@
         ctx.restore();
       }
 
-      // Fixed high-contrast reticle color per theme (never yellow-on-yellow)
+      // Fixed high-contrast reticle color per theme
       ctx.save();
       ctx.strokeStyle = theme.reticle;
       ctx.lineWidth = 2.5;
@@ -1596,7 +1778,7 @@
         var pAlpha = Math.max(0, pop.life / pop.maxLife);
         ctx.save();
         ctx.globalAlpha = pAlpha;
-        ctx.font = "bold 13px Arial, sans-serif";
+        ctx.font = "bold 12.5px Arial, sans-serif";
         ctx.textAlign = "center";
         ctx.fillStyle = pop.color;
         ctx.fillText(pop.text, pop.x, pop.y);
