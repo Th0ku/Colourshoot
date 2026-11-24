@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ColourShoot – Arcade & Tournament</title>
+  <title>ColourShoot – Arcade, Level-Mode & Tournament</title>
   <style>
     * {
       box-sizing: border-box;
@@ -28,7 +28,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 10px;
+      padding: 8px;
     }
 
     .gb-shell {
@@ -36,25 +36,32 @@
       max-width: 440px;
       background: linear-gradient(165deg, #242b3d 0%, #151924 100%);
       border: 1px solid rgba(148, 163, 184, 0.25);
-      border-radius: 28px;
-      padding: 14px;
+      border-radius: 26px;
+      padding: 12px;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
+      font-size: 11.5px;
       padding: 0 4px;
-      gap: 8px;
+      gap: 6px;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
     .mode-badge {
-      padding: 5px 11px;
+      padding: 4px 10px;
       border-radius: 999px;
       font-weight: 700;
       letter-spacing: 0.4px;
@@ -69,9 +76,15 @@
       border: 1px solid rgba(245, 158, 11, 0.45);
     }
 
+    .mode-badge.levelmode {
+      background: rgba(168, 85, 247, 0.22);
+      color: #e9d5ff;
+      border: 1px solid rgba(168, 85, 247, 0.5);
+    }
+
     .coin-box {
       background: rgba(15, 23, 42, 0.75);
-      padding: 5px 11px;
+      padding: 4px 10px;
       border-radius: 999px;
       border: 1px solid rgba(250, 204, 21, 0.45);
       color: #fde047;
@@ -80,14 +93,15 @@
 
     .hud {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 6px;
       background: rgba(9, 13, 22, 0.72);
-      padding: 8px 10px;
-      border-radius: 14px;
+      padding: 7px 9px;
+      border-radius: 13px;
       border: 1px solid rgba(148, 163, 184, 0.14);
       font-size: 12px;
       text-align: center;
+      align-items: center;
     }
 
     .hud div span {
@@ -111,6 +125,86 @@
       overflow: hidden;
       border: 2px solid rgba(148, 163, 184, 0.25);
       background: #0f172a;
+    }
+
+    .inner-top-stack {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 8;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .inner-time-bar-wrap {
+      width: 100%;
+      height: 11px;
+      background: rgba(9, 13, 22, 0.85);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+      overflow: hidden;
+    }
+
+    .lives-strip {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(9, 13, 22, 0.72);
+      min-height: 28px;
+    }
+
+    .lives-strip.active {
+      display: flex;
+    }
+
+    .life-pip {
+      font-size: 19px;
+      line-height: 1;
+      color: #f472b6;
+      text-shadow: 0 0 8px rgba(244, 114, 182, 0.85);
+    }
+
+    .countdown-banner {
+      position: absolute;
+      inset: 0;
+      z-index: 12;
+      pointer-events: none;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background: rgba(9, 13, 22, 0.32);
+    }
+
+    .countdown-banner.active {
+      display: flex;
+    }
+
+    .countdown-text {
+      font-size: 54px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #fde047;
+      text-shadow: 0 0 24px rgba(250, 204, 21, 0.85), 0 6px 18px rgba(0, 0, 0, 0.85);
+    }
+
+    .time-bar-fill {
+      height: 100%;
+      width: 100%;
+      background: #22c55e;
+      transition: background-color 0.08s linear;
+    }
+
+    .time-bar-fill.gold-max {
+      background: linear-gradient(90deg, #f59e0b 0%, #fde047 50%, #ffffff 75%, #f59e0b 100%) !important;
+      box-shadow: 0 0 12px #fde047, 0 0 20px rgba(250, 204, 21, 0.85);
+      animation: goldSparklePulse 0.35s infinite alternate;
+    }
+
+    @keyframes goldSparklePulse {
+      from { filter: brightness(1); }
+      to { filter: brightness(1.35); }
     }
 
     canvas {
@@ -139,15 +233,15 @@
       position: absolute;
       inset: 0;
       z-index: 20;
-      background: rgba(9, 13, 22, 0.95);
+      background: rgba(9, 13, 22, 0.96);
       color: #ffffff;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 13px;
-      gap: 8px;
+      padding: 10px;
+      gap: 6px;
       touch-action: manipulation;
     }
 
@@ -157,9 +251,11 @@
 
     .subview {
       width: 100%;
+      height: 100%;
       display: none;
       flex-direction: column;
-      gap: 7px;
+      justify-content: space-between;
+      gap: 5px;
     }
 
     .subview.active {
@@ -168,44 +264,14 @@
 
     .overlay h2 {
       margin: 0;
-      font-size: 19px;
+      font-size: 17px;
     }
 
     .overlay p {
       margin: 0;
-      font-size: 11.5px;
+      font-size: 10.5px;
       color: #cbd5e1;
-      line-height: 1.35;
-    }
-
-    .profile-card {
-      width: 100%;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.22);
-      border-radius: 12px;
-      padding: 8px 11px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .profile-info {
-      text-align: left;
-      font-size: 12px;
-    }
-
-    .profile-name {
-      font-weight: 800;
-      color: #f8fafc;
-      font-size: 13px;
-    }
-
-    .profile-points {
-      color: #34d399;
-      font-weight: 700;
-      font-size: 11.5px;
-      margin-top: 2px;
+      line-height: 1.3;
     }
 
     .small-btn {
@@ -213,8 +279,8 @@
       color: #f8fafc;
       border: 1px solid #64748b;
       border-radius: 8px;
-      padding: 6px 9px;
-      font-size: 11px;
+      padding: 5px 8px;
+      font-size: 10px;
       font-weight: 700;
       cursor: pointer;
       touch-action: manipulation;
@@ -224,16 +290,15 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 2px;
+      gap: 5px;
     }
 
     .hub-btn {
       width: 100%;
       border: none;
-      border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 14px;
+      border-radius: 10px;
+      padding: 7px 11px;
+      font-size: 12.5px;
       font-weight: 800;
       cursor: pointer;
       display: flex;
@@ -247,6 +312,11 @@
       color: #052e16;
     }
 
+    .hub-btn.levelmode {
+      background: #a855f7;
+      color: #faf5ff;
+    }
+
     .hub-btn.tourney {
       background: #f59e0b;
       color: #451a03;
@@ -258,9 +328,34 @@
     }
 
     .hub-sub {
+      font-size: 10px;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
+    .tab-row {
+      display: flex;
+      gap: 5px;
+      width: 100%;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1px solid #475569;
+      border-radius: 8px;
+      padding: 5px 6px;
       font-size: 11px;
       font-weight: 700;
-      opacity: 0.85;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .tab-btn.active {
+      background: rgba(56, 189, 248, 0.24);
+      color: #7dd3fc;
+      border-color: #38bdf8;
     }
 
     .panel-box {
@@ -268,12 +363,14 @@
       background: rgba(15, 23, 42, 0.88);
       border: 1px solid rgba(148, 163, 184, 0.22);
       border-radius: 10px;
-      padding: 7px 9px;
+      padding: 6px 8px;
       display: flex;
       flex-direction: column;
       gap: 5px;
-      font-size: 11px;
+      font-size: 10px;
       text-align: left;
+      flex: 1;
+      overflow-y: auto;
     }
 
     .panel-label {
@@ -281,32 +378,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.4px;
-      font-size: 10px;
-    }
-
-    .preset-buttons {
-      display: flex;
-      gap: 5px;
-      justify-content: space-between;
-    }
-
-    .preset-btn {
-      flex: 1;
-      background: #1e293b;
-      color: #cbd5e1;
-      border: 1px solid #475569;
-      border-radius: 8px;
-      padding: 5px 4px;
-      font-size: 10.5px;
-      font-weight: 700;
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-
-    .preset-btn.active {
-      background: rgba(56, 189, 248, 0.22);
-      color: #7dd3fc;
-      border-color: #38bdf8;
+      font-size: 9px;
     }
 
     .level-grid {
@@ -320,8 +392,8 @@
       color: #e2e8f0;
       border: 1px solid #475569;
       border-radius: 7px;
-      padding: 5px 3px;
-      font-size: 10px;
+      padding: 4px 3px;
+      font-size: 9.5px;
       font-weight: 700;
       cursor: pointer;
       touch-action: manipulation;
@@ -333,13 +405,54 @@
       border-color: #22c55e;
     }
 
+    .mode20-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+    }
+
+    .mode20-btn {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #475569;
+      border-radius: 7px;
+      padding: 3px 3px;
+      font-size: 8.8px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 31px;
+      gap: 1px;
+      touch-action: manipulation;
+    }
+
+    .mode20-btn.completed {
+      border-color: rgba(168, 85, 247, 0.7);
+      background: rgba(88, 28, 135, 0.32);
+    }
+
+    .mode20-btn.active {
+      background: rgba(168, 85, 247, 0.35);
+      color: #f3e8ff;
+      border-color: #c084fc;
+    }
+
+    .mode20-score {
+      font-size: 8px;
+      color: #fcd34d;
+      font-weight: 800;
+    }
+
     .briefing-box {
-      background: rgba(30, 41, 59, 0.72);
+      background: rgba(30, 41, 59, 0.75);
       border-left: 3px solid #38bdf8;
       border-radius: 6px;
-      padding: 6px 8px;
-      font-size: 10.5px;
-      line-height: 1.35;
+      padding: 5px 7px;
+      font-size: 10px;
+      line-height: 1.3;
       color: #e2e8f0;
     }
 
@@ -347,17 +460,58 @@
       color: #7dd3fc;
     }
 
+    .tourney-name-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 8px;
+      padding: 5px 8px;
+      font-size: 10.5px;
+    }
+
+    .leaderboard-box {
+      background: rgba(9, 13, 22, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 8px;
+      padding: 5px 7px;
+      max-height: 118px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 9.5px;
+    }
+
+    .lb-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 4px;
+      border-radius: 4px;
+      background: rgba(30, 41, 59, 0.45);
+    }
+
+    .lb-row.me {
+      background: rgba(245, 158, 11, 0.22);
+      border: 1px solid rgba(251, 191, 36, 0.45);
+      color: #fde68a;
+      font-weight: 700;
+    }
+
     .preset-meta {
       color: #fbbf24;
-      font-size: 10.5px;
+      font-size: 9.5px;
       font-weight: 700;
     }
 
     .btn-row {
       display: flex;
-      gap: 8px;
+      gap: 7px;
       justify-content: center;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     .btn-go {
@@ -366,8 +520,8 @@
       color: #052e16;
       border: none;
       border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 12px;
+      padding: 7px 10px;
+      font-size: 11px;
       font-weight: 800;
       cursor: pointer;
       touch-action: manipulation;
@@ -378,16 +532,78 @@
       color: #451a03;
     }
 
+    .btn-go.purple {
+      background: #a855f7;
+      color: #ffffff;
+    }
+
     .btn-back {
       background: #334155;
       color: #f8fafc;
       border: 1px solid #64748b;
       border-radius: 10px;
-      padding: 8px 12px;
-      font-size: 11.5px;
+      padding: 7px 10px;
+      font-size: 10.5px;
       font-weight: 700;
       cursor: pointer;
       touch-action: manipulation;
+    }
+
+    .result-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .close-x-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #334155;
+      color: #f8fafc;
+      border: 1px solid #64748b;
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+    }
+
+    .result-card {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(168, 85, 247, 0.45);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .result-row b {
+      color: #34d399;
+      font-size: 14px;
+    }
+
+    .result-compare {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.85);
+      font-size: 11.5px;
+      line-height: 1.35;
+      color: #f8fafc;
     }
 
     .shop-item {
@@ -404,7 +620,7 @@
       border: none;
       border-radius: 8px;
       padding: 4px 8px;
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
@@ -421,15 +637,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 6px 10px 4px;
-      gap: 16px;
+      padding: 4px 6px 2px;
+      gap: 8px;
       touch-action: none;
     }
 
     .joystick-base {
       position: relative;
-      width: 132px;
-      height: 132px;
+      width: 116px;
+      height: 116px;
       border-radius: 50%;
       background: radial-gradient(circle at 35% 35%, #1e293b 0%, #0b101b 100%);
       border: 2px solid rgba(148, 163, 184, 0.32);
@@ -443,8 +659,8 @@
 
     .joystick-ring {
       position: absolute;
-      width: 82px;
-      height: 82px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
       border: 1px dashed rgba(148, 163, 184, 0.22);
       pointer-events: none;
@@ -452,8 +668,8 @@
 
     .joystick-knob {
       position: relative;
-      width: 56px;
-      height: 56px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       background: radial-gradient(circle at 32% 28%, #60a5fa 0%, #2563eb 65%, #1d4ed8 100%);
       border: 2px solid rgba(191, 219, 254, 0.75);
@@ -462,9 +678,56 @@
       pointer-events: none;
     }
 
+    .assist-dock {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+      min-width: 102px;
+    }
+
+    .assist-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #94a3b8;
+      font-weight: 700;
+    }
+
+    .assist-slots {
+      display: grid;
+      grid-template-columns: repeat(2, 48px);
+      gap: 5px;
+    }
+
+    .assist-btn {
+      width: 48px;
+      height: 44px;
+      border-radius: 11px;
+      border: 1.5px solid #475569;
+      background: rgba(15, 23, 42, 0.85);
+      color: #64748b;
+      font-size: 9.5px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      line-height: 1.1;
+      touch-action: manipulation;
+    }
+
+    .assist-btn.ready {
+      background: rgba(14, 165, 233, 0.22);
+      border-color: #38bdf8;
+      color: #e0f2fe;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+    }
+
     .fire-btn {
-      width: 92px;
-      height: 92px;
+      width: 84px;
+      height: 84px;
       border-radius: 50%;
       background: #e11d48;
       color: #ffffff;
@@ -472,6 +735,7 @@
       font-size: 20px;
       font-weight: 900;
       cursor: pointer;
+      flex-shrink: 0;
       box-shadow: 0 6px 18px rgba(225, 29, 72, 0.45);
       touch-action: none;
     }
@@ -480,7 +744,9 @@
 <body>
   <div class="gb-shell">
     <div class="top-bar">
-      <span id="modeBadge" class="mode-badge">MODE: TRAINING</span>
+      <div class="top-left">
+        <span id="modeBadge" class="mode-badge">MODE: TRAINING</span>
+      </div>
       <span class="coin-box">Coins: <span id="coinsEl">0</span></span>
     </div>
 
@@ -488,109 +754,157 @@
       <div><span>Score</span><b id="scoreEl">0</b></div>
       <div><span>Stage/Rnd</span><b id="roundEl">1</b></div>
       <div><span>Pattern</span><b id="patternEl">Static</b></div>
-      <div><span>Time</span><b id="timeEl">3.8s</b></div>
     </div>
 
     <div class="screen-wrap">
+      <div class="inner-top-stack">
+        <div class="inner-time-bar-wrap">
+          <div id="timeBarFill" class="time-bar-fill"></div>
+        </div>
+        <div id="livesStrip" class="lives-strip"></div>
+      </div>
       <canvas id="gameCanvas" width="380" height="380"></canvas>
+      <div id="countdownBanner" class="countdown-banner">
+        <span id="countdownText" class="countdown-text">3</span>
+      </div>
       <div id="flashLayer" class="flash-layer"></div>
 
       <div id="overlay" class="overlay">
-        <!-- 1. MAIN HUB VIEW -->
         <div id="view_home" class="subview active">
           <h2>ColourShoot</h2>
-          <p id="homeSummary">Drag <b>Joystick</b> to aim and tap <b>A</b> to fire.</p>
-
-          <div class="profile-card">
-            <div class="profile-info">
-              <div id="playerNameEl" class="profile-name">Player1</div>
-              <div id="bestScoreEl" class="profile-points">Best Points: 0</div>
-            </div>
-            <button class="small-btn" type="button" onclick="editPlayerName()">Edit Name</button>
-          </div>
+          <p id="homeSummary">Drag <b>Joystick</b> to aim, tap <b>A</b> to fire, and shoot <b>Assist</b> tokens to store up to 4 active powers.</p>
 
           <div class="hub-menu">
-            <button class="hub-btn train" type="button" onclick="openView('training')">
+            <button id="navTrainBtn" class="hub-btn train" type="button">
               <span>Training</span>
-              <span class="hub-sub">Single Levels &amp; Briefings →</span>
+              <span class="hub-sub">Target Lab & Assist Lab</span>
             </button>
-            <button class="hub-btn tourney" type="button" onclick="openView('tournament')">
+            <button id="navLevelBtn" class="hub-btn levelmode" type="button">
+              <span>Level-Mode</span>
+              <span class="hub-sub">20 Levels & Obstacles</span>
+            </button>
+            <button id="navTourneyBtn" class="hub-btn tourney" type="button">
               <span>Tournament</span>
-              <span class="hub-sub">Presets &amp; Checkpoints →</span>
+              <span class="hub-sub">Classic Endless & Top 20</span>
             </button>
-            <button class="hub-btn skins" type="button" onclick="openView('skins')">
-              <span>Skins &amp; Sounds</span>
-              <span class="hub-sub">Themes, Aids &amp; Sound Packs →</span>
+            <button id="navSkinsBtn" class="hub-btn skins" type="button">
+              <span>Skins & Sounds</span>
+              <span class="hub-sub">Themes, Aids & Sound Packs</span>
             </button>
           </div>
         </div>
 
-        <!-- 2. TRAINING SUBVIEW -->
         <div id="view_training" class="subview">
           <h2>Training</h2>
-          <div class="panel-box">
-            <div class="panel-label">Select Single Variant</div>
+          <div class="tab-row">
+            <button id="tab_targets" class="tab-btn active" type="button">Target Lab</button>
+            <button id="tab_assists" class="tab-btn" type="button">Assist Lab</button>
+          </div>
+
+          <div id="trainTargetsPanel" class="panel-box">
+            <div class="panel-label">Target Lab – Single Target Variant (Fixed Shape & Style)</div>
             <div id="levelGrid" class="level-grid"></div>
             <div id="trainingBriefing" class="briefing-box"></div>
           </div>
+
+          <div id="trainAssistsPanel" class="panel-box" style="display:none;">
+            <div class="panel-label">Assist Lab – Moving Targets to Practice Freeze / Anchor / Assists</div>
+            <div id="assistLabGrid" class="level-grid"></div>
+            <div id="assistBriefing" class="briefing-box"></div>
+          </div>
+
           <div class="btn-row">
-            <button class="btn-back" type="button" onclick="openView('home')">← Main Menu</button>
-            <button class="btn-go" type="button" onclick="startGame('training')">Start Training</button>
+            <button id="backFromTrainBtn" class="btn-back" type="button">Main Menu</button>
+            <button id="startTrainBtn" class="btn-go" type="button">Start Target Lab</button>
           </div>
         </div>
 
-        <!-- 3. TOURNAMENT SUBVIEW -->
-        <div id="view_tournament" class="subview">
-          <h2>Tournament</h2>
+        <div id="view_levelmode" class="subview">
+          <h2>Level-Mode (20 Levels)</h2>
           <div class="panel-box">
-            <div class="panel-label">Select Tournament Preset</div>
-            <div class="preset-buttons">
-              <button id="preset_classic" class="preset-btn active" type="button" onclick="selectPreset('classic')">Classic Cup</button>
-              <button id="preset_variety" class="preset-btn" type="button" onclick="selectPreset('variety')">Pattern Mix</button>
-              <button id="preset_fever" class="preset-btn" type="button" onclick="selectPreset('fever')">Fever Circuit</button>
+            <div class="panel-label">Endless Until Miss (Saved Score Shown per Level)</div>
+            <div id="levelModeGrid" class="mode20-grid"></div>
+            <div id="levelModeBriefing" class="briefing-box"></div>
+          </div>
+          <div class="btn-row">
+            <button id="backFromLevelBtn" class="btn-back" type="button">Main Menu</button>
+            <button id="startLevelModeBtn" class="btn-go purple" type="button">Start Level</button>
+          </div>
+        </div>
+
+        <div id="view_levelresult" class="subview">
+          <div class="result-header">
+            <h2 id="levelResultTitle">Level Result</h2>
+            <button id="closeLevelResultBtn" class="close-x-btn" type="button" title="Close">✕</button>
+          </div>
+          <div class="result-card">
+            <div class="result-row">
+              <span>Erreichte Punktzahl:</span>
+              <b id="resultScoreVal">0</b>
             </div>
-            <div id="presetMeta" class="preset-meta">Jackpot Goal: 1,800 pts | Stages: 3</div>
+            <div class="result-row">
+              <span>Bisheriger Best-Score:</span>
+              <b id="resultPrevBestVal">0</b>
+            </div>
+            <div class="result-row">
+              <span>Aktueller Best-Score:</span>
+              <b id="resultNewBestVal">0</b>
+            </div>
+            <div id="resultComparisonBox" class="result-compare"></div>
+          </div>
+          <div></div>
+        </div>
+
+        <div id="view_tournament" class="subview">
+          <h2>Classic Tournament</h2>
+          <div class="panel-box">
+            <div class="tourney-name-row">
+              <span>Spieler: <b id="tourneyPlayerNameEl">Player1</b></span>
+              <button id="editNameBtn" class="small-btn" type="button">Name ändern</button>
+            </div>
+            <div id="presetMeta" class="preset-meta">All Target Variants & All Assists | Stage every 600 pts | Assists at R3, R6, R9</div>
+            <div class="panel-label">Top 20 Tournament Ranking</div>
+            <div id="tournamentLeaderboard" class="leaderboard-box"></div>
             <div id="presetBriefing" class="briefing-box"></div>
           </div>
           <div class="btn-row">
-            <button class="btn-back" type="button" onclick="openView('home')">← Main Menu</button>
-            <button class="btn-go amber" type="button" onclick="startGame('tournament')">Start Tournament</button>
+            <button id="backFromTourneyBtn" class="btn-back" type="button">Main Menu</button>
+            <button id="startTourneyBtn" class="btn-go amber" type="button">Start Classic Tournament</button>
           </div>
         </div>
 
-        <!-- 4. SKINS & SOUNDS SUBVIEW -->
         <div id="view_skins" class="subview">
-          <h2>Skins &amp; Sounds</h2>
+          <h2>Skins & Sounds</h2>
           <div class="panel-box">
-            <div class="panel-label">Skins &amp; Training Aids</div>
+            <div class="panel-label">Skins & Training Aids</div>
             <div class="shop-item">
               <span><b>Skin:</b> Retro Handheld</span>
-              <button id="buyRetroBtn" class="shop-btn" type="button" onclick="toggleRetro()">50 Coins</button>
+              <button id="buyRetroBtn" class="shop-btn" type="button">50 Coins</button>
             </div>
             <div class="shop-item">
               <span><b>Training Aid:</b> Aim Line (training only)</span>
-              <button id="buyGuideBtn" class="shop-btn" type="button" onclick="buyGuide()">30 Coins</button>
+              <button id="buyGuideBtn" class="shop-btn" type="button">30 Coins</button>
             </div>
           </div>
 
           <div class="panel-box">
-            <div class="panel-label">Sound Packs (Double Shot · Triple Shot · Rampage · God-Like)</div>
+            <div class="panel-label">Sound Packs (Double Shot - Triple Shot - Rampage - God-Like)</div>
             <div class="shop-item">
               <span><b>Arcade Synth</b> (Default)</span>
-              <button id="sound_synth_btn" class="shop-btn" type="button" onclick="selectSoundPack('synth')">Active</button>
+              <button id="sound_synth_btn" class="shop-btn" type="button">Active</button>
             </div>
             <div class="shop-item">
               <span><b>Arena Streak Pack</b> (Streak fanfares)</span>
-              <button id="sound_streak_btn" class="shop-btn" type="button" onclick="selectSoundPack('streak')">40 Coins</button>
+              <button id="sound_streak_btn" class="shop-btn" type="button">40 Coins</button>
             </div>
             <div class="shop-item">
               <span><b>Retro Beep Pack</b> (8-bit chimes)</span>
-              <button id="sound_retro_btn" class="shop-btn" type="button" onclick="selectSoundPack('retro')">35 Coins</button>
+              <button id="sound_retro_btn" class="shop-btn" type="button">35 Coins</button>
             </div>
           </div>
 
           <div class="btn-row">
-            <button class="btn-back" type="button" onclick="openView('home')">← Main Menu</button>
+            <button id="backFromSkinsBtn" class="btn-back" type="button">Main Menu</button>
           </div>
         </div>
       </div>
@@ -602,477 +916,2019 @@
         <div id="joystickKnob" class="joystick-knob"></div>
       </div>
 
+      <div class="assist-dock">
+        <div class="assist-label">Active Assists (4 Slots)</div>
+        <div class="assist-slots">
+          <button id="assistSlot0" class="assist-btn" type="button">-</button>
+          <button id="assistSlot1" class="assist-btn" type="button">-</button>
+          <button id="assistSlot2" class="assist-btn" type="button">-</button>
+          <button id="assistSlot3" class="assist-btn" type="button">-</button>
+        </div>
+      </div>
+
       <button id="fireBtn" class="fire-btn" type="button" title="Fire (Space)">A</button>
     </div>
   </div>
 
   <script>
-    var canvas = document.getElementById("gameCanvas");
-    var ctx = canvas.getContext("2d");
-    var flashLayer = document.getElementById("flashLayer");
+    (function () {
+      var canvas = document.getElementById("gameCanvas");
+      var ctx = canvas.getContext("2d");
+      var flashLayer = document.getElementById("flashLayer");
+      var countdownBanner = document.getElementById("countdownBanner");
+      var countdownText = document.getElementById("countdownText");
 
-    var modeBadge = document.getElementById("modeBadge");
-    var coinsEl = document.getElementById("coinsEl");
-    var scoreEl = document.getElementById("scoreEl");
-    var roundEl = document.getElementById("roundEl");
-    var patternEl = document.getElementById("patternEl");
-    var timeEl = document.getElementById("timeEl");
-    var overlay = document.getElementById("overlay");
-    var playerNameEl = document.getElementById("playerNameEl");
-    var bestScoreEl = document.getElementById("bestScoreEl");
-    var homeSummary = document.getElementById("homeSummary");
-    var levelGrid = document.getElementById("levelGrid");
-    var trainingBriefing = document.getElementById("trainingBriefing");
-    var presetMeta = document.getElementById("presetMeta");
-    var presetBriefing = document.getElementById("presetBriefing");
-    var buyGuideBtn = document.getElementById("buyGuideBtn");
-    var buyRetroBtn = document.getElementById("buyRetroBtn");
-    var soundSynthBtn = document.getElementById("sound_synth_btn");
-    var soundStreakBtn = document.getElementById("sound_streak_btn");
-    var soundRetroBtn = document.getElementById("sound_retro_btn");
-    var fireBtn = document.getElementById("fireBtn");
-    var joystickBase = document.getElementById("joystickBase");
-    var joystickKnob = document.getElementById("joystickKnob");
+      var modeBadge = document.getElementById("modeBadge");
+      var livesStrip = document.getElementById("livesStrip");
+      var coinsEl = document.getElementById("coinsEl");
+      var scoreEl = document.getElementById("scoreEl");
+      var roundEl = document.getElementById("roundEl");
+      var patternEl = document.getElementById("patternEl");
+      var timeBarFill = document.getElementById("timeBarFill");
+      var overlay = document.getElementById("overlay");
+      var tourneyPlayerNameEl = document.getElementById("tourneyPlayerNameEl");
+      var tournamentLeaderboard = document.getElementById("tournamentLeaderboard");
+      var homeSummary = document.getElementById("homeSummary");
+      var levelGrid = document.getElementById("levelGrid");
+      var trainingBriefing = document.getElementById("trainingBriefing");
+      var assistLabGrid = document.getElementById("assistLabGrid");
+      var assistBriefing = document.getElementById("assistBriefing");
+      var trainTargetsPanel = document.getElementById("trainTargetsPanel");
+      var trainAssistsPanel = document.getElementById("trainAssistsPanel");
+      var startTrainBtn = document.getElementById("startTrainBtn");
+      var levelModeGrid = document.getElementById("levelModeGrid");
+      var levelModeBriefing = document.getElementById("levelModeBriefing");
+      var startLevelModeBtn = document.getElementById("startLevelModeBtn");
+      var levelResultTitle = document.getElementById("levelResultTitle");
+      var resultScoreVal = document.getElementById("resultScoreVal");
+      var resultPrevBestVal = document.getElementById("resultPrevBestVal");
+      var resultNewBestVal = document.getElementById("resultNewBestVal");
+      var resultComparisonBox = document.getElementById("resultComparisonBox");
+      var closeLevelResultBtn = document.getElementById("closeLevelResultBtn");
+      var startTourneyBtn = document.getElementById("startTourneyBtn");
+      var presetMeta = document.getElementById("presetMeta");
+      var presetBriefing = document.getElementById("presetBriefing");
+      var buyGuideBtn = document.getElementById("buyGuideBtn");
+      var buyRetroBtn = document.getElementById("buyRetroBtn");
+      var soundSynthBtn = document.getElementById("sound_synth_btn");
+      var soundStreakBtn = document.getElementById("sound_streak_btn");
+      var soundRetroBtn = document.getElementById("sound_retro_btn");
+      var assistSlotsEls = [
+        document.getElementById("assistSlot0"),
+        document.getElementById("assistSlot1"),
+        document.getElementById("assistSlot2"),
+        document.getElementById("assistSlot3")
+      ];
+      var fireBtn = document.getElementById("fireBtn");
+      var joystickBase = document.getElementById("joystickBase");
+      var joystickKnob = document.getElementById("joystickKnob");
 
-    var SHOT_LOCK_DURATION = 0.22;
-    var FEVER_STREAK_REQUIRED = 3;
+      var SHOT_LOCK_DURATION = 0.22;
+      var FEVER_STREAK_REQUIRED = 3;
+      var TOURNAMENT_ASSIST_ROUNDS = [3, 6, 9, 12, 15, 18, 21, 24];
+      var MAX_TIME_BAR = 6.0;
+      var MAX_LIVES = 10;
 
-    var VIEWS = ["home", "training", "tournament", "skins"];
-    var currentView = "home";
+      var VIEWS = ["home", "training", "levelmode", "levelresult", "tournament", "skins"];
+      var currentView = "home";
+      var trainTab = "targets";
+      var countdownTimerId = null;
 
-    function openView(viewName) {
-      if (VIEWS.indexOf(viewName) === -1) viewName = "home";
-      currentView = viewName;
-      for (var i = 0; i < VIEWS.length; i++) {
-        var el = document.getElementById("view_" + VIEWS[i]);
-        if (el) {
-          el.className = VIEWS[i] === viewName ? "subview active" : "subview";
+      var TARGET_VISUALS = {
+        static:        { shape: "circle",  color: "#8b5cf6", retroColor: "#1f4e1f", pattern: "ring" },
+        moveX:         { shape: "circle",  color: "#06b6d4", retroColor: "#1f4e1f", pattern: "stripesX" },
+        ringTarget:    { shape: "circle",  color: "#f59e0b", retroColor: "#0f380f", pattern: "bullRing" },
+        figureEight:   { shape: "octagon", color: "#ec4899", retroColor: "#1f4e1f", pattern: "cross" },
+        telegraphJump: { shape: "circle",  color: "#3b82f6", retroColor: "#0f380f", pattern: "ghost" },
+        elasticBounce: { shape: "octagon", color: "#10b981", retroColor: "#1f4e1f", pattern: "pulseRing" },
+        shieldShot:    { shape: "circle",  color: "#0ea5e9", retroColor: "#0f380f", pattern: "shield" }
+      };
+
+      var TRAINING_LEVELS = [
+        {
+          id: "static",
+          shortLabel: "1. Static",
+          block: { type: "static", label: "Static", speed: 0 },
+          does: "Stationary violet circle with inner ring - ideal for banking leftover time.",
+          spotBy: "Always violet with a circle shape and steady core ring."
+        },
+        {
+          id: "moveX",
+          shortLabel: "2. Sweep X",
+          block: { type: "moveX", label: "Sweep X", speed: 42 },
+          does: "Glides horizontally left and right across the arena.",
+          spotBy: "Always cyan with horizontal scan stripes."
+        },
+        {
+          id: "ringTarget",
+          shortLabel: "3. DualRing",
+          block: { type: "ringTarget", label: "DualRing", speed: 0 },
+          does: "Inner core gives bonus & streak progress; outer edge shrinks target more.",
+          spotBy: "Always amber with a prominent double ring."
+        },
+        {
+          id: "figureEight",
+          shortLabel: "4. Fig-8",
+          block: { type: "figureEight", label: "Fig-8", speed: 1.08 },
+          does: "Smoothly traces a figure-eight curve across the screen.",
+          spotBy: "Always pink with an 8-sided octagon shape and crosshair."
+        },
+        {
+          id: "telegraphJump",
+          shortLabel: "5. JumpPlan",
+          block: { type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.72, jumpInterval: 1.85 },
+          does: "Previews upcoming jump location with a dashed outline before hopping.",
+          spotBy: "Always royal blue with a dashed ghost preview circle."
+        },
+        {
+          id: "elasticBounce",
+          shortLabel: "6. Elastic",
+          block: { type: "elasticBounce", label: "Elastic", speed: 54 },
+          does: "Rebounds diagonally off walls and alternates speed after each bounce.",
+          spotBy: "Always emerald green with an octagon shape and outer pulse ring."
+        },
+        {
+          id: "shieldShot",
+          shortLabel: "7. Shield",
+          block: { type: "shieldShot", label: "Shield", speed: 34 },
+          does: "Prevents radius shrink on a non-core hit.",
+          spotBy: "Always sky-blue with a thick outer shield ring."
         }
-      }
-      refreshProfileUI();
-      refreshShopUI();
-    }
+      ];
 
-    var TRAINING_LEVELS = [
-      {
-        id: "static",
-        shortLabel: "1. Static",
-        block: { type: "static", label: "Static", speed: 0 },
-        does: "The target stays in place so you can practice steady aiming and timing.",
-        spotBy: "A solid target circle with a thin inner core ring and no movement."
-      },
-      {
-        id: "moveX",
-        shortLabel: "2. Sweep X",
-        block: { type: "moveX", label: "Sweep X", speed: 40 },
-        does: "The target glides back and forth horizontally between left and right.",
-        spotBy: "Horizontal side-to-side travel along a straight line."
-      },
-      {
-        id: "ringTarget",
-        shortLabel: "3. DualRing",
-        block: { type: "ringTarget", label: "DualRing", speed: 0 },
-        does: "Hitting the inner core gives extra points & combo; outer edge shrinks faster.",
-        spotBy: "A golden inner core ring inside the main target."
-      },
-      {
-        id: "figureEight",
-        shortLabel: "4. Fig-8",
-        block: { type: "figureEight", label: "Fig-8", speed: 1.05 },
-        does: "The target smoothly traces a figure-eight curve across the arena.",
-        spotBy: "Curved looping path crossing itself like a figure eight."
-      },
-      {
-        id: "telegraphJump",
-        shortLabel: "5. JumpPlan",
-        block: { type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.72, jumpInterval: 1.85 },
-        does: "Before jumping, the target previews its next spot so you can move early.",
-        spotBy: "A dashed outline ('ghost' circle) showing the upcoming jump position."
-      },
-      {
-        id: "elasticBounce",
-        shortLabel: "6. Elastic",
-        block: { type: "elasticBounce", label: "Elastic", speed: 52 },
-        does: "The target bounces off walls and shifts speed between brisk and calm.",
-        spotBy: "Diagonal wall rebounds followed by a noticeable pace shift."
-      },
-      {
-        id: "shieldShot",
-        shortLabel: "7. Shield",
-        block: { type: "shieldShot", label: "Shield", speed: 32 },
-        does: "Protects your target radius from shrinking on a non-core hit.",
-        spotBy: "A bright blue outer ring around the target."
-      }
-    ];
-
-    var selectedTrainingId = "static";
-
-    function getSelectedTrainingLevel() {
-      for (var i = 0; i < TRAINING_LEVELS.length; i++) {
-        if (TRAINING_LEVELS[i].id === selectedTrainingId) {
-          return TRAINING_LEVELS[i];
+      var ASSISTS_CATALOG = [
+        {
+          id: "timeStitch",
+          code: "+TIME",
+          name: "Time-Stitch",
+          color: "#22c55e",
+          passive: true,
+          labTarget: { type: "moveX", label: "Sweep X", speed: 44 },
+          does: "Immediate/Passive: Adds +1.8s directly to the time bar on pickup (no slot used).",
+          whenToUse: "Triggers automatically when you shoot the +TIME token."
+        },
+        {
+          id: "safetyNet",
+          code: "NET",
+          name: "Safety Net",
+          color: "#f472b6",
+          passive: true,
+          labTarget: { type: "elasticBounce", label: "Elastic", speed: 52 },
+          does: "Immediate/Passive: Adds +1 life (up to 10 lives) shown below time bar.",
+          whenToUse: "Triggers automatically on pickup and stacks up to 10 lives."
+        },
+        {
+          id: "anchor",
+          code: "ANCHOR",
+          name: "Anchor",
+          color: "#38bdf8",
+          passive: false,
+          labTarget: { type: "figureEight", label: "Fig-8", speed: 1.15 },
+          does: "Active Slot Assist: Locks the moving target in place for 2.4s while time drains.",
+          whenToUse: "Use on Fig-8 or moving targets to stop target motion cleanly."
+        },
+        {
+          id: "freezer",
+          code: "FREEZE",
+          name: "Freezer",
+          color: "#a5f3fc",
+          passive: false,
+          labTarget: { type: "elasticBounce", label: "Elastic", speed: 62 },
+          does: "Active Slot Assist: Freezes both moving target and time bar drain for 2.4s.",
+          whenToUse: "Use to freeze fast targets and stop time drain simultaneously."
+        },
+        {
+          id: "autoAim",
+          code: "AUTO",
+          name: "Auto-Aim",
+          color: "#c084fc",
+          passive: false,
+          labTarget: { type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.72, jumpInterval: 1.65 },
+          does: "Active Slot Assist: Guides your reticle straight onto the target center for 2.4s.",
+          whenToUse: "Great for tracking hopping or moving targets effortlessly."
+        },
+        {
+          id: "coreMagnet",
+          code: "CORE+",
+          name: "Core Magnet",
+          color: "#facc15",
+          passive: false,
+          labTarget: { type: "moveX", label: "Sweep X", speed: 48 },
+          does: "Active Slot Assist: Expands the inner core hit zone for 3.5s so core hits come easier.",
+          whenToUse: "Use on moving targets when building streaks or Fever."
+        },
+        {
+          id: "inflate",
+          code: "SIZE+",
+          name: "Inflate",
+          color: "#fb923c",
+          passive: false,
+          labTarget: { type: "figureEight", label: "Fig-8", speed: 1.05 },
+          does: "Active Slot Assist: Expands the target radius by +12px (up to 84px).",
+          whenToUse: "Use on moving targets after outer hits shrink them."
         }
+      ];
+
+      var OBSTACLE_STYLES = [
+        "none",
+        "centerBarH",
+        "centerSquare",
+        "centerCircle",
+        "checkerboard"
+      ];
+
+      var VARIANT_POOL = [
+        { type: "static",        label: "Static",   speed: 0 },
+        { type: "moveX",         label: "Sweep X",  speed: 44 },
+        { type: "ringTarget",    label: "DualRing", speed: 0 },
+        { type: "figureEight",   label: "Fig-8",    speed: 1.1 },
+        { type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.7, jumpInterval: 1.8 },
+        { type: "elasticBounce", label: "Elastic",  speed: 55 },
+        { type: "shieldShot",    label: "Shield",   speed: 36 }
+      ];
+
+      var LEVEL_MODES = [];
+      for (var lv = 1; lv <= 20; lv++) {
+        var obsType = OBSTACLE_STYLES[(lv - 1) % OBSTACLE_STYLES.length];
+        var primaryVariant = VARIANT_POOL[(lv - 1) % VARIANT_POOL.length];
+        var obsNames = {
+          none: "Open Arena",
+          centerBarH: "Center Bar",
+          centerSquare: "Center Square",
+          centerCircle: "Center Circle",
+          checkerboard: "Checkerboard"
+        };
+        var focusText = "Focus: " + primaryVariant.label + " + All Variants & Assists | " + obsNames[obsType] + " (Endless)";
+        LEVEL_MODES.push({
+          id: lv,
+          label: "Lv." + lv,
+          title: "Level " + lv + " – " + primaryVariant.label,
+          obstacle: obsType,
+          obstacleName: obsNames[obsType],
+          primaryVariant: primaryVariant,
+          startTime: Math.max(3.4, 4.4 - ((lv - 1) % 5) * 0.18),
+          roundTimeGain: 2.05,
+          drainStepPerRound: 0.038 + ((lv - 1) % 6) * 0.005,
+          focusText: focusText
+        });
       }
-      return TRAINING_LEVELS[0];
-    }
 
-    function renderTrainingLevels() {
-      levelGrid.innerHTML = "";
-      for (var i = 0; i < TRAINING_LEVELS.length; i++) {
-        (function (lvl) {
-          var btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = lvl.id === selectedTrainingId ? "level-btn active" : "level-btn";
-          btn.textContent = lvl.shortLabel;
-          btn.onclick = function () {
-            selectedTrainingId = lvl.id;
-            renderTrainingLevels();
-          };
-          levelGrid.appendChild(btn);
-        })(TRAINING_LEVELS[i]);
-      }
-
-      var active = getSelectedTrainingLevel();
-      trainingBriefing.innerHTML =
-        "<b>" + active.shortLabel + " – What it does:</b> " + active.does +
-        "<br /><b>How to spot it:</b> " + active.spotBy;
-    }
-
-    // Smoother tournament progression + stage checkpoint refresh + non-lethal Golden Bonus Shot
-    var TOURNAMENT_PRESETS = {
-      classic: {
-        name: "Classic Cup",
-        jackpotGoal: 1800,
-        stages: [600, 1200],
-        startTime: 3.9,
-        timeDecay: 0.02,
-        minTime: 1.8,
-        shrinkFactor: 0.26,
-        ringShrinkFactor: 0.42,
-        minRadius: 16,
-        summary: "Starts calm with Static & Sweep X, gradually adds DualRing, Fig-8, JumpPlan & Elastic. Each Stage refreshes +8px radius & gives +100 pts.",
-        sequence: [
-          { untilRound: 3,  type: "static",        label: "Static",   speed: 0 },
-          { untilRound: 6,  type: "moveX",         label: "Sweep X",  speed: 38 },
-          { untilRound: 9,  type: "ringTarget",    label: "DualRing", speed: 0 },
-          { untilRound: 12, type: "figureEight",   label: "Fig-8",    speed: 1.0 },
-          { untilRound: 15, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.72, jumpInterval: 1.85 },
-          { untilRound: 99, type: "elasticBounce", label: "Elastic",  speed: 50 }
-        ]
-      },
-      variety: {
-        name: "Pattern Mix",
-        jackpotGoal: 2000,
-        stages: [650, 1300],
-        startTime: 4.0,
-        timeDecay: 0.018,
-        minTime: 1.85,
-        shrinkFactor: 0.25,
-        ringShrinkFactor: 0.4,
-        minRadius: 16,
-        summary: "Balanced mix starting with Shield & JumpPlan before moving into DualRing, Elastic and Fig-8 with gentle timer decay.",
-        sequence: [
-          { untilRound: 3,  type: "shieldShot",    label: "Shield",   speed: 30 },
-          { untilRound: 6,  type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.75, jumpInterval: 1.9 },
-          { untilRound: 9,  type: "ringTarget",    label: "DualRing", speed: 0 },
-          { untilRound: 12, type: "elasticBounce", label: "Elastic",  speed: 52 },
-          { untilRound: 99, type: "figureEight",   label: "Fig-8",    speed: 1.08 }
-        ]
-      },
-      fever: {
-        name: "Fever Circuit",
-        jackpotGoal: 2200,
-        stages: [700, 1450],
-        startTime: 3.8,
-        timeDecay: 0.022,
-        minTime: 1.75,
-        shrinkFactor: 0.26,
-        ringShrinkFactor: 0.42,
-        minRadius: 16,
-        summary: "Built around core streaks & Fever boosts across DualRing, Fig-8, Shield, Elastic and JumpPlan. Reaching the goal locks in your win!",
-        sequence: [
-          { untilRound: 3,  type: "ringTarget",    label: "DualRing", speed: 0 },
-          { untilRound: 6,  type: "figureEight",   label: "Fig-8",    speed: 1.05 },
-          { untilRound: 9,  type: "shieldShot",    label: "Shield",   speed: 34 },
-          { untilRound: 12, type: "elasticBounce", label: "Elastic",  speed: 54 },
-          { untilRound: 99, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.72, jumpInterval: 1.8 }
-        ]
-      }
-    };
-
-    var selectedPresetKey = "classic";
-
-    function getActivePreset() {
-      return TOURNAMENT_PRESETS[selectedPresetKey] || TOURNAMENT_PRESETS.classic;
-    }
-
-    function selectPreset(key) {
-      if (!TOURNAMENT_PRESETS[key]) return;
-      selectedPresetKey = key;
-      var keys = ["classic", "variety", "fever"];
-      for (var i = 0; i < keys.length; i++) {
-        var btn = document.getElementById("preset_" + keys[i]);
-        if (btn) {
-          btn.className = keys[i] === key ? "preset-btn active" : "preset-btn";
+      var selectedLevelId = 1;
+      function getSelectedLevelMode() {
+        for (var i = 0; i < LEVEL_MODES.length; i++) {
+          if (LEVEL_MODES[i].id === selectedLevelId) return LEVEL_MODES[i];
         }
+        return LEVEL_MODES[0];
       }
-      var p = getActivePreset();
-      var totalStages = (p.stages ? p.stages.length : 0) + 1;
-      presetMeta.textContent = "Jackpot Goal: " + p.jackpotGoal.toLocaleString("en-US") + " pts | Stages: " + totalStages;
-      presetBriefing.innerHTML = "<b>How this tournament plays:</b> " + p.summary;
-    }
 
-    var audioCtx = null;
-    function ensureAudio() {
+      var selectedTrainingId = "static";
+      var selectedAssistLabId = "anchor";
+
+      function getSelectedTrainingLevel() {
+        for (var i = 0; i < TRAINING_LEVELS.length; i++) {
+          if (TRAINING_LEVELS[i].id === selectedTrainingId) return TRAINING_LEVELS[i];
+        }
+        return TRAINING_LEVELS[0];
+      }
+
+      function getSelectedAssistLab() {
+        for (var i = 0; i < ASSISTS_CATALOG.length; i++) {
+          if (ASSISTS_CATALOG[i].id === selectedAssistLabId) return ASSISTS_CATALOG[i];
+        }
+        return ASSISTS_CATALOG[0];
+      }
+
+      function getAssistDef(id) {
+        for (var i = 0; i < ASSISTS_CATALOG.length; i++) {
+          if (ASSISTS_CATALOG[i].id === id) return ASSISTS_CATALOG[i];
+        }
+        return ASSISTS_CATALOG[0];
+      }
+
+      var THEMES = {
+        modern: {
+          bgTop: "#0f172a",
+          bgBottom: "#1e293b",
+          grid: "rgba(148, 163, 184, 0.12)",
+          reticle: "#ffffff"
+        },
+        retro: {
+          bgTop: "#9bbc0f",
+          bgBottom: "#8bac0f",
+          grid: "rgba(15, 56, 15, 0.16)",
+          reticle: "#0f380f"
+        }
+      };
+
+      var save = {
+        playerName: "Player1",
+        bestScore: 0,
+        coins: 0,
+        hasGuide: false,
+        hasRetro: false,
+        useRetro: false,
+        ownedSounds: { synth: true, streak: false, retro: false },
+        soundPack: "synth",
+        levelScores: {},
+        tournamentEntries: []
+      };
+
       try {
-        if (!audioCtx) {
-          var AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (AudioContextClass) {
-            audioCtx = new AudioContextClass();
+        var rawSave = localStorage.getItem("colourshoot_save_v21");
+        if (rawSave) {
+          var parsed = JSON.parse(rawSave);
+          if (parsed.playerName) save.playerName = String(parsed.playerName).slice(0, 16);
+          save.bestScore = parsed.bestScore || 0;
+          save.coins = parsed.coins || 0;
+          save.hasGuide = !!parsed.hasGuide;
+          save.hasRetro = !!parsed.hasRetro;
+          save.useRetro = !!parsed.useRetro;
+          if (parsed.ownedSounds) {
+            save.ownedSounds.synth = true;
+            save.ownedSounds.streak = !!parsed.ownedSounds.streak;
+            save.ownedSounds.retro = !!parsed.ownedSounds.retro;
+          }
+          if (parsed.soundPack && save.ownedSounds[parsed.soundPack]) {
+            save.soundPack = parsed.soundPack;
+          }
+          if (parsed.levelScores && typeof parsed.levelScores === "object") {
+            save.levelScores = parsed.levelScores;
+          }
+          if (Array.isArray(parsed.tournamentEntries)) {
+            save.tournamentEntries = parsed.tournamentEntries.slice(0, 20);
           }
         }
-        if (audioCtx && audioCtx.state === "suspended") {
-          audioCtx.resume();
-        }
       } catch (e) {}
-    }
 
-    function playTone(freq, endFreq, duration, type, gainVal, delaySec) {
-      try {
-        if (!audioCtx) return;
-        var now = audioCtx.currentTime + (delaySec || 0);
-        var osc = audioCtx.createOscillator();
-        var gain = audioCtx.createGain();
-        osc.type = type || "sine";
-        osc.frequency.setValueAtTime(freq, now);
-        if (endFreq) {
-          osc.frequency.exponentialRampToValueAtTime(Math.max(40, endFreq), now + duration);
+      function getUserLevelRecord(levelId) {
+        var byUser = save.levelScores[save.playerName];
+        if (!byUser || typeof byUser !== "object") return null;
+        return byUser[String(levelId)] || null;
+      }
+
+      function setUserLevelRecord(levelId, scoreVal) {
+        if (!save.levelScores[save.playerName] || typeof save.levelScores[save.playerName] !== "object") {
+          save.levelScores[save.playerName] = {};
         }
-        gain.gain.setValueAtTime(gainVal || 0.14, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(now);
-        osc.stop(now + duration);
-      } catch (e) {}
-    }
+        var prev = save.levelScores[save.playerName][String(levelId)];
+        var best = prev && typeof prev.best === "number" ? Math.max(prev.best, scoreVal) : scoreVal;
+        save.levelScores[save.playerName][String(levelId)] = {
+          best: best,
+          last: scoreVal
+        };
+      }
 
-    // Streak callouts: 2 = Double Shot, 3 = Triple Shot, 4 = Rampage, 5+ = God-Like
-    function getStreakCallout(streakCount) {
-      if (streakCount === 2) return "DOUBLE SHOT!";
-      if (streakCount === 3) return "TRIPLE SHOT!";
-      if (streakCount === 4) return "RAMPAGE!";
-      if (streakCount >= 5) return "GOD-LIKE!";
-      return null;
-    }
-
-    function playStreakFanfare(streakCount, pack) {
-      if (pack === "streak") {
-        if (streakCount === 2) {
-          playTone(587, 880, 0.09, "sawtooth", 0.16, 0);
-          playTone(880, 1174, 0.11, "triangle", 0.18, 0.08);
-        } else if (streakCount === 3) {
-          playTone(659, 987, 0.08, "sawtooth", 0.17, 0);
-          playTone(880, 1318, 0.09, "triangle", 0.19, 0.08);
-          playTone(1318, 1760, 0.14, "sine", 0.22, 0.16);
-        } else if (streakCount === 4) {
-          playTone(440, 880, 0.08, "square", 0.15, 0);
-          playTone(659, 1318, 0.09, "sawtooth", 0.18, 0.07);
-          playTone(880, 1760, 0.14, "triangle", 0.22, 0.15);
+      function recordTournamentScore(playerName, scoreVal) {
+        var cleanName = String(playerName || "Player1").trim().slice(0, 16) || "Player1";
+        var entries = save.tournamentEntries.slice();
+        var existingIdx = -1;
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].name.toLowerCase() === cleanName.toLowerCase()) {
+            existingIdx = i;
+            break;
+          }
+        }
+        if (existingIdx !== -1) {
+          if (scoreVal > entries[existingIdx].score) {
+            entries[existingIdx].score = scoreVal;
+            entries[existingIdx].name = cleanName;
+          }
         } else {
-          playTone(523, 1046, 0.09, "sawtooth", 0.18, 0);
-          playTone(784, 1568, 0.1, "triangle", 0.2, 0.08);
-          playTone(1046, 2093, 0.18, "sine", 0.24, 0.17);
+          entries.push({ name: cleanName, score: scoreVal });
         }
-      } else if (pack === "retro") {
-        var base = 520 + Math.min(400, streakCount * 90);
-        playTone(base, base * 1.25, 0.08, "square", 0.14, 0);
-        playTone(base * 1.5, base * 2, 0.12, "square", 0.15, 0.08);
-      } else {
-        playTone(660, 990, 0.09, "sine", 0.18, 0);
-        playTone(990, 1320, 0.13, "triangle", 0.2, 0.07);
+        entries.sort(function (a, b) {
+          return b.score - a.score;
+        });
+        save.tournamentEntries = entries.slice(0, 20);
       }
-    }
 
-    function playHitSound() {
-      var pack = save.soundPack || "synth";
-      if (pack === "retro") {
-        playTone(480, 640, 0.09, "square", 0.12, 0);
-      } else if (pack === "streak") {
-        playTone(540, 820, 0.1, "triangle", 0.15, 0);
-      } else {
-        playTone(520, 760, 0.11, "triangle", 0.16, 0);
-      }
-    }
-
-    function playBullseyeSound(streakCount) {
-      var pack = save.soundPack || "synth";
-      if (streakCount >= 2) {
-        playStreakFanfare(streakCount, pack);
-        return;
-      }
-      if (pack === "retro") {
-        playTone(660, 990, 0.08, "square", 0.15, 0);
-        playTone(990, 1320, 0.12, "square", 0.16, 0.07);
-      } else {
-        playTone(660, 990, 0.09, "sine", 0.2, 0);
-        playTone(990, 1320, 0.14, "triangle", 0.22, 0.07);
-      }
-    }
-
-    function playJumpSound() {
-      playTone(440, 680, 0.07, "sine", 0.08, 0);
-    }
-
-    function playMissSound() {
-      var pack = save.soundPack || "synth";
-      playTone(240, 95, 0.26, pack === "retro" ? "square" : "sawtooth", 0.15, 0);
-    }
-
-    var THEMES = {
-      modern: {
-        bgTop: "#0f172a",
-        bgBottom: "#1e293b",
-        grid: "rgba(148, 163, 184, 0.12)",
-        reticle: "#ffffff",
-        colors: ["#f43f5e", "#a855f7", "#06b6d4", "#f59e0b", "#10b981", "#ec4899"]
-      },
-      retro: {
-        bgTop: "#9bbc0f",
-        bgBottom: "#8bac0f",
-        grid: "rgba(15, 56, 15, 0.16)",
-        reticle: "#0f380f",
-        colors: ["#0f380f", "#306230", "#0f380f", "#306230"]
-      }
-    };
-
-    var save = {
-      playerName: "Player1",
-      bestScore: 0,
-      coins: 0,
-      hasGuide: false,
-      hasRetro: false,
-      useRetro: false,
-      ownedSounds: { synth: true, streak: false, retro: false },
-      soundPack: "synth"
-    };
-
-    try {
-      var rawSave = localStorage.getItem("colourshoot_save_v12");
-      if (rawSave) {
-        var parsed = JSON.parse(rawSave);
-        if (parsed.playerName) save.playerName = String(parsed.playerName).slice(0, 16);
-        save.bestScore = parsed.bestScore || 0;
-        save.coins = parsed.coins || 0;
-        save.hasGuide = !!parsed.hasGuide;
-        save.hasRetro = !!parsed.hasRetro;
-        save.useRetro = !!parsed.useRetro;
-        if (parsed.ownedSounds) {
-          save.ownedSounds.synth = true;
-          save.ownedSounds.streak = !!parsed.ownedSounds.streak;
-          save.ownedSounds.retro = !!parsed.ownedSounds.retro;
+      function renderTournamentLeaderboard() {
+        tourneyPlayerNameEl.textContent = save.playerName;
+        var entries = save.tournamentEntries.slice(0, 20);
+        tournamentLeaderboard.innerHTML = "";
+        if (entries.length === 0) {
+          var emptyRow = document.createElement("div");
+          emptyRow.className = "lb-row";
+          emptyRow.textContent = "Noch keine Tournament-Durchläufe vorhanden.";
+          tournamentLeaderboard.appendChild(emptyRow);
+          return;
         }
-        if (parsed.soundPack && save.ownedSounds[parsed.soundPack]) {
-          save.soundPack = parsed.soundPack;
+        for (var i = 0; i < entries.length; i++) {
+          var row = document.createElement("div");
+          var isMe = entries[i].name.toLowerCase() === save.playerName.toLowerCase();
+          row.className = isMe ? "lb-row me" : "lb-row";
+          var left = document.createElement("span");
+          left.textContent = "#" + (i + 1) + " " + entries[i].name;
+          var right = document.createElement("span");
+          right.textContent = String(entries[i].score);
+          row.appendChild(left);
+          row.appendChild(right);
+          tournamentLeaderboard.appendChild(row);
         }
       }
-    } catch (e) {}
 
-    function persistSave() {
-      try {
-        localStorage.setItem("colourshoot_save_v12", JSON.stringify(save));
-      } catch (e) {}
-      refreshProfileUI();
-      refreshShopUI();
-    }
+      function refreshProfileUI() {
+        tourneyPlayerNameEl.textContent = save.playerName;
+      }
 
-    function refreshProfileUI() {
-      playerNameEl.textContent = save.playerName;
-      bestScoreEl.textContent = "Best Points: " + save.bestScore.toLocaleString("en-US");
-    }
+      function refreshShopUI() {
+        coinsEl.textContent = save.coins;
 
-    function editPlayerName() {
-      var nextName = window.prompt("Enter your player name (max 16 chars):", save.playerName);
-      if (nextName !== null) {
-        var trimmed = nextName.trim().slice(0, 16);
-        if (trimmed.length > 0) {
-          save.playerName = trimmed;
-          persistSave();
+        if (save.hasRetro) {
+          buyRetroBtn.textContent = save.useRetro ? "Active (Tap: Modern)" : "Enable";
+          buyRetroBtn.disabled = false;
+        } else {
+          buyRetroBtn.textContent = "50 Coins";
+          buyRetroBtn.disabled = save.coins < 50;
+        }
+
+        if (save.hasGuide) {
+          buyGuideBtn.textContent = "Owned (Train)";
+          buyGuideBtn.disabled = true;
+        } else {
+          buyGuideBtn.textContent = "30 Coins";
+          buyGuideBtn.disabled = save.coins < 30;
+        }
+
+        soundSynthBtn.textContent = save.soundPack === "synth" ? "Active" : "Select";
+        soundSynthBtn.disabled = save.soundPack === "synth";
+
+        if (save.ownedSounds.streak) {
+          soundStreakBtn.textContent = save.soundPack === "streak" ? "Active" : "Select";
+          soundStreakBtn.disabled = save.soundPack === "streak";
+        } else {
+          soundStreakBtn.textContent = "40 Coins";
+          soundStreakBtn.disabled = save.coins < 40;
+        }
+
+        if (save.ownedSounds.retro) {
+          soundRetroBtn.textContent = save.soundPack === "retro" ? "Active" : "Select";
+          soundRetroBtn.disabled = save.soundPack === "retro";
+        } else {
+          soundRetroBtn.textContent = "35 Coins";
+          soundRetroBtn.disabled = save.coins < 35;
         }
       }
-    }
 
-    function refreshShopUI() {
-      coinsEl.textContent = save.coins;
-
-      if (save.hasRetro) {
-        buyRetroBtn.textContent = save.useRetro ? "Active (Tap: Modern)" : "Enable";
-        buyRetroBtn.disabled = false;
-      } else {
-        buyRetroBtn.textContent = "50 Coins";
-        buyRetroBtn.disabled = save.coins < 50;
+      function persistSave() {
+        try {
+          localStorage.setItem("colourshoot_save_v21", JSON.stringify(save));
+        } catch (e) {}
+        refreshProfileUI();
+        refreshShopUI();
       }
 
-      if (save.hasGuide) {
-        buyGuideBtn.textContent = "Owned (Train)";
-        buyGuideBtn.disabled = true;
-      } else {
-        buyGuideBtn.textContent = "30 Coins";
-        buyGuideBtn.disabled = save.coins < 30;
+      function clearCountdown() {
+        if (countdownTimerId !== null) {
+          clearTimeout(countdownTimerId);
+          countdownTimerId = null;
+        }
+        countdownBanner.className = "countdown-banner";
+        countdownText.textContent = "";
       }
 
-      soundSynthBtn.textContent = save.soundPack === "synth" ? "Active" : "Select";
-      soundSynthBtn.disabled = save.soundPack === "synth";
-
-      if (save.ownedSounds.streak) {
-        soundStreakBtn.textContent = save.soundPack === "streak" ? "Active" : "Select";
-        soundStreakBtn.disabled = save.soundPack === "streak";
-      } else {
-        soundStreakBtn.textContent = "40 Coins";
-        soundStreakBtn.disabled = save.coins < 40;
+      function openView(viewName) {
+        clearCountdown();
+        if (VIEWS.indexOf(viewName) === -1) viewName = "home";
+        currentView = viewName;
+        for (var i = 0; i < VIEWS.length; i++) {
+          var el = document.getElementById("view_" + VIEWS[i]);
+          if (el) {
+            el.className = VIEWS[i] === viewName ? "subview active" : "subview";
+          }
+        }
+        if (viewName === "levelmode") {
+          renderLevelModeUI();
+        }
+        if (viewName === "tournament") {
+          renderTournamentLeaderboard();
+        }
+        refreshProfileUI();
+        refreshShopUI();
       }
 
-      if (save.ownedSounds.retro) {
-        soundRetroBtn.textContent = save.soundPack === "retro" ? "Active" : "Select";
-        soundRetroBtn.disabled = save.soundPack === "retro";
-      } else {
-        soundRetroBtn.textContent = "35 Coins";
-        soundRetroBtn.disabled = save.coins < 35;
+      function switchTrainTab(tab) {
+        trainTab = tab === "assists" ? "assists" : "targets";
+        var tBtn = document.getElementById("tab_targets");
+        var aBtn = document.getElementById("tab_assists");
+        if (tBtn) tBtn.className = trainTab === "targets" ? "tab-btn active" : "tab-btn";
+        if (aBtn) aBtn.className = trainTab === "assists" ? "tab-btn active" : "tab-btn";
+        trainTargetsPanel.style.display = trainTab === "targets" ? "flex" : "none";
+        trainAssistsPanel.style.display = trainTab === "assists" ? "flex" : "none";
+        startTrainBtn.textContent = trainTab === "assists" ? "Start Assist Lab" : "Start Target Lab";
       }
-    }
 
-    function buyGuide() {
-      if (!save.hasGuide && save.coins >= 30) {
-        save.coins -= 30;
-        save.hasGuide = true;
+      function renderTrainingUI() {
+        levelGrid.innerHTML = "";
+        for (var i = 0; i < TRAINING_LEVELS.length; i++) {
+          (function (lvl) {
+            var btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = lvl.id === selectedTrainingId ? "level-btn active" : "level-btn";
+            btn.textContent = lvl.shortLabel;
+            btn.addEventListener("click", function () {
+              selectedTrainingId = lvl.id;
+              renderTrainingUI();
+            });
+            levelGrid.appendChild(btn);
+          })(TRAINING_LEVELS[i]);
+        }
+        var activeLvl = getSelectedTrainingLevel();
+        trainingBriefing.innerHTML =
+          "<b>" + activeLvl.shortLabel + ":</b> " + activeLvl.does +
+          "<br /><b>Look:</b> " + activeLvl.spotBy;
+
+        assistLabGrid.innerHTML = "";
+        for (var j = 0; j < ASSISTS_CATALOG.length; j++) {
+          (function (ast) {
+            var abtn = document.createElement("button");
+            abtn.type = "button";
+            abtn.className = ast.id === selectedAssistLabId ? "level-btn active" : "level-btn";
+            abtn.textContent = ast.code;
+            abtn.addEventListener("click", function () {
+              selectedAssistLabId = ast.id;
+              renderTrainingUI();
+            });
+            assistLabGrid.appendChild(abtn);
+          })(ASSISTS_CATALOG[j]);
+        }
+        var activeAst = getSelectedAssistLab();
+        assistBriefing.innerHTML =
+          "<b>" + activeAst.name + " (" + activeAst.code + "):</b> " + activeAst.does +
+          "<br /><b>Target in Lab:</b> " + activeAst.labTarget.label + " | " + activeAst.whenToUse;
+      }
+
+      function renderLevelModeUI() {
+        levelModeGrid.innerHTML = "";
+        for (var i = 0; i < LEVEL_MODES.length; i++) {
+          (function (m) {
+            var rec = getUserLevelRecord(m.id);
+            var btn = document.createElement("button");
+            btn.type = "button";
+            var cls = "mode20-btn";
+            if (rec) cls += " completed";
+            if (m.id === selectedLevelId) cls += " active";
+            btn.className = cls;
+
+            var topTxt = document.createElement("span");
+            topTxt.textContent = m.label;
+            btn.appendChild(topTxt);
+
+            var scTxt = document.createElement("span");
+            scTxt.className = "mode20-score";
+            scTxt.textContent = rec ? ("★ " + rec.best) : "-";
+            btn.appendChild(scTxt);
+
+            btn.addEventListener("click", function () {
+              selectedLevelId = m.id;
+              renderLevelModeUI();
+            });
+            levelModeGrid.appendChild(btn);
+          })(LEVEL_MODES[i]);
+        }
+
+        var activeM = getSelectedLevelMode();
+        var activeRec = getUserLevelRecord(activeM.id);
+        var savedLine = activeRec
+          ? ("Saved Best: <b>" + activeRec.best + "</b> (Last: <b>" + activeRec.last + "</b>)")
+          : "Not completed yet";
+        levelModeBriefing.innerHTML =
+          "<b>" + activeM.title + ":</b> " + activeM.focusText +
+          "<br />" + savedLine;
+      }
+
+      var CLASSIC_TOURNAMENT = {
+        name: "Classic",
+        stageStep: 600,
+        startTime: 4.2,
+        roundTimeGain: 2.1,
+        drainStepPerRound: 0.04,
+        shrinkFactor: 0.28,
+        ringShrinkFactor: 0.44,
+        minRadius: 15,
+        summary: "Endless Classic Tournament using all target variants and all assists. Leftover time carries over on hits, and the bar drains faster each round. Assist tokens spawn on rounds 3, 6, 9, 12, 15.",
+        sequence: [
+          { untilRound: 3,  type: "static",        label: "Static",   speed: 0 },
+          { untilRound: 6,  type: "moveX",         label: "Sweep X",  speed: 42 },
+          { untilRound: 9,  type: "ringTarget",    label: "DualRing", speed: 0 },
+          { untilRound: 12, type: "figureEight",   label: "Fig-8",    speed: 1.08 },
+          { untilRound: 15, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.7, jumpInterval: 1.8 },
+          { untilRound: 999,type: "elasticBounce", label: "Elastic",  speed: 55 },
+          { untilRound: 999,type: "shieldShot",    label: "Shield",   speed: 34 }
+        ]
+      };
+
+      function initTournamentInfo() {
+        presetMeta.textContent = "All Target Variants & All Assists | Stage every " + CLASSIC_TOURNAMENT.stageStep + " pts | Assists at R3, R6, R9";
+        presetBriefing.innerHTML = "<b>Classic Tournament:</b> " + CLASSIC_TOURNAMENT.summary;
+        renderTournamentLeaderboard();
+      }
+
+      var audioCtx = null;
+      function ensureAudio() {
+        try {
+          if (!audioCtx) {
+            var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) {
+              audioCtx = new AudioContextClass();
+            }
+          }
+          if (audioCtx && audioCtx.state === "suspended") {
+            audioCtx.resume();
+          }
+        } catch (e) {}
+      }
+
+      function playTone(freq, endFreq, duration, type, gainVal, delaySec) {
+        try {
+          if (!audioCtx) return;
+          var now = audioCtx.currentTime + (delaySec || 0);
+          var osc = audioCtx.createOscillator();
+          var gain = audioCtx.createGain();
+          osc.type = type || "sine";
+          osc.frequency.setValueAtTime(freq, now);
+          if (endFreq) {
+            osc.frequency.exponentialRampToValueAtTime(Math.max(40, endFreq), now + duration);
+          }
+          gain.gain.setValueAtTime(gainVal || 0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + duration);
+        } catch (e) {}
+      }
+
+      function getStreakCallout(streakCount) {
+        if (streakCount === 2) return "DOUBLE SHOT!";
+        if (streakCount === 3) return "TRIPLE SHOT!";
+        if (streakCount === 4) return "RAMPAGE!";
+        if (streakCount >= 5) return "GOD-LIKE!";
+        return null;
+      }
+
+      function playStreakFanfare(streakCount, pack) {
+        if (pack === "streak") {
+          if (streakCount === 2) {
+            playTone(587, 880, 0.09, "sawtooth", 0.16, 0);
+            playTone(880, 1174, 0.11, "triangle", 0.18, 0.08);
+          } else if (streakCount === 3) {
+            playTone(659, 987, 0.08, "sawtooth", 0.17, 0);
+            playTone(880, 1318, 0.09, "triangle", 0.19, 0.08);
+            playTone(1318, 1760, 0.14, "sine", 0.22, 0.16);
+          } else if (streakCount === 4) {
+            playTone(440, 880, 0.08, "square", 0.15, 0);
+            playTone(659, 1318, 0.09, "sawtooth", 0.18, 0.07);
+            playTone(880, 1760, 0.14, "triangle", 0.22, 0.15);
+          } else {
+            playTone(523, 1046, 0.09, "sawtooth", 0.18, 0);
+            playTone(784, 1568, 0.1, "triangle", 0.2, 0.08);
+            playTone(1046, 2093, 0.18, "sine", 0.24, 0.17);
+          }
+        } else if (pack === "retro") {
+          var base = 520 + Math.min(400, streakCount * 90);
+          playTone(base, base * 1.25, 0.08, "square", 0.14, 0);
+          playTone(base * 1.5, base * 2, 0.12, "square", 0.15, 0.08);
+        } else {
+          playTone(660, 990, 0.09, "sine", 0.18, 0);
+          playTone(990, 1320, 0.13, "triangle", 0.2, 0.07);
+        }
+      }
+
+      function playHitSound() {
+        var pack = save.soundPack || "synth";
+        playTone(pack === "retro" ? 480 : 520, pack === "retro" ? 640 : 760, 0.1, pack === "retro" ? "square" : "triangle", 0.15, 0);
+      }
+
+      function playBullseyeSound(streakCount) {
+        var pack = save.soundPack || "synth";
+        if (streakCount >= 2) {
+          playStreakFanfare(streakCount, pack);
+          return;
+        }
+        playTone(660, 990, 0.09, pack === "retro" ? "square" : "sine", 0.18, 0);
+        playTone(990, 1320, 0.13, pack === "retro" ? "square" : "triangle", 0.2, 0.07);
+      }
+
+      function playJumpSound() {
+        playTone(440, 680, 0.07, "sine", 0.08, 0);
+      }
+
+      function playAssistSound() {
+        playTone(740, 1180, 0.12, "triangle", 0.18, 0);
+      }
+
+      function playMaxBarSound() {
+        playTone(880, 1320, 0.09, "sine", 0.16, 0);
+        playTone(1320, 1760, 0.14, "triangle", 0.18, 0.06);
+      }
+
+      function playMissSound() {
+        var pack = save.soundPack || "synth";
+        playTone(240, 95, 0.26, pack === "retro" ? "square" : "sawtooth", 0.15, 0);
+      }
+
+      var state = {
+        running: false,
+        countingDown: false,
+        mode: "training",
+        labMode: false,
+        activeLevelObj: null,
+        levelHits: 0,
+        score: 0,
+        round: 1,
+        stageIndex: 1,
+        combo: 0,
+        streak: 0,
+        feverLeft: 0,
+        runCoins: 0,
+        maxTime: MAX_TIME_BAR,
+        timeLeft: 4.2,
+        timeDrainRate: 1.0,
+        goldBarTimer: 0,
+        shotLockLeft: 0,
+        effects: {
+          freezeTimer: 0,
+          anchorTimer: 0,
+          autoAimTimer: 0,
+          coreMagnetTimer: 0,
+          extraLives: 0
+        },
+        inventory: [null, null, null, null],
+        assistToken: null,
+        cursor: {
+          x: 190,
+          y: 190,
+          vx: 0,
+          vy: 0,
+          maxSpeed: 155,
+          accelRate: 11,
+          damping: 16
+        },
+        target: {
+          x: 190,
+          y: 190,
+          baseX: 190,
+          baseY: 190,
+          vx: 40,
+          vy: 30,
+          angle: 0,
+          jumpTimer: 1.85,
+          nextX: null,
+          nextY: null,
+          radius: 75,
+          block: TRAINING_LEVELS[0].block,
+          dir: 1
+        },
+        splatters: [],
+        pulses: [],
+        popups: [],
+        glitters: [],
+        joy: {
+          active: false,
+          pointerId: null,
+          ax: 0,
+          ay: 0
+        },
+        keys: { up: false, down: false, left: false, right: false },
+        lastFrame: 0
+      };
+
+      function getTargetColor(type) {
+        var vis = TARGET_VISUALS[type] || TARGET_VISUALS.static;
+        return save.useRetro ? vis.retroColor : vis.color;
+      }
+
+      function refreshLivesStrip() {
+        var count = Math.max(0, Math.min(MAX_LIVES, state.effects.extraLives));
+        if ((!state.running && !state.countingDown) || count <= 0) {
+          livesStrip.className = "lives-strip";
+          livesStrip.innerHTML = "";
+          return;
+        }
+        livesStrip.className = "lives-strip active";
+        var html = "";
+        for (var i = 0; i < count; i++) {
+          html += '<span class="life-pip">♥</span>';
+        }
+        livesStrip.innerHTML = html;
+      }
+
+      function refreshAssistButtons() {
+        for (var i = 0; i < 4; i++) {
+          var btn = assistSlotsEls[i];
+          var itemId = state.inventory[i];
+          if (!itemId) {
+            btn.className = "assist-btn";
+            btn.textContent = "-";
+          } else {
+            var def = getAssistDef(itemId);
+            btn.className = "assist-btn ready";
+            btn.textContent = def.code;
+          }
+        }
+        refreshLivesStrip();
+      }
+
+      function storeAssist(assistId) {
+        for (var i = 0; i < 4; i++) {
+          if (state.inventory[i] === null) {
+            state.inventory[i] = assistId;
+            refreshAssistButtons();
+            return;
+          }
+        }
+        state.inventory[0] = state.inventory[1];
+        state.inventory[1] = state.inventory[2];
+        state.inventory[2] = state.inventory[3];
+        state.inventory[3] = assistId;
+        refreshAssistButtons();
+      }
+
+      function spawnGoldGlitterBurst() {
+        state.goldBarTimer = 1.25;
+        playMaxBarSound();
+        for (var i = 0; i < 46; i++) {
+          state.glitters.push({
+            x: Math.random() * canvas.width,
+            y: -10 - Math.random() * 65,
+            vy: 65 + Math.random() * 85,
+            vx: (Math.random() - 0.5) * 32,
+            swayPhase: Math.random() * Math.PI * 2,
+            size: 2 + Math.random() * 2.6,
+            life: 1.8 + Math.random() * 0.9,
+            maxLife: 2.7
+          });
+        }
+      }
+
+      function addTimeToBar(addedSeconds) {
+        var nextTotal = state.timeLeft + addedSeconds;
+        if (nextTotal >= MAX_TIME_BAR) {
+          state.timeLeft = MAX_TIME_BAR;
+          spawnGoldGlitterBurst();
+        } else {
+          state.timeLeft = nextTotal;
+        }
+      }
+
+      function applyPassiveAssistOnPickup(assistId, x, y) {
+        var def = getAssistDef(assistId);
+        if (assistId === "timeStitch") {
+          addTimeToBar(1.8);
+          addPopup(x, y - 14, "+1.8s TIME!", def.color);
+        } else if (assistId === "safetyNet") {
+          if (state.effects.extraLives < MAX_LIVES) {
+            state.effects.extraLives += 1;
+          }
+          refreshLivesStrip();
+          addPopup(x, y - 14, "+1 LIFE (" + state.effects.extraLives + "/" + MAX_LIVES + ")", def.color);
+        }
+      }
+
+      function addPopup(x, y, text, color) {
+        state.popups.push({
+          x: x,
+          y: y,
+          text: text,
+          color: color,
+          life: 0.85,
+          maxLife: 0.85
+        });
+      }
+
+      function addPulse(x, y, radius, color, isBullseye) {
+        state.pulses.push({
+          x: x,
+          y: y,
+          radius: isBullseye ? 10 : Math.max(14, radius * 0.4),
+          currentRadius: isBullseye ? 10 : Math.max(14, radius * 0.4),
+          maxRadius: isBullseye ? 75 : Math.max(42, radius * 1.15),
+          color: color,
+          life: 0.35,
+          maxLife: 0.35
+        });
+      }
+
+      function getTimeBarColor(ratio) {
+        var r, g, b;
+        if (ratio > 0.65) {
+          var t1 = (1 - ratio) / 0.35;
+          r = Math.round(34 + (234 - 34) * t1);
+          g = Math.round(197 + (179 - 197) * t1);
+          b = Math.round(94 + (8 - 94) * t1);
+        } else if (ratio > 0.35) {
+          var t2 = (0.65 - ratio) / 0.3;
+          r = Math.round(234 + (249 - 234) * t2);
+          g = Math.round(179 + (115 - 179) * t2);
+          b = Math.round(8 + (22 - 8) * t2);
+        } else {
+          var t3 = (0.35 - ratio) / 0.35;
+          r = Math.round(249 + (239 - 249) * t3);
+          g = Math.round(115 + (68 - 115) * t3);
+          b = Math.round(22 + (68 - 22) * t3);
+        }
+        return "rgb(" + r + "," + g + "," + b + ")";
+      }
+
+      function updateHud() {
+        scoreEl.textContent = state.score;
+        if (state.mode === "tournament") {
+          roundEl.textContent = "S" + state.stageIndex + "/R" + state.round;
+        } else if (state.mode === "levelmode" && state.activeLevelObj) {
+          roundEl.textContent = "L" + state.activeLevelObj.id + "/R" + state.round;
+        } else {
+          roundEl.textContent = state.round;
+        }
+        patternEl.textContent = state.effects.freezeTimer > 0
+          ? "FROZEN"
+          : (state.feverLeft > 0 ? "FEVER!" : state.target.block.label);
+
+        var ratio = Math.max(0, Math.min(1, state.timeLeft / MAX_TIME_BAR));
+        timeBarFill.style.width = (ratio * 100).toFixed(1) + "%";
+
+        if (state.goldBarTimer > 0) {
+          timeBarFill.className = "time-bar-fill gold-max";
+        } else {
+          timeBarFill.className = "time-bar-fill";
+          timeBarFill.style.backgroundColor = getTimeBarColor(ratio);
+        }
+      }
+
+      function useAssist(slotIndex) {
+        if (!state.running) return;
+        var assistId = state.inventory[slotIndex];
+        if (!assistId) return;
+        var def = getAssistDef(assistId);
+        if (def.passive) return;
+
+        ensureAudio();
+        playAssistSound();
+        state.inventory[slotIndex] = null;
+
+        addPopup(state.cursor.x, state.cursor.y - 22, def.name.toUpperCase() + "!", def.color);
+
+        if (assistId === "anchor") {
+          state.effects.anchorTimer = 2.4;
+        } else if (assistId === "freezer") {
+          state.effects.freezeTimer = 2.4;
+        } else if (assistId === "autoAim") {
+          state.effects.autoAimTimer = 2.4;
+        } else if (assistId === "coreMagnet") {
+          state.effects.coreMagnetTimer = 3.5;
+        } else if (assistId === "inflate") {
+          state.target.radius = Math.min(84, state.target.radius + 12);
+        }
+
+        refreshAssistButtons();
+        updateHud();
+      }
+
+      function spawnAssistToken(specificId) {
+        var chosenId = specificId;
+        if (!chosenId) {
+          var idx = Math.floor(Math.random() * ASSISTS_CATALOG.length);
+          chosenId = ASSISTS_CATALOG[idx].id;
+        }
+        var margin = 52;
+        var x = margin + Math.random() * (canvas.width - margin * 2);
+        var y = margin + Math.random() * (canvas.height - margin * 2);
+        if (Math.hypot(x - state.target.x, y - state.target.y) < 55) {
+          x = x < canvas.width * 0.5 ? canvas.width - margin : margin;
+        }
+        state.assistToken = {
+          id: chosenId,
+          x: x,
+          y: y,
+          radius: 17
+        };
+      }
+
+      function shouldSpawnTournamentAssist(round) {
+        return TOURNAMENT_ASSIST_ROUNDS.indexOf(round) !== -1;
+      }
+
+      function setKnobPosition(dx, dy) {
+        joystickKnob.style.transform = "translate(" + dx.toFixed(1) + "px, " + dy.toFixed(1) + "px)";
+      }
+
+      function updateJoystickFromClient(clientX, clientY) {
+        var rect = joystickBase.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        var maxStick = rect.width * 0.5 - 22;
+
+        var dx = clientX - cx;
+        var dy = clientY - cy;
+        var dist = Math.hypot(dx, dy);
+
+        if (dist > maxStick && dist > 0) {
+          dx = (dx / dist) * maxStick;
+          dy = (dy / dist) * maxStick;
+          dist = maxStick;
+        }
+
+        setKnobPosition(dx, dy);
+
+        var norm = maxStick > 0 ? dist / maxStick : 0;
+        if (norm < 0.09) {
+          state.joy.ax = 0;
+          state.joy.ay = 0;
+        } else {
+          var curved = Math.pow((norm - 0.09) / 0.91, 1.35);
+          curved = Math.min(1, Math.max(0, curved));
+          var angle = Math.atan2(dy, dx);
+          state.joy.ax = Math.cos(angle) * curved;
+          state.joy.ay = Math.sin(angle) * curved;
+        }
+      }
+
+      function resetJoystick() {
+        state.joy.active = false;
+        state.joy.pointerId = null;
+        state.joy.ax = 0;
+        state.joy.ay = 0;
+        setKnobPosition(0, 0);
+      }
+
+      function triggerScreenFlash() {
+        flashLayer.className = "flash-layer active";
+        setTimeout(function () {
+          flashLayer.className = "flash-layer";
+        }, 30);
+      }
+
+      function getObstacleShape(obsType) {
+        if (obsType === "centerBarH") {
+          return { kind: "rect", x: 115, y: 180, w: 150, h: 20 };
+        }
+        if (obsType === "centerSquare") {
+          return { kind: "rect", x: 156, y: 156, w: 68, h: 68 };
+        }
+        if (obsType === "centerCircle") {
+          return { kind: "circle", x: 190, y: 190, r: 34 };
+        }
+        return null;
+      }
+
+      function pointHitsObstacle(px, py, obsType) {
+        if (!obsType || obsType === "none") return false;
+        if (obsType === "checkerboard") {
+          var cell = 38;
+          var col = Math.floor(px / cell);
+          var row = Math.floor(py / cell);
+          return ((row + col) % 2 === 1) && (row >= 2 && row <= 7 && col >= 2 && col <= 7);
+        }
+        var sh = getObstacleShape(obsType);
+        if (!sh) return false;
+        if (sh.kind === "rect") {
+          return px >= sh.x && px <= sh.x + sh.w && py >= sh.y && py <= sh.y + sh.h;
+        }
+        if (sh.kind === "circle") {
+          return Math.hypot(px - sh.x, py - sh.y) <= sh.r;
+        }
+        return false;
+      }
+
+      function getBlockForRound(round) {
+        if (state.mode === "training") {
+          if (state.labMode) {
+            return getSelectedAssistLab().labTarget;
+          }
+          return getSelectedTrainingLevel().block;
+        }
+        if (state.mode === "levelmode" && state.activeLevelObj) {
+          if (round === 1) return state.activeLevelObj.primaryVariant;
+          var vIdx = (state.activeLevelObj.id + round - 2) % VARIANT_POOL.length;
+          return VARIANT_POOL[vIdx];
+        }
+        var seq = CLASSIC_TOURNAMENT.sequence;
+        for (var i = 0; i < seq.length; i++) {
+          if (round <= seq[i].untilRound) {
+            return seq[i];
+          }
+        }
+        return seq[seq.length - 1];
+      }
+
+      function randomTargetPos(radius) {
+        var margin = Math.max(58, radius + 30);
+        return {
+          x: margin + Math.random() * Math.max(20, canvas.width - margin * 2),
+          y: margin + Math.random() * Math.max(20, canvas.height - margin * 2)
+        };
+      }
+
+      function pickTargetForRound(round, currentRadius) {
+        var block = getBlockForRound(round);
+        var pos = randomTargetPos(currentRadius);
+        var spd = block.speed || 48;
+        var ang = Math.random() * Math.PI * 2;
+
+        return {
+          x: pos.x,
+          y: pos.y,
+          baseX: pos.x,
+          baseY: pos.y,
+          vx: Math.cos(ang) * spd,
+          vy: Math.sin(ang) * spd,
+          angle: ang,
+          jumpTimer: block.jumpInterval || 1.85,
+          nextX: null,
+          nextY: null,
+          radius: currentRadius,
+          block: block,
+          dir: Math.random() < 0.5 ? -1 : 1
+        };
+      }
+
+      function computeStageIndex(score) {
+        var step = CLASSIC_TOURNAMENT.stageStep || 600;
+        return Math.floor(score / step) + 1;
+      }
+
+      function endGame(reason) {
+        clearCountdown();
+        var wasLevelMode = (state.mode === "levelmode" && state.activeLevelObj);
+        var wasTournament = (state.mode === "tournament");
+        var lvObj = state.activeLevelObj;
+        var prevRec = wasLevelMode ? getUserLevelRecord(lvObj.id) : null;
+        var prevBest = prevRec ? prevRec.best : 0;
+
+        if (wasLevelMode) {
+          setUserLevelRecord(lvObj.id, state.score);
+        }
+
+        if (wasTournament) {
+          recordTournamentScore(save.playerName, state.score);
+        }
+
+        state.running = false;
+        state.countingDown = false;
+        state.shotLockLeft = 0;
+        state.assistToken = null;
+        resetJoystick();
+        refreshLivesStrip();
+        playMissSound();
+
+        if (state.score > save.bestScore) {
+          save.bestScore = state.score;
+        }
+        if (state.mode === "training" && state.runCoins > 0) {
+          save.coins += state.runCoins;
+        }
         persistSave();
-      }
-    }
 
-    function toggleRetro() {
-      if (!save.hasRetro) {
-        if (save.coins >= 50) {
-          save.coins -= 50;
-          save.hasRetro = true;
-          save.useRetro = true;
-          persistSave();
+        if (wasLevelMode) {
+          var updatedRec = getUserLevelRecord(lvObj.id);
+          var newBest = updatedRec ? updatedRec.best : state.score;
+          levelResultTitle.textContent = lvObj.title + " – Ergebnis";
+          resultScoreVal.textContent = String(state.score);
+          resultPrevBestVal.textContent = String(prevBest);
+          resultNewBestVal.textContent = String(newBest);
+
+          if (!prevRec) {
+            resultComparisonBox.innerHTML = "Ergebnis: <b>Erster Abschluss gespeichert</b> (" + reason + ")";
+          } else if (state.score > prevBest) {
+            resultComparisonBox.innerHTML = "Ergebnis: <b>BESSER</b> als bisheriger Best-Score (+" + (state.score - prevBest) + ") – " + reason;
+          } else if (state.score < prevBest) {
+            resultComparisonBox.innerHTML = "Ergebnis: <b>SCHLECHTER</b> als bisheriger Best-Score (" + (state.score - prevBest) + ") – " + reason;
+          } else {
+            resultComparisonBox.innerHTML = "Ergebnis: <b>GLEICH</b> wie bisheriger Best-Score – " + reason;
+          }
+
+          overlay.className = "overlay";
+          openView("levelresult");
+          return;
         }
-      } else {
-        save.useRetro = !save.useRetro;
-        persistSave();
+
+        var trainLvl = getSelectedTrainingLevel();
+        var extra = state.mode === "training"
+          ? (state.labMode ? "Lab: <b>" + getSelectedAssistLab().name + "</b>" : "Level: <b>" + trainLvl.shortLabel + "</b>") + " | Coins: <b>+" + state.runCoins + "</b>"
+          : "Mode: <b>Classic Tournament</b> | Reached Stage <b>" + state.stageIndex + "</b>";
+
+        homeSummary.innerHTML =
+          "<b>Run Over</b> - " + reason + "<br />" +
+          "Score: <b>" + state.score + "</b> | " + extra;
+
+        overlay.className = "overlay";
+        openView("home");
+      }
+
+      function tryConsumeSafetyNet(reasonText) {
+        if (state.effects.extraLives > 0) {
+          state.effects.extraLives -= 1;
+          state.timeLeft = MAX_TIME_BAR * 0.75;
+          state.target.radius = Math.max(32, state.target.radius + 10);
+          addPopup(state.cursor.x, state.cursor.y - 16, "LIFE USED (" + state.effects.extraLives + " LEFT)", "#f472b6");
+          refreshLivesStrip();
+          updateHud();
+          return true;
+        }
+        endGame(reasonText);
+        return false;
+      }
+
+      function fireShot(isManual) {
+        if (!state.running || state.countingDown) return;
+        if (isManual && state.shotLockLeft > 0) return;
+        ensureAudio();
+
+        state.shotLockLeft = SHOT_LOCK_DURATION;
+
+        if (state.assistToken) {
+          var adx = state.cursor.x - state.assistToken.x;
+          var ady = state.cursor.y - state.assistToken.y;
+          if (Math.hypot(adx, ady) <= state.assistToken.radius + 8) {
+            var pickedId = state.assistToken.id;
+            var aDef = getAssistDef(pickedId);
+            playAssistSound();
+            if (aDef.passive) {
+              applyPassiveAssistOnPickup(pickedId, state.assistToken.x, state.assistToken.y);
+            } else {
+              storeAssist(pickedId);
+              addPopup(state.assistToken.x, state.assistToken.y - 14, "+ " + aDef.code, aDef.color);
+            }
+            state.assistToken = null;
+            if (state.labMode) {
+              spawnAssistToken(pickedId);
+            }
+            updateHud();
+            return;
+          }
+        }
+
+        var obsType = (state.mode === "levelmode" && state.activeLevelObj) ? state.activeLevelObj.obstacle : "none";
+        if (obsType !== "none" && pointHitsObstacle(state.cursor.x, state.cursor.y, obsType)) {
+          tryConsumeSafetyNet("Hit a blocked obstacle!");
+          return;
+        }
+
+        var dx = state.cursor.x - state.target.x;
+        var dy = state.cursor.y - state.target.y;
+        var dist = Math.hypot(dx, dy);
+        var tColor = getTargetColor(state.target.block.type);
+
+        state.splatters.push({
+          x: state.cursor.x,
+          y: state.cursor.y,
+          radius: Math.max(12, state.target.radius * 0.35),
+          color: tColor
+        });
+
+        if (dist > state.target.radius) {
+          tryConsumeSafetyNet("Missed the target!");
+          return;
+        }
+
+        var coreFactor = state.effects.coreMagnetTimer > 0 ? 0.42 : 0.26;
+        var innerCoreRadius = Math.max(7, state.target.radius * coreFactor);
+        var isBullseye = dist <= innerCoreRadius;
+
+        state.streak += 1;
+        var callout = getStreakCallout(state.streak);
+        if (callout) {
+          addPopup(state.cursor.x, state.cursor.y - 28, callout, "#38bdf8");
+        }
+
+        if (isBullseye) {
+          state.combo += 1;
+          if (state.combo >= FEVER_STREAK_REQUIRED) {
+            state.feverLeft = 3;
+            state.combo = 0;
+            addPopup(state.cursor.x, state.cursor.y - 42, "FEVER MODE!", "#f97316");
+          }
+          playBullseyeSound(state.streak);
+          triggerScreenFlash();
+          addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#facc15", true);
+        } else {
+          state.combo = 0;
+          playHitSound();
+          addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#34d399", false);
+        }
+
+        var leftover = Math.max(0, state.timeLeft);
+
+        var accuracy = Math.max(0, 1 - dist / state.target.radius);
+        var feverMult = state.feverLeft > 0 ? 1.45 : 1.0;
+        var streakMult = 1 + Math.min(0.4, (state.streak - 1) * 0.05);
+        var timeBonus = Math.round(leftover * 18);
+        var shotPoints = Math.round((45 + accuracy * 75) * feverMult * streakMult + timeBonus);
+        state.score += shotPoints;
+
+        if (state.feverLeft > 0) {
+          state.feverLeft -= 1;
+        }
+
+        if (isBullseye) {
+          addPopup(state.cursor.x, state.cursor.y - 12, "CORE HIT! +" + shotPoints, "#fde047");
+        } else {
+          addPopup(state.cursor.x, state.cursor.y - 12, "HIT +" + shotPoints, "#4ade80");
+        }
+
+        if (state.mode === "training") {
+          state.runCoins += isBullseye ? 5 : 2;
+        }
+
+        if (state.mode === "levelmode" && state.activeLevelObj) {
+          state.levelHits += 1;
+        }
+
+        var nextRadius = state.target.radius;
+
+        if (state.mode === "tournament") {
+          var newStage = computeStageIndex(state.score);
+          if (newStage > state.stageIndex) {
+            state.stageIndex = newStage;
+            state.score += 100;
+            nextRadius = Math.min(78, nextRadius + 6);
+            addPopup(canvas.width / 2, 42, "STAGE " + state.stageIndex + " (+100)", "#38bdf8");
+          }
+        }
+
+        if (isBullseye) {
+          nextRadius = Math.min(82, nextRadius + 4);
+        } else if (state.target.block.type === "shieldShot") {
+          addPopup(state.cursor.x, state.cursor.y + 14, "SHIELD SAVED", "#38bdf8");
+        } else {
+          var shrinkFactor = state.target.block.type === "ringTarget"
+            ? CLASSIC_TOURNAMENT.ringShrinkFactor
+            : CLASSIC_TOURNAMENT.shrinkFactor;
+          nextRadius = nextRadius - dist * shrinkFactor;
+        }
+
+        var minAllowedRadius = state.mode === "tournament" ? CLASSIC_TOURNAMENT.minRadius : 14;
+        if (nextRadius < minAllowedRadius) {
+          tryConsumeSafetyNet("Target became too small!");
+          return;
+        }
+
+        state.round += 1;
+
+        var roundGain = state.mode === "training"
+          ? 2.2
+          : (state.mode === "levelmode" && state.activeLevelObj ? state.activeLevelObj.roundTimeGain : CLASSIC_TOURNAMENT.roundTimeGain);
+        addTimeToBar(roundGain);
+
+        var drainStep = state.mode === "training"
+          ? 0.035
+          : (state.mode === "levelmode" && state.activeLevelObj ? state.activeLevelObj.drainStepPerRound : CLASSIC_TOURNAMENT.drainStepPerRound);
+        state.timeDrainRate = 1.0 + (state.round - 1) * drainStep;
+
+        state.target = pickTargetForRound(state.round, nextRadius);
+
+        if (state.labMode) {
+          spawnAssistToken(getSelectedAssistLab().id);
+        } else if (state.mode === "tournament" && shouldSpawnTournamentAssist(state.round)) {
+          spawnAssistToken(null);
+        } else if (state.mode === "levelmode" && (state.round % 2 === 0)) {
+          spawnAssistToken(null);
+        } else if (state.mode === "training" && state.round % 3 === 0) {
+          spawnAssistToken(null);
+        }
+
+        updateHud();
+      }
+
+      function update(dt) {
+        if (state.goldBarTimer > 0) {
+          state.goldBarTimer = Math.max(0, state.goldBarTimer - dt);
+        }
+        if (state.effects.anchorTimer > 0) {
+          state.effects.anchorTimer = Math.max(0, state.effects.anchorTimer - dt);
+        }
+        if (state.effects.autoAimTimer > 0) {
+          state.effects.autoAimTimer = Math.max(0, state.effects.autoAimTimer - dt);
+        }
+        if (state.effects.coreMagnetTimer > 0) {
+          state.effects.coreMagnetTimer = Math.max(0, state.effects.coreMagnetTimer - dt);
+        }
+        if (state.shotLockLeft > 0) {
+          state.shotLockLeft = Math.max(0, state.shotLockLeft - dt);
+        }
+
+        if (state.countingDown) {
+          updateHud();
+          return;
+        }
+
+        var frozen = state.effects.freezeTimer > 0;
+        if (frozen) {
+          state.effects.freezeTimer = Math.max(0, state.effects.freezeTimer - dt);
+        } else {
+          state.timeLeft -= dt * state.timeDrainRate;
+        }
+
+        if (!frozen && state.timeLeft <= 0) {
+          state.timeLeft = 0;
+          fireShot(false);
+          if (!state.running) return;
+        }
+
+        for (var g = state.glitters.length - 1; g >= 0; g--) {
+          var gl = state.glitters[g];
+          gl.life -= dt;
+          gl.swayPhase += dt * 4.5;
+          gl.y += gl.vy * dt;
+          gl.x += (gl.vx + Math.sin(gl.swayPhase) * 22) * dt;
+          if (gl.life <= 0 || gl.y > canvas.height + 12) {
+            state.glitters.splice(g, 1);
+          }
+        }
+
+        for (var p = state.pulses.length - 1; p >= 0; p--) {
+          var pulse = state.pulses[p];
+          pulse.life -= dt;
+          var progress = 1 - Math.max(0, pulse.life / pulse.maxLife);
+          pulse.currentRadius = pulse.radius + (pulse.maxRadius - pulse.radius) * progress;
+          if (pulse.life <= 0) {
+            state.pulses.splice(p, 1);
+          }
+        }
+
+        for (var q = state.popups.length - 1; q >= 0; q--) {
+          var pop = state.popups[q];
+          pop.life -= dt;
+          pop.y -= 26 * dt;
+          if (pop.life <= 0) {
+            state.popups.splice(q, 1);
+          }
+        }
+
+        var t = state.target;
+        var pad = t.radius + 14;
+        var anchored = state.effects.anchorTimer > 0;
+
+        if (!frozen && !anchored) {
+          if (t.block.type === "moveX") {
+            t.x += t.dir * (t.block.speed || 42) * dt;
+            if (t.x < pad) { t.x = pad; t.dir = 1; }
+            if (t.x > canvas.width - pad) { t.x = canvas.width - pad; t.dir = -1; }
+          } else if (t.block.type === "figureEight") {
+            t.angle += (t.block.speed || 1.08) * dt;
+            var ampX = Math.min(72, canvas.width * 0.5 - pad - 10);
+            var ampY = Math.min(44, canvas.height * 0.5 - pad - 10);
+            t.x = Math.max(pad, Math.min(canvas.width - pad, t.baseX + Math.sin(t.angle) * Math.max(20, ampX)));
+            t.y = Math.max(pad, Math.min(canvas.height - pad, t.baseY + Math.sin(t.angle * 2) * 0.5 * Math.max(16, ampY)));
+          } else if (t.block.type === "elasticBounce") {
+            t.x += t.vx * dt;
+            t.y += t.vy * dt;
+            var bounced = false;
+            if (t.x < pad) { t.x = pad; t.vx = Math.abs(t.vx); bounced = true; }
+            if (t.x > canvas.width - pad) { t.x = canvas.width - pad; t.vx = -Math.abs(t.vx); bounced = true; }
+            if (t.y < pad) { t.y = pad; t.vy = Math.abs(t.vy); bounced = true; }
+            if (t.y > canvas.height - pad) { t.y = canvas.height - pad; t.vy = -Math.abs(t.vy); bounced = true; }
+            if (bounced) {
+              var curSpd = Math.hypot(t.vx, t.vy) || 50;
+              var baseSpd = t.block.speed || 54;
+              var nextSpd = curSpd > baseSpd ? baseSpd * 0.75 : baseSpd * 1.32;
+              var ang = Math.atan2(t.vy, t.vx);
+              t.vx = Math.cos(ang) * nextSpd;
+              t.vy = Math.sin(ang) * nextSpd;
+            }
+          } else if (t.block.type === "telegraphJump") {
+            var interval = t.block.jumpInterval || 1.85;
+            var teleTime = t.block.telegraphTime || 0.72;
+            t.jumpTimer -= dt;
+            if (t.jumpTimer <= teleTime && t.nextX === null) {
+              var cand = randomTargetPos(t.radius);
+              t.nextX = cand.x;
+              t.nextY = cand.y;
+            }
+            if (t.jumpTimer <= 0) {
+              addPulse(t.x, t.y, t.radius, "#38bdf8", false);
+              if (t.nextX !== null) {
+                t.x = t.nextX;
+                t.y = t.nextY;
+              } else {
+                var fallback = randomTargetPos(t.radius);
+                t.x = fallback.x;
+                t.y = fallback.y;
+              }
+              t.nextX = null;
+              t.nextY = null;
+              t.jumpTimer = interval;
+              playJumpSound();
+            }
+          }
+        }
+
+        var c = state.cursor;
+        if (state.effects.autoAimTimer > 0) {
+          var aimBlend = 1 - Math.exp(-14 * dt);
+          c.x += (t.x - c.x) * aimBlend;
+          c.y += (t.y - c.y) * aimBlend;
+          c.vx = 0;
+          c.vy = 0;
+        } else {
+          var ix = state.joy.ax;
+          var iy = state.joy.ay;
+
+          if (!state.joy.active) {
+            var kx = 0;
+            var ky = 0;
+            if (state.keys.left) kx -= 1;
+            if (state.keys.right) kx += 1;
+            if (state.keys.up) ky -= 1;
+            if (state.keys.down) ky += 1;
+            if (kx !== 0 && ky !== 0) {
+              var inv = 1 / Math.SQRT2;
+              kx *= inv;
+              ky *= inv;
+            }
+            ix = kx * 0.75;
+            iy = ky * 0.75;
+          }
+
+          var targetVx = ix * c.maxSpeed;
+          var targetVy = iy * c.maxSpeed;
+
+          if (Math.abs(ix) > 0.01 || Math.abs(iy) > 0.01) {
+            var blend = 1 - Math.exp(-c.accelRate * dt);
+            c.vx += (targetVx - c.vx) * blend;
+            c.vy += (targetVy - c.vy) * blend;
+          } else {
+            var decay = Math.exp(-c.damping * dt);
+            c.vx *= decay;
+            c.vy *= decay;
+            if (Math.hypot(c.vx, c.vy) < 1) {
+              c.vx = 0;
+              c.vy = 0;
+            }
+          }
+
+          c.x = Math.max(10, Math.min(canvas.width - 10, c.x + c.vx * dt));
+          c.y = Math.max(26, Math.min(canvas.height - 10, c.y + c.vy * dt));
+        }
+
+        updateHud();
+      }
+
+      function traceTargetShape(ctxRef, x, y, r, shape) {
+        ctxRef.beginPath();
+        if (shape === "octagon") {
+          for (var i = 0; i < 8; i++) {
+            var a = (Math.PI / 8) + (i * Math.PI) / 4;
+            var px = x + Math.cos(a) * r;
+            var py = y + Math.sin(a) * r;
+            if (i === 0) ctxRef.moveTo(px, py);
+            else ctxRef.lineTo(px, py);
+          }
+          ctxRef.closePath();
+        } else {
+          ctxRef.arc(x, y, r, 0, Math.PI * 2);
+        }
+      }
+
+      function drawObstacles(obsType) {
+        if (!obsType || obsType === "none") return;
+        ctx.save();
+        var fillCol = save.useRetro ? "rgba(15, 56, 15, 0.78)" : "rgba(220, 38, 38, 0.62)";
+        var borderCol = save.useRetro ? "#0f380f" : "#fca5a5";
+        ctx.fillStyle = fillCol;
+        ctx.strokeStyle = borderCol;
+        ctx.lineWidth = 2.5;
+
+        if (obsType === "checkerboard") {
+          var cell = 38;
+          for (var r = 2; r <= 7; r++) {
+            for (var c = 2; c <= 7; c++) {
+              if ((r + c) % 2 === 1) {
+                var bx = c * cell;
+                var by = r * cell;
+                ctx.fillRect(bx, by, cell, cell);
+                ctx.strokeRect(bx + 0.5, by + 0.5, cell - 1, cell - 1);
+                ctx.beginPath();
+                ctx.moveTo(bx + 6, by + 6);
+                ctx.lineTo(bx + cell - 6, by + cell - 6);
+                ctx.moveTo(bx + cell - 6, by + 6);
+                ctx.lineTo(bx + 6, by + cell - 6);
+                ctx.stroke();
+              }
+            }
+          }
+        } else {
+          var sh = getObstacleShape(obsType);
+          if (sh.kind === "rect") {
+            ctx.fillRect(sh.x, sh.y, sh.w, sh.h);
+            ctx.strokeRect(sh.x, sh.y, sh.w, sh.h);
+            ctx.beginPath();
+            ctx.moveTo(sh.x + 6, sh.y + 4);
+            ctx.lineTo(sh.x + sh.w - 6, sh.y + sh.h - 4);
+            ctx.stroke();
+          } else if (sh.kind === "circle") {
+            ctx.beginPath();
+            ctx.arc(sh.x, sh.y, sh.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(sh.x - sh.r * 0.55, sh.y - sh.r * 0.55);
+            ctx.lineTo(sh.x + sh.r * 0.55, sh.y + sh.r * 0.55);
+            ctx.moveTo(sh.x + sh.r * 0.55, sh.y - sh.r * 0.55);
+            ctx.lineTo(sh.x - sh.r * 0.55, sh.y + sh.r * 0.55);
+            ctx.stroke();
+          }
+        }
+        ctx.restore();
+      }
+
+      function draw() {
+        var theme = save.useRetro ? THEMES.retro : THEMES.modern;
+        var grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        grad.addColorStop(0, theme.bgTop);
+        grad.addColorStop(1, theme.bgBottom);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = theme.grid;
+        ctx.lineWidth = 1;
+        for (var i = 0; i <= canvas.width; i += 24) {
+          ctx.beginPath();
+          ctx.moveTo(i, 0);
+          ctx.lineTo(i, canvas.height);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(0, i);
+          ctx.lineTo(canvas.width, i);
+          ctx.stroke();
+        }
+
+        for (var j = 0; j < state.splatters.length; j++) {
+          var s = state.splatters[j];
+          ctx.save();
+          ctx.globalAlpha = 0.24;
+          ctx.fillStyle = s.color;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        var vis = TARGET_VISUALS[state.target.block.type] || TARGET_VISUALS.static;
+        var tColor = getTargetColor(state.target.block.type);
+
+        if (state.running && !state.countingDown && state.target.block.type === "telegraphJump" && state.target.nextX !== null) {
+          ctx.save();
+          ctx.strokeStyle = theme.reticle;
+          ctx.setLineDash([5, 4]);
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(state.target.nextX, state.target.nextY, state.target.radius, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        ctx.save();
+        if (!save.useRetro) {
+          ctx.shadowColor = tColor;
+          ctx.shadowBlur = 12;
+        }
+        ctx.fillStyle = tColor;
+        ctx.globalAlpha = 0.9;
+        traceTargetShape(ctx, state.target.x, state.target.y, state.target.radius, vis.shape);
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        if (vis.pattern === "stripesX") {
+          ctx.strokeStyle = "rgba(255,255,255,0.45)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(state.target.x - state.target.radius * 0.7, state.target.y);
+          ctx.lineTo(state.target.x + state.target.radius * 0.7, state.target.y);
+          ctx.stroke();
+        } else if (vis.pattern === "cross") {
+          ctx.strokeStyle = "rgba(255,255,255,0.45)";
+          ctx.lineWidth = 1.8;
+          ctx.beginPath();
+          ctx.moveTo(state.target.x - state.target.radius * 0.55, state.target.y - state.target.radius * 0.55);
+          ctx.lineTo(state.target.x + state.target.radius * 0.55, state.target.y + state.target.radius * 0.55);
+          ctx.moveTo(state.target.x + state.target.radius * 0.55, state.target.y - state.target.radius * 0.55);
+          ctx.lineTo(state.target.x - state.target.radius * 0.55, state.target.y + state.target.radius * 0.55);
+          ctx.stroke();
+        } else if (vis.pattern === "pulseRing") {
+          ctx.strokeStyle = "rgba(255,255,255,0.55)";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(state.target.x, state.target.y, state.target.radius * 0.65, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        var coreFactor = state.effects.coreMagnetTimer > 0 ? 0.42 : 0.26;
+        var coreR = Math.max(7, state.target.radius * coreFactor);
+        ctx.strokeStyle = state.effects.coreMagnetTimer > 0
+          ? "#facc15"
+          : (state.target.block.type === "ringTarget" ? "#fde047" : "rgba(255, 255, 255, 0.88)");
+        ctx.lineWidth = state.effects.coreMagnetTimer > 0 ? 3 : (state.target.block.type === "ringTarget" ? 2.5 : 2);
+        ctx.beginPath();
+        ctx.arc(state.target.x, state.target.y, coreR, 0, Math.PI * 2);
+        ctx.stroke();
+
+        if (state.effects.anchorTimer > 0) {
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 3;
+          ctx.setLineDash([6, 4]);
+          ctx.beginPath();
+          ctx.arc(state.target.x, state.target.y, state.target.radius + 5, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        if (state.target.block.type === "shieldShot") {
+          ctx.strokeStyle = "#38bdf8";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(state.target.x, state.target.y, state.target.radius + 4, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        if (state.mode === "levelmode" && state.activeLevelObj) {
+          drawObstacles(state.activeLevelObj.obstacle);
+        }
+
+        if (state.running && state.assistToken) {
+          var tok = state.assistToken;
+          var aDef = getAssistDef(tok.id);
+          ctx.save();
+          ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+          ctx.strokeStyle = aDef.color;
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.arc(tok.x, tok.y, tok.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = aDef.color;
+          ctx.font = "bold 9px Arial, sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(aDef.code, tok.x, tok.y);
+          ctx.restore();
+        }
+
+        for (var p = 0; p < state.pulses.length; p++) {
+          var pulse = state.pulses[p];
+          var alpha = Math.max(0, pulse.life / pulse.maxLife);
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          ctx.strokeStyle = pulse.color;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(pulse.x, pulse.y, pulse.currentRadius || pulse.radius, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        if (state.running && state.mode === "training" && save.hasGuide) {
+          ctx.save();
+          ctx.strokeStyle = theme.reticle;
+          ctx.globalAlpha = 0.55;
+          ctx.setLineDash([4, 4]);
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(state.cursor.x, state.cursor.y);
+          ctx.lineTo(state.target.x, state.target.y);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        ctx.save();
+        ctx.strokeStyle = state.effects.autoAimTimer > 0 ? "#c084fc" : theme.reticle;
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(state.cursor.x, state.cursor.y, 11, 0, Math.PI * 2);
+        ctx.moveTo(state.cursor.x - 17, state.cursor.y);
+        ctx.lineTo(state.cursor.x + 17, state.cursor.y);
+        ctx.moveTo(state.cursor.x, state.cursor.y - 17);
+        ctx.lineTo(state.cursor.x, state.cursor.y + 17);
+        ctx.stroke();
+        ctx.restore();
+
+        if (state.running && state.effects.freezeTimer > 0) {
+          ctx.save();
+          ctx.strokeStyle = "rgba(165, 243, 252, 0.75)";
+          ctx.lineWidth = 6;
+          ctx.strokeRect(3, 3, canvas.width - 6, canvas.height - 6);
+          ctx.restore();
+        }
+
+        for (var g = 0; g < state.glitters.length; g++) {
+          var gl = state.glitters[g];
+          var gAlpha = Math.max(0, Math.min(1, gl.life / gl.maxLife));
+          var twinkle = 0.6 + 0.4 * Math.sin(gl.swayPhase * 3);
+          ctx.save();
+          ctx.globalAlpha = gAlpha * twinkle;
+          ctx.fillStyle = twinkle > 0.85 ? "#ffffff" : "#fde047";
+          ctx.shadowColor = "#facc15";
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          ctx.moveTo(gl.x, gl.y - gl.size * 1.6);
+          ctx.lineTo(gl.x + gl.size * 0.55, gl.y - gl.size * 0.55);
+          ctx.lineTo(gl.x + gl.size * 1.6, gl.y);
+          ctx.lineTo(gl.x + gl.size * 0.55, gl.y + gl.size * 0.55);
+          ctx.lineTo(gl.x, gl.y + gl.size * 1.6);
+          ctx.lineTo(gl.x - gl.size * 0.55, gl.y + gl.size * 0.55);
+          ctx.lineTo(gl.x - gl.size * 1.6, gl.y);
+          ctx.lineTo(gl.x - gl.size * 0.55, gl.y - gl.size * 0.55);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+        }
+
+        for (var q = 0; q < state.popups.length; q++) {
+          var pop = state.popups[q];
+          var pAlpha = Math.max(0, pop.life / pop.maxLife);
+          ctx.save();
+          ctx.globalAlpha = pAlpha;
+          ctx.font = "bold 12px Arial, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillStyle = pop.color;
+          ctx.fillText(pop.text, pop.x, pop.y);
+          ctx.restore();
+        }
+      }
+
+      function loop(now) {
+        if (!state.running) return;
+        var dt = Math.min(0.05, (now - state.lastFrame) / 1000);
+        state.lastFrame = now;
+
+        update(dt);
         draw();
+        requestAnimationFrame(loop);
       }
-    }
 
-    function selectSoundPack(packId) {
-      ensureAudio();
-      if (packId === "synth") {
+      function runCountdownThenPlay() {
+        clearCountdown();
+        state.countingDown = true;
+        countdownBanner.className = "countdown-banner active";
+
+        var steps = [
+          { label: "3", tone: 440, delay: 0 },
+          { label: "2", tone: 554, delay: 550 },
+          { label: "1", tone: 659, delay: 1100 },
+          { label: "Go", tone: 880, delay: 1650 }
+        ];
+
+        countdownText.textContent = steps[0].label;
+        playTone(steps[0].tone, steps[0].tone, 0.14, "triangle", 0.16, 0);
+
+        for (var i = 1; i < steps.length; i++) {
+          (function (step) {
+            setTimeout(function () {
+              if (!state.running || !state.countingDown) return;
+              countdownText.textContent = step.label;
+              playTone(step.tone, step.label === "Go" ? 1174 : step.tone, 0.16, "triangle", 0.18, 0);
+            }, step.delay);
+          })(steps[i]);
+        }
+
+        countdownTimerId = setTimeout(function () {
+          countdownTimerId = null;
+          if (!state.running) return;
+          state.countingDown = false;
+          countdownBanner.className = "countdown-banner";
+          countdownText.textContent = "";
+          state.lastFrame = performance.now();
+        }, 2150);
+      }
+
+      function startGame(selectedMode) {
+        ensureAudio();
+        clearCountdown();
+        resetJoystick();
+        var trainLvl = getSelectedTrainingLevel();
+        var lvModeObj = getSelectedLevelMode();
+        state.mode = selectedMode || "training";
+        state.labMode = (state.mode === "training" && trainTab === "assists");
+        state.activeLevelObj = (state.mode === "levelmode") ? lvModeObj : null;
+        state.levelHits = 0;
+        state.running = true;
+        state.score = 0;
+        state.round = 1;
+        state.stageIndex = 1;
+        state.combo = 0;
+        state.streak = 0;
+        state.feverLeft = 0;
+        state.runCoins = 0;
+        state.shotLockLeft = 0;
+        state.goldBarTimer = 0;
+        state.timeDrainRate = 1.0;
+        state.effects.freezeTimer = 0;
+        state.effects.anchorTimer = 0;
+        state.effects.autoAimTimer = 0;
+        state.effects.coreMagnetTimer = 0;
+        state.effects.extraLives = 0;
+        state.inventory = [null, null, null, null];
+        state.assistToken = null;
+        state.maxTime = MAX_TIME_BAR;
+        if (state.mode === "training") {
+          state.timeLeft = 4.4;
+        } else if (state.mode === "levelmode") {
+          state.timeLeft = lvModeObj.startTime;
+        } else {
+          state.timeLeft = CLASSIC_TOURNAMENT.startTime;
+        }
+        state.splatters = [];
+        state.pulses = [];
+        state.popups = [];
+        state.glitters = [];
+        state.cursor.x = canvas.width / 2;
+        state.cursor.y = canvas.height / 2;
+        state.cursor.vx = 0;
+        state.cursor.vy = 0;
+        state.target = pickTargetForRound(1, 75);
+
+        if (state.labMode) {
+          var ast = getSelectedAssistLab();
+          spawnAssistToken(ast.id);
+          modeBadge.textContent = "ASSIST LAB: " + ast.code;
+          modeBadge.className = "mode-badge";
+        } else if (state.mode === "levelmode") {
+          spawnAssistToken(null);
+          modeBadge.textContent = "LEVEL " + lvModeObj.id + " (" + lvModeObj.obstacleName + ")";
+          modeBadge.className = "mode-badge levelmode";
+        } else if (state.mode === "tournament") {
+          modeBadge.textContent = "CLASSIC TOURNAMENT";
+          modeBadge.className = "mode-badge tournament";
+        } else {
+          modeBadge.textContent = "TARGET LAB: " + trainLvl.block.label.toUpperCase();
+          modeBadge.className = "mode-badge";
+        }
+
+        refreshAssistButtons();
+        overlay.className = "overlay hidden";
+        updateHud();
+        draw();
+        runCountdownThenPlay();
+        state.lastFrame = performance.now();
+        requestAnimationFrame(loop);
+      }
+
+      document.getElementById("editNameBtn").addEventListener("click", function () {
+        var nextName = window.prompt("Spielername eingeben (max. 16 Zeichen):", save.playerName);
+        if (nextName !== null) {
+          var trimmed = nextName.trim().slice(0, 16);
+          if (trimmed.length > 0) {
+            save.playerName = trimmed;
+            persistSave();
+            renderTournamentLeaderboard();
+          }
+        }
+      });
+
+      document.getElementById("navTrainBtn").addEventListener("click", function () { openView("training"); });
+      document.getElementById("navLevelBtn").addEventListener("click", function () { openView("levelmode"); });
+      document.getElementById("navTourneyBtn").addEventListener("click", function () { openView("tournament"); });
+      document.getElementById("navSkinsBtn").addEventListener("click", function () { openView("skins"); });
+
+      document.getElementById("tab_targets").addEventListener("click", function () { switchTrainTab("targets"); });
+      document.getElementById("tab_assists").addEventListener("click", function () { switchTrainTab("assists"); });
+
+      document.getElementById("backFromTrainBtn").addEventListener("click", function () { openView("home"); });
+      document.getElementById("backFromLevelBtn").addEventListener("click", function () { openView("home"); });
+      closeLevelResultBtn.addEventListener("click", function () { openView("levelmode"); });
+      document.getElementById("backFromTourneyBtn").addEventListener("click", function () { openView("home"); });
+      document.getElementById("backFromSkinsBtn").addEventListener("click", function () { openView("home"); });
+
+      startTrainBtn.addEventListener("click", function () { startGame("training"); });
+      startLevelModeBtn.addEventListener("click", function () { startGame("levelmode"); });
+      startTourneyBtn.addEventListener("click", function () { startGame("tournament"); });
+
+      buyRetroBtn.addEventListener("click", function () {
+        if (!save.hasRetro) {
+          if (save.coins >= 50) {
+            save.coins -= 50;
+            save.hasRetro = true;
+            save.useRetro = true;
+            persistSave();
+            draw();
+          }
+        } else {
+          save.useRetro = !save.useRetro;
+          persistSave();
+          draw();
+        }
+      });
+
+      buyGuideBtn.addEventListener("click", function () {
+        if (!save.hasGuide && save.coins >= 30) {
+          save.coins -= 30;
+          save.hasGuide = true;
+          persistSave();
+        }
+      });
+
+      soundSynthBtn.addEventListener("click", function () {
+        ensureAudio();
         save.soundPack = "synth";
         persistSave();
         playHitSound();
-        return;
-      }
-      if (packId === "streak") {
+      });
+
+      soundStreakBtn.addEventListener("click", function () {
+        ensureAudio();
         if (!save.ownedSounds.streak && save.coins >= 40) {
           save.coins -= 40;
           save.ownedSounds.streak = true;
@@ -1082,9 +2938,10 @@
           persistSave();
           playStreakFanfare(3, "streak");
         }
-        return;
-      }
-      if (packId === "retro") {
+      });
+
+      soundRetroBtn.addEventListener("click", function () {
+        ensureAudio();
         if (!save.ownedSounds.retro && save.coins >= 35) {
           save.coins -= 35;
           save.ownedSounds.retro = true;
@@ -1094,738 +2951,76 @@
           persistSave();
           playStreakFanfare(2, "retro");
         }
-      }
-    }
-
-    var state = {
-      running: false,
-      mode: "training",
-      score: 0,
-      round: 1,
-      stageIndex: 1,
-      combo: 0,
-      streak: 0,
-      feverLeft: 0,
-      runCoins: 0,
-      maxTime: 3.8,
-      timeLeft: 3.8,
-      shotLockLeft: 0,
-      jackpotStage: false,
-      jackpotUnlocked: false,
-      cursor: {
-        x: 190,
-        y: 190,
-        vx: 0,
-        vy: 0,
-        maxSpeed: 155,
-        accelRate: 11,
-        damping: 16
-      },
-      target: {
-        x: 190,
-        y: 190,
-        baseX: 190,
-        baseY: 190,
-        vx: 40,
-        vy: 30,
-        angle: 0,
-        jumpTimer: 1.85,
-        nextX: null,
-        nextY: null,
-        radius: 75,
-        color: "#f43f5e",
-        block: TRAINING_LEVELS[0].block,
-        dir: 1
-      },
-      splatters: [],
-      pulses: [],
-      popups: [],
-      joy: {
-        active: false,
-        pointerId: null,
-        ax: 0,
-        ay: 0
-      },
-      keys: { up: false, down: false, left: false, right: false },
-      lastFrame: 0
-    };
-
-    function setKnobPosition(dx, dy) {
-      joystickKnob.style.transform = "translate(" + dx.toFixed(1) + "px, " + dy.toFixed(1) + "px)";
-    }
-
-    function updateJoystickFromClient(clientX, clientY) {
-      var rect = joystickBase.getBoundingClientRect();
-      var cx = rect.left + rect.width / 2;
-      var cy = rect.top + rect.height / 2;
-      var maxStick = rect.width * 0.5 - 26;
-
-      var dx = clientX - cx;
-      var dy = clientY - cy;
-      var dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist > maxStick && dist > 0) {
-        dx = (dx / dist) * maxStick;
-        dy = (dy / dist) * maxStick;
-        dist = maxStick;
-      }
-
-      setKnobPosition(dx, dy);
-
-      var norm = maxStick > 0 ? dist / maxStick : 0;
-      if (norm < 0.09) {
-        state.joy.ax = 0;
-        state.joy.ay = 0;
-      } else {
-        var curved = Math.pow((norm - 0.09) / 0.91, 1.35);
-        curved = Math.min(1, Math.max(0, curved));
-        var angle = Math.atan2(dy, dx);
-        state.joy.ax = Math.cos(angle) * curved;
-        state.joy.ay = Math.sin(angle) * curved;
-      }
-    }
-
-    function resetJoystick() {
-      state.joy.active = false;
-      state.joy.pointerId = null;
-      state.joy.ax = 0;
-      state.joy.ay = 0;
-      setKnobPosition(0, 0);
-    }
-
-    joystickBase.addEventListener("pointerdown", function (e) {
-      e.preventDefault();
-      ensureAudio();
-      if (joystickBase.setPointerCapture) {
-        try { joystickBase.setPointerCapture(e.pointerId); } catch (err) {}
-      }
-      state.joy.active = true;
-      state.joy.pointerId = e.pointerId;
-      updateJoystickFromClient(e.clientX, e.clientY);
-    });
-
-    joystickBase.addEventListener("pointermove", function (e) {
-      if (!state.joy.active || e.pointerId !== state.joy.pointerId) return;
-      e.preventDefault();
-      updateJoystickFromClient(e.clientX, e.clientY);
-    });
-
-    joystickBase.addEventListener("pointerup", function (e) {
-      if (e.pointerId === state.joy.pointerId) {
-        resetJoystick();
-      }
-    });
-
-    joystickBase.addEventListener("pointercancel", function (e) {
-      if (e.pointerId === state.joy.pointerId) {
-        resetJoystick();
-      }
-    });
-
-    function triggerScreenFlash() {
-      flashLayer.className = "flash-layer active";
-      setTimeout(function () {
-        flashLayer.className = "flash-layer";
-      }, 30);
-    }
-
-    function addPopup(x, y, text, color) {
-      state.popups.push({
-        x: x,
-        y: y,
-        text: text,
-        color: color,
-        life: 0.85,
-        maxLife: 0.85
-      });
-    }
-
-    function addPulse(x, y, radius, color, isBullseye) {
-      state.pulses.push({
-        x: x,
-        y: y,
-        radius: isBullseye ? 10 : Math.max(14, radius * 0.4),
-        currentRadius: isBullseye ? 10 : Math.max(14, radius * 0.4),
-        maxRadius: isBullseye ? 75 : Math.max(42, radius * 1.15),
-        color: color,
-        life: 0.35,
-        maxLife: 0.35
-      });
-    }
-
-    function getBlockForRound(round) {
-      if (state.mode === "training") {
-        return getSelectedTrainingLevel().block;
-      }
-      var seq = getActivePreset().sequence;
-      for (var i = 0; i < seq.length; i++) {
-        if (round <= seq[i].untilRound) {
-          return seq[i];
-        }
-      }
-      return seq[seq.length - 1];
-    }
-
-    function randomTargetPos(radius) {
-      var margin = Math.max(58, radius + 30);
-      return {
-        x: margin + Math.random() * Math.max(20, canvas.width - margin * 2),
-        y: margin + Math.random() * Math.max(20, canvas.height - margin * 2)
-      };
-    }
-
-    function pickTargetForRound(round, currentRadius, isGoldenFinal) {
-      var theme = save.useRetro ? THEMES.retro : THEMES.modern;
-      var colorIdx = (round - 1) % theme.colors.length;
-      var color = isGoldenFinal ? "#facc15" : theme.colors[colorIdx];
-      var block = isGoldenFinal
-        ? { type: "figureEight", label: "GOLDEN BONUS", speed: 1.15 }
-        : getBlockForRound(round);
-
-      var pos = randomTargetPos(currentRadius);
-      var spd = block.speed || 48;
-      var ang = Math.random() * Math.PI * 2;
-
-      return {
-        x: pos.x,
-        y: pos.y,
-        baseX: pos.x,
-        baseY: pos.y,
-        vx: Math.cos(ang) * spd,
-        vy: Math.sin(ang) * spd,
-        angle: ang,
-        jumpTimer: block.jumpInterval || 1.85,
-        nextX: null,
-        nextY: null,
-        radius: currentRadius,
-        color: color,
-        block: block,
-        dir: Math.random() < 0.5 ? -1 : 1
-      };
-    }
-
-    function computeStageIndex(score, preset) {
-      if (!preset.stages || preset.stages.length === 0) return 1;
-      var idx = 1;
-      for (var i = 0; i < preset.stages.length; i++) {
-        if (score >= preset.stages[i]) idx += 1;
-      }
-      return idx;
-    }
-
-    function updateHud() {
-      scoreEl.textContent = state.score;
-      roundEl.textContent = state.mode === "tournament"
-        ? ("S" + state.stageIndex + "/R" + state.round)
-        : state.round;
-      patternEl.textContent = state.feverLeft > 0 ? "FEVER!" : state.target.block.label;
-      timeEl.textContent = state.timeLeft.toFixed(1) + "s";
-    }
-
-    function startGame(selectedMode) {
-      ensureAudio();
-      resetJoystick();
-      var preset = getActivePreset();
-      var trainLvl = getSelectedTrainingLevel();
-      state.mode = selectedMode || "training";
-      state.running = true;
-      state.score = 0;
-      state.round = 1;
-      state.stageIndex = 1;
-      state.combo = 0;
-      state.streak = 0;
-      state.feverLeft = 0;
-      state.runCoins = 0;
-      state.jackpotStage = false;
-      state.jackpotUnlocked = false;
-      state.shotLockLeft = 0;
-      state.maxTime = state.mode === "training" ? 4.0 : preset.startTime;
-      state.timeLeft = state.maxTime;
-      state.splatters = [];
-      state.pulses = [];
-      state.popups = [];
-      state.cursor.x = canvas.width / 2;
-      state.cursor.y = canvas.height / 2;
-      state.cursor.vx = 0;
-      state.cursor.vy = 0;
-      state.target = pickTargetForRound(1, 75, false);
-
-      if (state.mode === "tournament") {
-        modeBadge.textContent = "TOURNEY: " + preset.name.toUpperCase();
-        modeBadge.className = "mode-badge tournament";
-      } else {
-        modeBadge.textContent = "TRAIN: " + trainLvl.block.label.toUpperCase();
-        modeBadge.className = "mode-badge";
-      }
-
-      overlay.className = "overlay hidden";
-      updateHud();
-      state.lastFrame = performance.now();
-      requestAnimationFrame(loop);
-    }
-
-    function endGame(reason, wonJackpot) {
-      state.running = false;
-      state.shotLockLeft = 0;
-      resetJoystick();
-      if (!wonJackpot) {
-        playMissSound();
-      }
-
-      if (state.score > save.bestScore) {
-        save.bestScore = state.score;
-      }
-      if (state.mode === "training" && state.runCoins > 0) {
-        save.coins += state.runCoins;
-      }
-      persistSave();
-
-      var preset = getActivePreset();
-      var trainLvl = getSelectedTrainingLevel();
-      var headline = wonJackpot ? "JACKPOT GOAL CLEARED!" : "Run Complete";
-      var extra = state.mode === "training"
-        ? "Level: <b>" + trainLvl.shortLabel + "</b> | Coins: <b>+" + state.runCoins + "</b>"
-        : "Preset: <b>" + preset.name + "</b> | Stage <b>" + state.stageIndex + "</b> (Goal: " + preset.jackpotGoal + ")";
-
-      homeSummary.innerHTML =
-        "<b>" + headline + "</b> – " + reason + "<br />" +
-        "Score: <b>" + state.score + "</b> | " + extra;
-
-      overlay.className = "overlay";
-      openView("home");
-    }
-
-    function fireShot(isManual) {
-      if (!state.running) return;
-      if (isManual && state.shotLockLeft > 0) return;
-      ensureAudio();
-
-      state.shotLockLeft = SHOT_LOCK_DURATION;
-
-      var dx = state.cursor.x - state.target.x;
-      var dy = state.cursor.y - state.target.y;
-      var dist = Math.sqrt(dx * dx + dy * dy);
-
-      state.splatters.push({
-        x: state.cursor.x,
-        y: state.cursor.y,
-        radius: Math.max(12, state.target.radius * 0.35),
-        color: state.target.color
       });
 
-      // Bonus Golden Shot after clearing the tournament goal never revokes the win
-      if (state.jackpotStage) {
-        if (dist <= state.target.radius) {
-          state.score += 400;
-          playBullseyeSound(4);
-          triggerScreenFlash();
-          endGame("Bonus Golden Shot hit (+400 pts)!", true);
-        } else {
-          endGame("Jackpot goal already secured! Bonus shot missed.", true);
+      for (var s = 0; s < 4; s++) {
+        (function (idx) {
+          assistSlotsEls[idx].addEventListener("click", function () { useAssist(idx); });
+        })(s);
+      }
+
+      joystickBase.addEventListener("pointerdown", function (e) {
+        e.preventDefault();
+        ensureAudio();
+        if (joystickBase.setPointerCapture) {
+          try { joystickBase.setPointerCapture(e.pointerId); } catch (err) {}
         }
-        return;
-      }
+        state.joy.active = true;
+        state.joy.pointerId = e.pointerId;
+        updateJoystickFromClient(e.clientX, e.clientY);
+      });
 
-      if (dist > state.target.radius) {
-        if (state.jackpotUnlocked) {
-          endGame("Jackpot goal secured! Missed follow-up shot.", true);
-        } else {
-          endGame("Missed the target!", false);
+      joystickBase.addEventListener("pointermove", function (e) {
+        if (!state.joy.active || e.pointerId !== state.joy.pointerId) return;
+        e.preventDefault();
+        updateJoystickFromClient(e.clientX, e.clientY);
+      });
+
+      joystickBase.addEventListener("pointerup", function (e) {
+        if (e.pointerId === state.joy.pointerId) {
+          resetJoystick();
         }
-        return;
-      }
+      });
 
-      var innerCoreRadius = Math.max(6, state.target.radius * 0.26);
-      var isBullseye = dist <= innerCoreRadius;
-
-      state.streak += 1;
-      var callout = getStreakCallout(state.streak);
-      if (callout) {
-        addPopup(state.cursor.x, state.cursor.y - 28, callout, "#38bdf8");
-      }
-
-      if (isBullseye) {
-        state.combo += 1;
-        if (state.combo >= FEVER_STREAK_REQUIRED) {
-          state.feverLeft = 3;
-          state.combo = 0;
-          addPopup(state.cursor.x, state.cursor.y - 42, "FEVER MODE!", "#f97316");
+      joystickBase.addEventListener("pointercancel", function (e) {
+        if (e.pointerId === state.joy.pointerId) {
+          resetJoystick();
         }
-        playBullseyeSound(state.streak);
-        triggerScreenFlash();
-        addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#facc15", true);
-      } else {
-        state.combo = 0;
-        playHitSound();
-        addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#34d399", false);
-      }
+      });
 
-      var accuracy = Math.max(0, 1 - dist / state.target.radius);
-      var feverMult = state.feverLeft > 0 ? 1.45 : 1.0;
-      var streakMult = 1 + Math.min(0.4, (state.streak - 1) * 0.05);
-      var timeBonus = Math.round(state.timeLeft * 18);
-      var shotPoints = Math.round((45 + accuracy * 75) * feverMult * streakMult + timeBonus);
-      state.score += shotPoints;
+      fireBtn.addEventListener("pointerdown", function (e) {
+        e.preventDefault();
+        fireShot(true);
+      });
 
-      if (state.feverLeft > 0) {
-        state.feverLeft -= 1;
-      }
-
-      if (isBullseye) {
-        addPopup(state.cursor.x, state.cursor.y - 12, "CORE HIT! +" + shotPoints, "#fde047");
-      } else {
-        addPopup(state.cursor.x, state.cursor.y - 12, "HIT +" + shotPoints, "#4ade80");
-      }
-
-      if (state.mode === "training") {
-        state.runCoins += isBullseye ? 5 : 2;
-      }
-
-      var preset = getActivePreset();
-      var nextRadius = state.target.radius;
-
-      if (state.mode === "tournament") {
-        var newStage = computeStageIndex(state.score, preset);
-        if (newStage > state.stageIndex) {
-          state.stageIndex = newStage;
-          state.score += 100;
-          nextRadius = Math.min(78, nextRadius + 8);
-          addPopup(canvas.width / 2, 42, "STAGE " + state.stageIndex + " (+100 & +SIZE)", "#38bdf8");
-        }
-
-        if (state.score >= preset.jackpotGoal) {
-          state.jackpotUnlocked = true;
-          state.jackpotStage = true;
-          state.round += 1;
-          state.maxTime = 2.8;
-          state.timeLeft = 2.8;
-          state.target = pickTargetForRound(state.round, Math.max(36, nextRadius), true);
-          updateHud();
-          return;
-        }
-      }
-
-      if (isBullseye) {
-        nextRadius = Math.min(82, nextRadius + 4);
-      } else if (state.target.block.type === "shieldShot") {
-        addPopup(state.cursor.x, state.cursor.y + 14, "SHIELD SAVED", "#38bdf8");
-      } else {
-        var shrinkFactor = state.target.block.type === "ringTarget"
-          ? (preset.ringShrinkFactor || 0.42)
-          : (preset.shrinkFactor || 0.26);
-        nextRadius = nextRadius - dist * shrinkFactor;
-      }
-
-      var minAllowedRadius = state.mode === "tournament" ? (preset.minRadius || 16) : 14;
-      if (nextRadius < minAllowedRadius) {
-        endGame("Target became too small!", false);
-        return;
-      }
-
-      state.round += 1;
-      if (state.mode === "training") {
-        state.maxTime = Math.max(2.0, 4.0 - (state.round - 1) * 0.015);
-      } else {
-        state.maxTime = Math.max(preset.minTime, preset.startTime - (state.round - 1) * preset.timeDecay);
-      }
-      state.timeLeft = state.maxTime;
-      state.target = pickTargetForRound(state.round, nextRadius, false);
-      updateHud();
-    }
-
-    function update(dt) {
-      state.timeLeft -= dt;
-      if (state.shotLockLeft > 0) {
-        state.shotLockLeft = Math.max(0, state.shotLockLeft - dt);
-      }
-
-      if (state.timeLeft <= 0) {
-        state.timeLeft = 0;
-        fireShot(false);
-        if (!state.running) return;
-      }
-
-      for (var p = state.pulses.length - 1; p >= 0; p--) {
-        var pulse = state.pulses[p];
-        pulse.life -= dt;
-        var progress = 1 - Math.max(0, pulse.life / pulse.maxLife);
-        pulse.currentRadius = pulse.radius + (pulse.maxRadius - pulse.radius) * progress;
-        if (pulse.life <= 0) {
-          state.pulses.splice(p, 1);
-        }
-      }
-
-      for (var q = state.popups.length - 1; q >= 0; q--) {
-        var pop = state.popups[q];
-        pop.life -= dt;
-        pop.y -= 26 * dt;
-        if (pop.life <= 0) {
-          state.popups.splice(q, 1);
-        }
-      }
-
-      var t = state.target;
-      var pad = t.radius + 14;
-
-      if (t.block.type === "moveX") {
-        t.x += t.dir * (t.block.speed || 40) * dt;
-        if (t.x < pad) { t.x = pad; t.dir = 1; }
-        if (t.x > canvas.width - pad) { t.x = canvas.width - pad; t.dir = -1; }
-      } else if (t.block.type === "figureEight") {
-        t.angle += (t.block.speed || 1.05) * dt;
-        var ampX = Math.min(72, canvas.width * 0.5 - pad - 10);
-        var ampY = Math.min(44, canvas.height * 0.5 - pad - 10);
-        t.x = Math.max(pad, Math.min(canvas.width - pad, t.baseX + Math.sin(t.angle) * Math.max(20, ampX)));
-        t.y = Math.max(pad, Math.min(canvas.height - pad, t.baseY + Math.sin(t.angle * 2) * 0.5 * Math.max(16, ampY)));
-      } else if (t.block.type === "elasticBounce") {
-        t.x += t.vx * dt;
-        t.y += t.vy * dt;
-        var bounced = false;
-        if (t.x < pad) { t.x = pad; t.vx = Math.abs(t.vx); bounced = true; }
-        if (t.x > canvas.width - pad) { t.x = canvas.width - pad; t.vx = -Math.abs(t.vx); bounced = true; }
-        if (t.y < pad) { t.y = pad; t.vy = Math.abs(t.vy); bounced = true; }
-        if (t.y > canvas.height - pad) { t.y = canvas.height - pad; t.vy = -Math.abs(t.vy); bounced = true; }
-        if (bounced) {
-          var curSpd = Math.sqrt(t.vx * t.vx + t.vy * t.vy) || 50;
-          var baseSpd = t.block.speed || 52;
-          var nextSpd = curSpd > baseSpd ? baseSpd * 0.75 : baseSpd * 1.32;
-          var ang = Math.atan2(t.vy, t.vx);
-          t.vx = Math.cos(ang) * nextSpd;
-          t.vy = Math.sin(ang) * nextSpd;
-        }
-      } else if (t.block.type === "telegraphJump") {
-        var interval = t.block.jumpInterval || 1.85;
-        var teleTime = t.block.telegraphTime || 0.72;
-        t.jumpTimer -= dt;
-        if (t.jumpTimer <= teleTime && t.nextX === null) {
-          var cand = randomTargetPos(t.radius);
-          t.nextX = cand.x;
-          t.nextY = cand.y;
-        }
-        if (t.jumpTimer <= 0) {
-          addPulse(t.x, t.y, t.radius, "#38bdf8", false);
-          if (t.nextX !== null) {
-            t.x = t.nextX;
-            t.y = t.nextY;
-          } else {
-            var fallback = randomTargetPos(t.radius);
-            t.x = fallback.x;
-            t.y = fallback.y;
+      window.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") state.keys.up = true;
+        if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") state.keys.down = true;
+        if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") state.keys.left = true;
+        if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") state.keys.right = true;
+        if (e.key === " " || e.key === "Enter") {
+          if (!state.running && overlay.className.indexOf("hidden") === -1 && currentView === "home") {
+            startGame("training");
+          } else if (state.running) {
+            fireShot(true);
           }
-          t.nextX = null;
-          t.nextY = null;
-          t.jumpTimer = interval;
-          playJumpSound();
         }
-      }
+      });
 
-      var ix = state.joy.ax;
-      var iy = state.joy.ay;
+      window.addEventListener("keyup", function (e) {
+        if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") state.keys.up = false;
+        if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") state.keys.down = false;
+        if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") state.keys.left = false;
+        if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") state.keys.right = false;
+      });
 
-      if (!state.joy.active) {
-        var kx = 0;
-        var ky = 0;
-        if (state.keys.left) kx -= 1;
-        if (state.keys.right) kx += 1;
-        if (state.keys.up) ky -= 1;
-        if (state.keys.down) ky += 1;
-        if (kx !== 0 && ky !== 0) {
-          var inv = 1 / Math.SQRT2;
-          kx *= inv;
-          ky *= inv;
-        }
-        ix = kx * 0.75;
-        iy = ky * 0.75;
-      }
-
-      var c = state.cursor;
-      var targetVx = ix * c.maxSpeed;
-      var targetVy = iy * c.maxSpeed;
-
-      if (Math.abs(ix) > 0.01 || Math.abs(iy) > 0.01) {
-        var blend = 1 - Math.exp(-c.accelRate * dt);
-        c.vx += (targetVx - c.vx) * blend;
-        c.vy += (targetVy - c.vy) * blend;
-      } else {
-        var decay = Math.exp(-c.damping * dt);
-        c.vx *= decay;
-        c.vy *= decay;
-        if (Math.sqrt(c.vx * c.vx + c.vy * c.vy) < 1) {
-          c.vx = 0;
-          c.vy = 0;
-        }
-      }
-
-      c.x = Math.max(10, Math.min(canvas.width - 10, c.x + c.vx * dt));
-      c.y = Math.max(10, Math.min(canvas.height - 10, c.y + c.vy * dt));
-
-      updateHud();
-    }
-
-    function draw() {
-      var theme = save.useRetro ? THEMES.retro : THEMES.modern;
-      var grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      grad.addColorStop(0, theme.bgTop);
-      grad.addColorStop(1, theme.bgBottom);
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.strokeStyle = theme.grid;
-      ctx.lineWidth = 1;
-      for (var i = 0; i <= canvas.width; i += 24) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, canvas.height);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(0, i);
-        ctx.lineTo(canvas.width, i);
-        ctx.stroke();
-      }
-
-      for (var j = 0; j < state.splatters.length; j++) {
-        var s = state.splatters[j];
-        ctx.save();
-        ctx.globalAlpha = 0.24;
-        ctx.fillStyle = s.color;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-
-      if (state.running && state.target.block.type === "telegraphJump" && state.target.nextX !== null) {
-        ctx.save();
-        ctx.strokeStyle = theme.reticle;
-        ctx.setLineDash([5, 4]);
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(state.target.nextX, state.target.nextY, state.target.radius, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      ctx.save();
-      if (!save.useRetro) {
-        ctx.shadowColor = state.target.color;
-        ctx.shadowBlur = 14;
-      }
-      ctx.fillStyle = state.target.color;
-      ctx.globalAlpha = 0.9;
-      ctx.beginPath();
-      ctx.arc(state.target.x, state.target.y, state.target.radius, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.shadowBlur = 0;
-      var coreR = Math.max(6, state.target.radius * 0.26);
-      ctx.strokeStyle = state.target.block.type === "ringTarget" ? "#fde047" : "rgba(255, 255, 255, 0.85)";
-      ctx.lineWidth = state.target.block.type === "ringTarget" ? 2.5 : 2;
-      ctx.beginPath();
-      ctx.arc(state.target.x, state.target.y, coreR, 0, Math.PI * 2);
-      ctx.stroke();
-
-      if (state.target.block.type === "shieldShot") {
-        ctx.strokeStyle = "#38bdf8";
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(state.target.x, state.target.y, state.target.radius + 4, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-      ctx.restore();
-
-      for (var p = 0; p < state.pulses.length; p++) {
-        var pulse = state.pulses[p];
-        var alpha = Math.max(0, pulse.life / pulse.maxLife);
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        ctx.strokeStyle = pulse.color;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(pulse.x, pulse.y, pulse.currentRadius || pulse.radius, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      if (state.running && state.mode === "training" && save.hasGuide) {
-        ctx.save();
-        ctx.strokeStyle = theme.reticle;
-        ctx.globalAlpha = 0.55;
-        ctx.setLineDash([4, 4]);
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(state.cursor.x, state.cursor.y);
-        ctx.lineTo(state.target.x, state.target.y);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      // Fixed high-contrast reticle color per theme
-      ctx.save();
-      ctx.strokeStyle = theme.reticle;
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      ctx.arc(state.cursor.x, state.cursor.y, 11, 0, Math.PI * 2);
-      ctx.moveTo(state.cursor.x - 17, state.cursor.y);
-      ctx.lineTo(state.cursor.x + 17, state.cursor.y);
-      ctx.moveTo(state.cursor.x, state.cursor.y - 17);
-      ctx.lineTo(state.cursor.x, state.cursor.y + 17);
-      ctx.stroke();
-      ctx.restore();
-
-      for (var q = 0; q < state.popups.length; q++) {
-        var pop = state.popups[q];
-        var pAlpha = Math.max(0, pop.life / pop.maxLife);
-        ctx.save();
-        ctx.globalAlpha = pAlpha;
-        ctx.font = "bold 12.5px Arial, sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillStyle = pop.color;
-        ctx.fillText(pop.text, pop.x, pop.y);
-        ctx.restore();
-      }
-    }
-
-    function loop(now) {
-      if (!state.running) return;
-      var dt = Math.min(0.05, (now - state.lastFrame) / 1000);
-      state.lastFrame = now;
-
-      update(dt);
+      renderTrainingUI();
+      renderLevelModeUI();
+      initTournamentInfo();
+      refreshAssistButtons();
+      openView("home");
       draw();
-      requestAnimationFrame(loop);
-    }
-
-    fireBtn.addEventListener("pointerdown", function (e) {
-      e.preventDefault();
-      fireShot(true);
-    });
-
-    window.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") state.keys.up = true;
-      if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") state.keys.down = true;
-      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") state.keys.left = true;
-      if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") state.keys.right = true;
-      if (e.key === " " || e.key === "Enter") {
-        if (!state.running && overlay.className.indexOf("hidden") === -1 && currentView === "home") {
-          startGame("training");
-        } else {
-          fireShot(true);
-        }
-      }
-    });
-
-    window.addEventListener("keyup", function (e) {
-      if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") state.keys.up = false;
-      if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") state.keys.down = false;
-      if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") state.keys.left = false;
-      if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") state.keys.right = false;
-    });
-
-    renderTrainingLevels();
-    selectPreset("classic");
-    openView("home");
-    draw();
+    })();
   </script>
 </body>
 </html>
