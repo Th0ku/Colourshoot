@@ -19,9 +19,9 @@
       height: 100%;
       overflow: hidden;
       overscroll-behavior: none;
-      background: linear-gradient(155deg, #f8c8dc 0%, #e5b8f4 45%, #ffd8a8 100%);
+      background: radial-gradient(circle at top, #1b2845 0%, #0b1021 100%);
       font-family: Arial, Helvetica, sans-serif;
-      color: #2d1b3d;
+      color: #f8fafc;
     }
 
     body {
@@ -34,11 +34,11 @@
     .gb-shell {
       width: 100%;
       max-width: 440px;
-      background: linear-gradient(165deg, #fff6f0 0%, #f5e6ff 55%, #ffe9d6 100%);
-      border: 2px solid rgba(255, 255, 255, 0.85);
+      background: linear-gradient(165deg, #212b48 0%, #11182c 100%);
+      border: 2px solid rgba(125, 211, 252, 0.28);
       border-radius: 30px;
       padding: 12px;
-      box-shadow: 0 22px 50px rgba(124, 58, 137, 0.25);
+      box-shadow: 0 24px 55px rgba(4, 9, 24, 0.72);
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -53,13 +53,13 @@
     }
 
     .coin-box {
-      background: rgba(255, 255, 255, 0.82);
+      background: rgba(15, 23, 42, 0.85);
       padding: 4px 12px;
       border-radius: 999px;
-      border: 1.5px solid rgba(245, 158, 11, 0.55);
-      color: #b45309;
+      border: 1.5px solid rgba(251, 191, 36, 0.6);
+      color: #fde047;
       font-weight: 800;
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+      box-shadow: 0 4px 14px rgba(251, 191, 36, 0.16);
     }
 
     .screen-wrap {
@@ -68,9 +68,9 @@
       aspect-ratio: 1 / 1;
       border-radius: 22px;
       overflow: hidden;
-      border: 2px solid rgba(255, 255, 255, 0.9);
-      box-shadow: inset 0 2px 14px rgba(139, 92, 246, 0.14);
-      background: #fff1e6;
+      border: 2px solid rgba(125, 211, 252, 0.45);
+      box-shadow: inset 0 2px 16px rgba(15, 23, 42, 0.65);
+      background: #0d1b36;
     }
 
     .inner-top-stack {
@@ -87,8 +87,8 @@
     .inner-time-bar-wrap {
       width: 100%;
       height: 12px;
-      background: rgba(255, 255, 255, 0.65);
-      border-bottom: 1px solid rgba(217, 119, 166, 0.3);
+      background: rgba(9, 14, 28, 0.75);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.3);
       overflow: hidden;
     }
 
@@ -97,7 +97,7 @@
       align-items: center;
       gap: 8px;
       padding: 6px 12px;
-      background: rgba(255, 250, 247, 0.78);
+      background: rgba(11, 18, 38, 0.78);
       backdrop-filter: blur(4px);
       min-height: 36px;
     }
@@ -109,8 +109,8 @@
     .life-pip {
       font-size: 25px;
       line-height: 1;
-      color: #fb568b;
-      text-shadow: 0 3px 10px rgba(251, 86, 139, 0.4);
+      color: #fb7185;
+      text-shadow: 0 0 10px rgba(251, 113, 133, 0.65);
     }
 
     .countdown-banner {
@@ -121,7 +121,7 @@
       display: none;
       justify-content: center;
       align-items: center;
-      background: rgba(255, 244, 236, 0.35);
+      background: rgba(9, 15, 32, 0.38);
       backdrop-filter: blur(2px);
     }
 
@@ -133,8 +133,8 @@
       font-size: 58px;
       font-weight: 900;
       letter-spacing: 2px;
-      color: #ff7a59;
-      text-shadow: 0 4px 20px rgba(255, 255, 255, 0.95), 0 6px 18px rgba(190, 24, 93, 0.25);
+      color: #fde047;
+      text-shadow: 0 0 22px rgba(251, 146, 60, 0.85), 0 6px 18px rgba(0, 0, 0, 0.75);
     }
 
     .time-bar-fill {
@@ -169,7 +169,7 @@
       z-index: 6;
       pointer-events: none;
       opacity: 0;
-      background: radial-gradient(circle, rgba(254, 240, 138, 0.78) 0%, rgba(255, 228, 230, 0.45) 60%, transparent 100%);
+      background: radial-gradient(circle, rgba(254, 240, 138, 0.78) 0%, rgba(244, 114, 182, 0.4) 60%, transparent 100%);
       transition: opacity 0.16s ease-out;
     }
 
@@ -182,8 +182,8 @@
       position: absolute;
       inset: 0;
       z-index: 20;
-      background: linear-gradient(160deg, rgba(255, 247, 242, 0.97) 0%, rgba(246, 234, 255, 0.97) 100%);
-      color: #2d1b3d;
+      background: linear-gradient(160deg, rgba(14, 23, 48, 0.96) 0%, rgba(26, 20, 54, 0.96) 100%);
+      color: #f8fafc;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -214,20 +214,20 @@
     .overlay h2 {
       margin: 0;
       font-size: 18px;
-      color: #4c1d6b;
+      color: #fde047;
     }
 
     .overlay p {
       margin: 0;
       font-size: 10.5px;
-      color: #5b466e;
+      color: #cbd5e1;
       line-height: 1.35;
     }
 
     .small-btn {
-      background: #ffffff;
-      color: #4c1d6b;
-      border: 1.5px solid #d8b4fe;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1.5px solid #64748b;
       border-radius: 10px;
       padding: 5px 9px;
       font-size: 10px;
@@ -245,7 +245,7 @@
 
     .hub-btn {
       width: 100%;
-      border: 1.5px solid rgba(255, 255, 255, 0.8);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
       border-radius: 14px;
       padding: 8px 12px;
       font-size: 12.5px;
@@ -254,28 +254,28 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 6px 16px rgba(140, 82, 168, 0.14);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
       touch-action: manipulation;
     }
 
     .hub-btn.train {
-      background: linear-gradient(90deg, #86efac 0%, #6ee7b7 100%);
-      color: #064e3b;
+      background: linear-gradient(90deg, #34d399 0%, #22d3ee 100%);
+      color: #06281e;
     }
 
     .hub-btn.levelmode {
-      background: linear-gradient(90deg, #e9d5ff 0%, #f9a8d4 100%);
-      color: #4a154b;
+      background: linear-gradient(90deg, #c084fc 0%, #f472b6 100%);
+      color: #2e0838;
     }
 
     .hub-btn.tourney {
-      background: linear-gradient(90deg, #fde68a 0%, #fdba74 100%);
-      color: #7c2d12;
+      background: linear-gradient(90deg, #fbbf24 0%, #fb7185 100%);
+      color: #3b0d14;
     }
 
     .hub-btn.skins {
-      background: linear-gradient(90deg, #bae6fd 0%, #ddd6fe 100%);
-      color: #1e3a8a;
+      background: linear-gradient(90deg, #38bdf8 0%, #818cf8 100%);
+      color: #0c1942;
     }
 
     .hub-sub {
@@ -292,9 +292,9 @@
 
     .tab-btn {
       flex: 1;
-      background: rgba(255, 255, 255, 0.75);
-      color: #5b466e;
-      border: 1.5px solid #e9d5ff;
+      background: rgba(30, 41, 59, 0.85);
+      color: #cbd5e1;
+      border: 1.5px solid #475569;
       border-radius: 10px;
       padding: 5px 6px;
       font-size: 11px;
@@ -304,15 +304,15 @@
     }
 
     .tab-btn.active {
-      background: #fae8ff;
-      color: #6b21a8;
-      border-color: #c084fc;
+      background: rgba(56, 189, 248, 0.24);
+      color: #7dd3fc;
+      border-color: #38bdf8;
     }
 
     .panel-box {
       width: 100%;
-      background: rgba(255, 255, 255, 0.78);
-      border: 1.5px solid rgba(216, 180, 254, 0.65);
+      background: rgba(15, 23, 42, 0.82);
+      border: 1.5px solid rgba(148, 163, 184, 0.28);
       border-radius: 14px;
       padding: 7px 9px;
       display: flex;
@@ -325,7 +325,7 @@
     }
 
     .panel-label {
-      color: #7e22ce;
+      color: #7dd3fc;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.4px;
@@ -339,9 +339,9 @@
     }
 
     .level-btn {
-      background: #ffffff;
-      color: #4c1d6b;
-      border: 1.5px solid #e9d5ff;
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1.5px solid #475569;
       border-radius: 9px;
       padding: 4px 3px;
       font-size: 9.5px;
@@ -351,9 +351,9 @@
     }
 
     .level-btn.active {
-      background: #dcfce7;
-      color: #166534;
-      border-color: #4ade80;
+      background: rgba(52, 211, 153, 0.24);
+      color: #6ee7b7;
+      border-color: #34d399;
     }
 
     .mode20-grid {
@@ -363,9 +363,9 @@
     }
 
     .mode20-btn {
-      background: #ffffff;
-      color: #4c1d6b;
-      border: 1.5px solid #e9d5ff;
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1.5px solid #475569;
       border-radius: 9px;
       padding: 3px 3px;
       font-size: 8.8px;
@@ -382,33 +382,33 @@
 
     .mode20-btn.completed {
       border-color: #f472b6;
-      background: #fdf2f8;
+      background: rgba(131, 24, 67, 0.35);
     }
 
     .mode20-btn.active {
-      background: #f3e8ff;
-      color: #6b21a8;
-      border-color: #a855f7;
+      background: rgba(192, 132, 252, 0.3);
+      color: #f3e8ff;
+      border-color: #c084fc;
     }
 
     .mode20-score {
       font-size: 8px;
-      color: #d97706;
+      color: #fde047;
       font-weight: 800;
     }
 
     .briefing-box {
-      background: rgba(255, 241, 242, 0.88);
+      background: rgba(30, 41, 59, 0.8);
       border-left: 3.5px solid #f472b6;
       border-radius: 8px;
       padding: 5px 8px;
       font-size: 10px;
       line-height: 1.32;
-      color: #3b264d;
+      color: #e2e8f0;
     }
 
     .briefing-box b {
-      color: #9d174d;
+      color: #f9a8d4;
     }
 
     .tourney-name-row {
@@ -416,17 +416,17 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      background: #fffbeb;
-      border: 1.5px solid #fcd34d;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1.5px solid rgba(251, 191, 36, 0.5);
       border-radius: 10px;
       padding: 5px 8px;
       font-size: 10.5px;
-      color: #451a03;
+      color: #fef3c7;
     }
 
     .leaderboard-box {
-      background: rgba(255, 255, 255, 0.85);
-      border: 1.5px solid #e9d5ff;
+      background: rgba(10, 16, 34, 0.82);
+      border: 1.5px solid rgba(148, 163, 184, 0.25);
       border-radius: 10px;
       padding: 5px 7px;
       max-height: 112px;
@@ -443,19 +443,19 @@
       align-items: center;
       padding: 2px 5px;
       border-radius: 6px;
-      background: rgba(250, 245, 255, 0.9);
-      color: #3b264d;
+      background: rgba(30, 41, 59, 0.55);
+      color: #e2e8f0;
     }
 
     .lb-row.me {
-      background: #fef3c7;
-      border: 1px solid #f59e0b;
-      color: #78350f;
+      background: rgba(251, 191, 36, 0.22);
+      border: 1px solid #fbbf24;
+      color: #fde68a;
       font-weight: 700;
     }
 
     .preset-meta {
-      color: #b45309;
+      color: #fde047;
       font-size: 9.5px;
       font-weight: 700;
     }
@@ -469,32 +469,31 @@
 
     .btn-go {
       flex: 1;
-      background: linear-gradient(90deg, #4ade80 0%, #34d399 100%);
-      color: #064e3b;
-      border: 1.5px solid #ffffff;
+      background: linear-gradient(90deg, #34d399 0%, #22c55e 100%);
+      color: #052e16;
+      border: none;
       border-radius: 12px;
       padding: 7px 10px;
       font-size: 11px;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(52, 211, 153, 0.25);
       touch-action: manipulation;
     }
 
     .btn-go.amber {
-      background: linear-gradient(90deg, #fbbf24 0%, #fb923c 100%);
+      background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);
       color: #451a03;
     }
 
     .btn-go.purple {
-      background: linear-gradient(90deg, #c084fc 0%, #f472b6 100%);
+      background: linear-gradient(90deg, #c084fc 0%, #ec4899 100%);
       color: #ffffff;
     }
 
     .btn-back {
-      background: #ffffff;
-      color: #4c1d6b;
-      border: 1.5px solid #d8b4fe;
+      background: #334155;
+      color: #f8fafc;
+      border: 1.5px solid #64748b;
       border-radius: 12px;
       padding: 7px 10px;
       font-size: 10.5px;
@@ -514,9 +513,9 @@
       width: 30px;
       height: 30px;
       border-radius: 10px;
-      background: #ffffff;
-      color: #4c1d6b;
-      border: 1.5px solid #d8b4fe;
+      background: #334155;
+      color: #f8fafc;
+      border: 1.5px solid #64748b;
       font-size: 15px;
       font-weight: 900;
       line-height: 1;
@@ -529,7 +528,7 @@
 
     .result-card {
       width: 100%;
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(15, 23, 42, 0.9);
       border: 1.5px solid #e879f9;
       border-radius: 14px;
       padding: 12px;
@@ -547,17 +546,17 @@
     }
 
     .result-row b {
-      color: #059669;
+      color: #34d399;
       font-size: 14px;
     }
 
     .result-compare {
       padding: 8px 10px;
       border-radius: 10px;
-      background: #fdf4ff;
+      background: rgba(30, 41, 59, 0.88);
       font-size: 11.5px;
       line-height: 1.35;
-      color: #3b264d;
+      color: #f8fafc;
     }
 
     .shop-item {
@@ -566,12 +565,12 @@
       align-items: center;
       gap: 8px;
       padding: 2px 0;
-      color: #3b264d;
+      color: #e2e8f0;
     }
 
     .shop-btn {
-      background: #e0f2fe;
-      color: #0369a1;
+      background: #0284c7;
+      color: #ffffff;
       border: 1.5px solid #7dd3fc;
       border-radius: 9px;
       padding: 4px 8px;
@@ -583,8 +582,8 @@
     }
 
     .shop-btn:disabled {
-      background: #f1f5f9;
-      border-color: #cbd5e1;
+      background: #334155;
+      border-color: #475569;
       color: #94a3b8;
       cursor: default;
     }
@@ -603,9 +602,9 @@
       width: 116px;
       height: 116px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 30%, #ffffff 0%, #f3e8ff 65%, #e9d5ff 100%);
-      border: 2px solid rgba(255, 255, 255, 0.9);
-      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2), inset 0 3px 10px rgba(168, 85, 247, 0.15);
+      background: radial-gradient(circle at 35% 30%, #273559 0%, #10182e 75%, #090e1c 100%);
+      border: 2px solid rgba(125, 211, 252, 0.42);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45), inset 0 3px 10px rgba(56, 189, 248, 0.16);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -618,7 +617,7 @@
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      border: 1.5px dashed rgba(168, 85, 247, 0.35);
+      border: 1.5px dashed rgba(125, 211, 252, 0.35);
       pointer-events: none;
     }
 
@@ -627,9 +626,9 @@
       width: 48px;
       height: 48px;
       border-radius: 50%;
-      background: radial-gradient(circle at 32% 28%, #f9a8d4 0%, #c084fc 65%, #9333ea 100%);
-      border: 2px solid #ffffff;
-      box-shadow: 0 5px 14px rgba(147, 51, 234, 0.35);
+      background: radial-gradient(circle at 32% 28%, #7dd3fc 0%, #38bdf8 60%, #0284c7 100%);
+      border: 2px solid #e0f2fe;
+      box-shadow: 0 5px 14px rgba(2, 132, 199, 0.45);
       transform: translate(0px, 0px);
       pointer-events: none;
     }
@@ -646,7 +645,7 @@
       font-size: 9px;
       text-transform: uppercase;
       letter-spacing: 0.4px;
-      color: #6b21a8;
+      color: #7dd3fc;
       font-weight: 800;
     }
 
@@ -660,9 +659,9 @@
       width: 48px;
       height: 44px;
       border-radius: 13px;
-      border: 1.5px solid #e9d5ff;
-      background: rgba(255, 255, 255, 0.72);
-      color: #a89bb9;
+      border: 1.5px solid #475569;
+      background: rgba(15, 23, 42, 0.85);
+      color: #64748b;
       font-size: 9.5px;
       font-weight: 800;
       cursor: pointer;
@@ -675,24 +674,24 @@
     }
 
     .assist-btn.ready {
-      background: linear-gradient(145deg, #fffbeb 0%, #fce7f3 100%);
+      background: linear-gradient(145deg, rgba(56, 189, 248, 0.25) 0%, rgba(244, 114, 182, 0.25) 100%);
       border-color: #f472b6;
-      color: #831843;
-      box-shadow: 0 4px 12px rgba(244, 114, 182, 0.25);
+      color: #fdf2f8;
+      box-shadow: 0 4px 12px rgba(244, 114, 182, 0.28);
     }
 
     .fire-btn {
       width: 84px;
       height: 84px;
       border-radius: 50%;
-      background: radial-gradient(circle at 32% 28%, #fda4af 0%, #fb7185 55%, #e11d48 100%);
+      background: radial-gradient(circle at 32% 28%, #fb7185 0%, #e11d48 60%, #9f1239 100%);
       color: #ffffff;
-      border: 2.5px solid #ffffff;
+      border: 2.5px solid #fecdd3;
       font-size: 20px;
       font-weight: 900;
       cursor: pointer;
       flex-shrink: 0;
-      box-shadow: 0 8px 20px rgba(225, 29, 72, 0.32);
+      box-shadow: 0 8px 20px rgba(225, 29, 72, 0.45);
       touch-action: none;
     }
   </style>
@@ -710,7 +709,7 @@
         </div>
         <div id="livesStrip" class="lives-strip"></div>
       </div>
-      <canvas id="gameCanvas" width="380" height="380"></canvas>
+      <canvas id="gameCanvas" width="760" height="760"></canvas>
       <div id="countdownBanner" class="countdown-banner">
         <span id="countdownText" class="countdown-text">3</span>
       </div>
@@ -825,7 +824,7 @@
           <div class="panel-box">
             <div class="panel-label">Skins & Training Aids</div>
             <div class="shop-item">
-              <span><b>Skin:</b> Sunset Pastel (Default)</span>
+              <span><b>Skin:</b> Neon Street (Default)</span>
               <button id="buyRetroBtn" class="shop-btn" type="button">50 Coins</button>
             </div>
             <div class="shop-item">
@@ -885,6 +884,18 @@
       var countdownBanner = document.getElementById("countdownBanner");
       var countdownText = document.getElementById("countdownText");
 
+      var LOGICAL_SIZE = 380;
+      var RENDER_SCALE = 2;
+
+      function setupHighResCanvas() {
+        var dpr = window.devicePixelRatio || 1;
+        var scale = Math.max(RENDER_SCALE, Math.min(3, dpr * RENDER_SCALE));
+        canvas.width = Math.round(LOGICAL_SIZE * scale);
+        canvas.height = Math.round(LOGICAL_SIZE * scale);
+        ctx.setTransform(canvas.width / LOGICAL_SIZE, 0, 0, canvas.height / LOGICAL_SIZE, 0, 0);
+      }
+      setupHighResCanvas();
+
       var livesStrip = document.getElementById("livesStrip");
       var coinsEl = document.getElementById("coinsEl");
       var timeBarFill = document.getElementById("timeBarFill");
@@ -932,7 +943,6 @@
       var MAX_TIME_BAR = 6.0;
       var MAX_LIVES = 10;
 
-      // Feste, faire Assist-Reihenfolgen (inkl. +TIME und AUTO, ohne Zufalls-Vorteile)
       var FAIR_TOURNAMENT_ASSISTS = [
         "timeStitch",
         "autoAim",
@@ -973,13 +983,13 @@
       var activeRng = Math.random;
 
       var TARGET_VISUALS = {
-        static:        { shape: "circle",  color: "#a855f7", retroColor: "#1f4e1f", pattern: "ring" },
-        moveX:         { shape: "circle",  color: "#38bdf8", retroColor: "#1f4e1f", pattern: "stripesX" },
-        ringTarget:    { shape: "circle",  color: "#fb923c", retroColor: "#0f380f", pattern: "bullRing" },
-        figureEight:   { shape: "octagon", color: "#f472b6", retroColor: "#1f4e1f", pattern: "cross" },
-        telegraphJump: { shape: "circle",  color: "#818cf8", retroColor: "#0f380f", pattern: "ghost" },
-        elasticBounce: { shape: "octagon", color: "#34d399", retroColor: "#1f4e1f", pattern: "pulseRing" },
-        shieldShot:    { shape: "circle",  color: "#60a5fa", retroColor: "#0f380f", pattern: "shield" }
+        static:        { shape: "circle",  color: "#c084fc", retroColor: "#22c55e", pattern: "ring" },
+        moveX:         { shape: "circle",  color: "#38bdf8", retroColor: "#38bdf8", pattern: "stripesX" },
+        ringTarget:    { shape: "circle",  color: "#fb923c", retroColor: "#facc15", pattern: "bullRing" },
+        figureEight:   { shape: "octagon", color: "#f472b6", retroColor: "#f472b6", pattern: "cross" },
+        telegraphJump: { shape: "circle",  color: "#818cf8", retroColor: "#a78bfa", pattern: "ghost" },
+        elasticBounce: { shape: "octagon", color: "#34d399", retroColor: "#4ade80", pattern: "pulseRing" },
+        shieldShot:    { shape: "circle",  color: "#60a5fa", retroColor: "#2dd4bf", pattern: "shield" }
       };
 
       var TRAINING_LEVELS = [
@@ -987,50 +997,50 @@
           id: "static",
           shortLabel: "1. Static",
           block: { type: "static", label: "Static", speed: 0 },
-          does: "Stationary lavender-violet circle with inner ring.",
-          spotBy: "Soft violet circle with steady core ring."
+          does: "Stationary violet circle with inner ring.",
+          spotBy: "Neon violet circle with steady core ring."
         },
         {
           id: "moveX",
           shortLabel: "2. Sweep X",
           block: { type: "moveX", label: "Sweep X", speed: 42 },
-          does: "Glides horizontally left and right across the arena.",
-          spotBy: "Sky-blue circle with horizontal line."
+          does: "Glides horizontally left and right across the street.",
+          spotBy: "Cyan circle with horizontal line."
         },
         {
           id: "ringTarget",
           shortLabel: "3. DualRing",
           block: { type: "ringTarget", label: "DualRing", speed: 0 },
           does: "Inner core gives bonus & streak progress; outer edge shrinks target more.",
-          spotBy: "Warm peach-orange circle with double ring."
+          spotBy: "Warm orange circle with double ring."
         },
         {
           id: "figureEight",
           shortLabel: "4. Fig-8",
           block: { type: "figureEight", label: "Fig-8", speed: 1.08 },
           does: "Smoothly traces a figure-eight curve across the screen.",
-          spotBy: "Rose-pink octagon with soft cross."
+          spotBy: "Pink octagon with cross."
         },
         {
           id: "telegraphJump",
           shortLabel: "5. JumpPlan",
           block: { type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.72, jumpInterval: 1.85 },
           does: "Previews upcoming jump location before hopping.",
-          spotBy: "Soft periwinkle circle with dashed preview."
+          spotBy: "Indigo circle with dashed preview."
         },
         {
           id: "elasticBounce",
           shortLabel: "6. Elastic",
           block: { type: "elasticBounce", label: "Elastic", speed: 54 },
           does: "Rebounds off walls and alternates speed after each bounce.",
-          spotBy: "Mint-emerald octagon with inner ring."
+          spotBy: "Emerald octagon with inner ring."
         },
         {
           id: "shieldShot",
           shortLabel: "7. Shield",
           block: { type: "shieldShot", label: "Shield", speed: 34 },
           does: "Prevents radius shrink on a non-core hit.",
-          spotBy: "Soft blue circle with outer shield ring."
+          spotBy: "Blue circle with outer shield ring."
         }
       ];
 
@@ -1039,7 +1049,7 @@
           id: "timeStitch",
           code: "+TIME",
           name: "Time-Stitch",
-          color: "#16a34a",
+          color: "#4ade80",
           passive: true,
           labTarget: { type: "moveX", label: "Sweep X", speed: 44 },
           does: "Adds +1.8s directly to the time bar on pickup.",
@@ -1049,7 +1059,7 @@
           id: "safetyNet",
           code: "NET",
           name: "Safety Net",
-          color: "#ec4899",
+          color: "#f472b6",
           passive: true,
           labTarget: { type: "elasticBounce", label: "Elastic", speed: 52 },
           does: "Adds +1 life (up to 10 lives) shown below time bar.",
@@ -1059,7 +1069,7 @@
           id: "anchor",
           code: "ANCHOR",
           name: "Anchor",
-          color: "#0284c7",
+          color: "#38bdf8",
           passive: false,
           labTarget: { type: "figureEight", label: "Fig-8", speed: 1.15 },
           does: "Locks the moving target in place for 2.4s.",
@@ -1069,7 +1079,7 @@
           id: "freezer",
           code: "FREEZE",
           name: "Freezer",
-          color: "#0891b2",
+          color: "#67e8f9",
           passive: false,
           labTarget: { type: "elasticBounce", label: "Elastic", speed: 62 },
           does: "Freezes both target movement and time drain for 2.4s.",
@@ -1079,7 +1089,7 @@
           id: "autoAim",
           code: "AUTO",
           name: "Auto-Aim",
-          color: "#9333ea",
+          color: "#c084fc",
           passive: false,
           labTarget: { type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.72, jumpInterval: 1.65 },
           does: "Guides your reticle straight onto the target center for 2.4s.",
@@ -1089,7 +1099,7 @@
           id: "coreMagnet",
           code: "CORE+",
           name: "Core Magnet",
-          color: "#d97706",
+          color: "#facc15",
           passive: false,
           labTarget: { type: "moveX", label: "Sweep X", speed: 48 },
           does: "Expands the inner core hit zone for 3.5s.",
@@ -1099,7 +1109,7 @@
           id: "inflate",
           code: "SIZE+",
           name: "Inflate",
-          color: "#ea580c",
+          color: "#fb923c",
           passive: false,
           labTarget: { type: "figureEight", label: "Fig-8", speed: 1.05 },
           does: "Expands the target radius by +12px (up to 84px).",
@@ -1130,7 +1140,7 @@
         var obsType = OBSTACLE_STYLES[(lv - 1) % OBSTACLE_STYLES.length];
         var primaryVariant = VARIANT_POOL[(lv - 1) % VARIANT_POOL.length];
         var obsNames = {
-          none: "Open Arena",
+          none: "Open Street",
           centerBarH: "Center Bar",
           centerSquare: "Center Square",
           centerCircle: "Center Circle",
@@ -1184,21 +1194,18 @@
         return ASSISTS_CATALOG[0];
       }
 
-      // Heller, weicher Sonnenuntergangs- & Abendrot-Stil inspiriert vom Bild
       var THEMES = {
         modern: {
-          bgTop: "#fde8e9",
-          bgMid: "#f3e5ff",
-          bgBottom: "#ffedd5",
-          grid: "rgba(168, 85, 247, 0.11)",
-          reticle: "#4c1d6b"
+          skyTop: "#091b3a",
+          skyMid: "#134e78",
+          skyGlow: "#1d9bf0",
+          reticle: "#ffffff"
         },
         retro: {
-          bgTop: "#d9f99d",
-          bgMid: "#fef08a",
-          bgBottom: "#fed7aa",
-          grid: "rgba(101, 163, 13, 0.14)",
-          reticle: "#365314"
+          skyTop: "#131738",
+          skyMid: "#3b1d6e",
+          skyGlow: "#ec4899",
+          reticle: "#fde047"
         }
       };
 
@@ -1216,7 +1223,7 @@
       };
 
       try {
-        var rawSave = localStorage.getItem("colourshoot_save_v22");
+        var rawSave = localStorage.getItem("colourshoot_save_v23");
         if (rawSave) {
           var parsed = JSON.parse(rawSave);
           if (parsed.playerName) save.playerName = String(parsed.playerName).slice(0, 16);
@@ -1317,7 +1324,7 @@
         coinsEl.textContent = save.coins;
 
         if (save.hasRetro) {
-          buyRetroBtn.textContent = save.useRetro ? "Active (Tap: Sunset)" : "Enable";
+          buyRetroBtn.textContent = save.useRetro ? "Active (Tap: Street)" : "Enable";
           buyRetroBtn.disabled = false;
         } else {
           buyRetroBtn.textContent = "50 Coins";
@@ -1354,7 +1361,7 @@
 
       function persistSave() {
         try {
-          localStorage.setItem("colourshoot_save_v22", JSON.stringify(save));
+          localStorage.setItem("colourshoot_save_v23", JSON.stringify(save));
         } catch (e) {}
         refreshProfileUI();
         refreshShopUI();
@@ -1732,7 +1739,7 @@
         playMaxBarSound();
         for (var i = 0; i < 42; i++) {
           state.glitters.push({
-            x: activeRng() * canvas.width,
+            x: activeRng() * LOGICAL_SIZE,
             y: -10 - activeRng() * 65,
             vy: 65 + activeRng() * 85,
             vx: (activeRng() - 0.5) * 32,
@@ -1867,14 +1874,13 @@
         return FAIR_LEVEL_ASSISTS[idx % FAIR_LEVEL_ASSISTS.length];
       }
 
-      // Nicht eingesammelte Assists werden bei jedem neuen Assist-Spawn überschrieben/verworfen
       function spawnAssistToken(specificId) {
         var chosenId = specificId || pickDeterministicAssistId();
         var margin = 56;
-        var x = margin + activeRng() * (canvas.width - margin * 2);
-        var y = margin + activeRng() * (canvas.height - margin * 2);
+        var x = margin + activeRng() * (LOGICAL_SIZE - margin * 2);
+        var y = margin + activeRng() * (LOGICAL_SIZE - margin * 2);
         if (Math.hypot(x - state.target.x, y - state.target.y) < 58) {
-          x = x < canvas.width * 0.5 ? canvas.width - margin : margin;
+          x = x < LOGICAL_SIZE * 0.5 ? LOGICAL_SIZE - margin : margin;
         }
         state.assistToken = {
           id: chosenId,
@@ -1994,8 +2000,8 @@
       function randomTargetPos(radius) {
         var margin = Math.max(60, radius + 32);
         return {
-          x: margin + activeRng() * Math.max(20, canvas.width - margin * 2),
-          y: margin + activeRng() * Math.max(20, canvas.height - margin * 2)
+          x: margin + activeRng() * Math.max(20, LOGICAL_SIZE - margin * 2),
+          y: margin + activeRng() * Math.max(20, LOGICAL_SIZE - margin * 2)
         };
       }
 
@@ -2100,7 +2106,7 @@
           state.effects.extraLives -= 1;
           state.timeLeft = MAX_TIME_BAR * 0.75;
           state.target.radius = Math.max(32, state.target.radius + 10);
-          addPopup(state.cursor.x, state.cursor.y - 16, "LIFE USED (" + state.effects.extraLives + " LEFT)", "#db2777");
+          addPopup(state.cursor.x, state.cursor.y - 16, "LIFE USED (" + state.effects.extraLives + " LEFT)", "#f472b6");
           refreshLivesStrip();
           updateHud();
           return true;
@@ -2168,7 +2174,7 @@
         state.streak += 1;
         var callout = getStreakCallout(state.streak);
         if (callout) {
-          addPopup(state.cursor.x, state.cursor.y - 28, callout, "#7e22ce");
+          addPopup(state.cursor.x, state.cursor.y - 28, callout, "#e879f9");
         }
 
         if (isBullseye) {
@@ -2176,15 +2182,15 @@
           if (state.combo >= FEVER_STREAK_REQUIRED) {
             state.feverLeft = 3;
             state.combo = 0;
-            addPopup(state.cursor.x, state.cursor.y - 42, "FEVER MODE!", "#ea580c");
+            addPopup(state.cursor.x, state.cursor.y - 42, "FEVER MODE!", "#fb923c");
           }
           playBullseyeSound(state.streak);
           triggerScreenFlash();
-          addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#f59e0b", true);
+          addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#fde047", true);
         } else {
           state.combo = 0;
           playHitSound();
-          addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#10b981", false);
+          addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#34d399", false);
         }
 
         var leftover = Math.max(0, state.timeLeft);
@@ -2200,9 +2206,9 @@
         }
 
         if (isBullseye) {
-          addPopup(state.cursor.x, state.cursor.y - 12, "CORE HIT! +" + shotPoints, "#d97706");
+          addPopup(state.cursor.x, state.cursor.y - 12, "CORE HIT! +" + shotPoints, "#fde047");
         } else {
-          addPopup(state.cursor.x, state.cursor.y - 12, "HIT +" + shotPoints, "#059669");
+          addPopup(state.cursor.x, state.cursor.y - 12, "HIT +" + shotPoints, "#4ade80");
         }
 
         if (state.mode === "training") {
@@ -2217,14 +2223,14 @@
             state.stageIndex = newStage;
             state.score += 100;
             nextRadius = Math.min(78, nextRadius + 6);
-            addPopup(canvas.width / 2, 46, "STAGE " + state.stageIndex + " (+100)", "#7e22ce");
+            addPopup(LOGICAL_SIZE / 2, 46, "STAGE " + state.stageIndex + " (+100)", "#7dd3fc");
           }
         }
 
         if (isBullseye) {
           nextRadius = Math.min(82, nextRadius + 4);
         } else if (state.target.block.type === "shieldShot") {
-          addPopup(state.cursor.x, state.cursor.y + 14, "SHIELD SAVED", "#0284c7");
+          addPopup(state.cursor.x, state.cursor.y + 14, "SHIELD SAVED", "#38bdf8");
         } else {
           var shrinkFactor = state.target.block.type === "ringTarget"
             ? CLASSIC_TOURNAMENT.ringShrinkFactor
@@ -2252,7 +2258,6 @@
 
         state.target = pickTargetForRound(state.round, nextRadius);
 
-        // Nicht eingesammelte Assists werden bei jedem neuen Spawn überschrieben
         if (state.labMode) {
           spawnAssistToken(getSelectedAssistLab().id);
         } else if (state.mode === "tournament" && shouldSpawnTournamentAssist(state.round)) {
@@ -2307,7 +2312,7 @@
           gl.swayPhase += dt * 4.5;
           gl.y += gl.vy * dt;
           gl.x += (gl.vx + Math.sin(gl.swayPhase) * 22) * dt;
-          if (gl.life <= 0 || gl.y > canvas.height + 12) {
+          if (gl.life <= 0 || gl.y > LOGICAL_SIZE + 12) {
             state.glitters.splice(g, 1);
           }
         }
@@ -2339,21 +2344,21 @@
           if (t.block.type === "moveX") {
             t.x += t.dir * (t.block.speed || 42) * dt;
             if (t.x < pad) { t.x = pad; t.dir = 1; }
-            if (t.x > canvas.width - pad) { t.x = canvas.width - pad; t.dir = -1; }
+            if (t.x > LOGICAL_SIZE - pad) { t.x = LOGICAL_SIZE - pad; t.dir = -1; }
           } else if (t.block.type === "figureEight") {
             t.angle += (t.block.speed || 1.08) * dt;
-            var ampX = Math.min(72, canvas.width * 0.5 - pad - 10);
-            var ampY = Math.min(44, canvas.height * 0.5 - pad - 10);
-            t.x = Math.max(pad, Math.min(canvas.width - pad, t.baseX + Math.sin(t.angle) * Math.max(20, ampX)));
-            t.y = Math.max(pad, Math.min(canvas.height - pad, t.baseY + Math.sin(t.angle * 2) * 0.5 * Math.max(16, ampY)));
+            var ampX = Math.min(72, LOGICAL_SIZE * 0.5 - pad - 10);
+            var ampY = Math.min(44, LOGICAL_SIZE * 0.5 - pad - 10);
+            t.x = Math.max(pad, Math.min(LOGICAL_SIZE - pad, t.baseX + Math.sin(t.angle) * Math.max(20, ampX)));
+            t.y = Math.max(pad, Math.min(LOGICAL_SIZE - pad, t.baseY + Math.sin(t.angle * 2) * 0.5 * Math.max(16, ampY)));
           } else if (t.block.type === "elasticBounce") {
             t.x += t.vx * dt;
             t.y += t.vy * dt;
             var bounced = false;
             if (t.x < pad) { t.x = pad; t.vx = Math.abs(t.vx); bounced = true; }
-            if (t.x > canvas.width - pad) { t.x = canvas.width - pad; t.vx = -Math.abs(t.vx); bounced = true; }
+            if (t.x > LOGICAL_SIZE - pad) { t.x = LOGICAL_SIZE - pad; t.vx = -Math.abs(t.vx); bounced = true; }
             if (t.y < pad) { t.y = pad; t.vy = Math.abs(t.vy); bounced = true; }
-            if (t.y > canvas.height - pad) { t.y = canvas.height - pad; t.vy = -Math.abs(t.vy); bounced = true; }
+            if (t.y > LOGICAL_SIZE - pad) { t.y = LOGICAL_SIZE - pad; t.vy = -Math.abs(t.vy); bounced = true; }
             if (bounced) {
               var curSpd = Math.hypot(t.vx, t.vy) || 50;
               var baseSpd = t.block.speed || 54;
@@ -2433,8 +2438,8 @@
             }
           }
 
-          c.x = Math.max(10, Math.min(canvas.width - 10, c.x + c.vx * dt));
-          c.y = Math.max(26, Math.min(canvas.height - 10, c.y + c.vy * dt));
+          c.x = Math.max(10, Math.min(LOGICAL_SIZE - 10, c.x + c.vx * dt));
+          c.y = Math.max(26, Math.min(LOGICAL_SIZE - 10, c.y + c.vy * dt));
         }
 
         updateHud();
@@ -2456,67 +2461,125 @@
         }
       }
 
-      function drawSoftLandscapeBackdrop(theme) {
-        var grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        grad.addColorStop(0, theme.bgTop);
-        grad.addColorStop(0.55, theme.bgMid);
-        grad.addColorStop(1, theme.bgBottom);
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Weiche Sonne / Abendrot-Glow
+      // Bunte Neon-Straßenszene ohne Schriftzeichen
+      function drawNeonStreetScene(theme) {
         ctx.save();
-        var sunGrad = ctx.createRadialGradient(295, 92, 6, 295, 92, 85);
-        sunGrad.addColorStop(0, "rgba(255, 251, 235, 0.95)");
-        sunGrad.addColorStop(0.45, "rgba(253, 224, 71, 0.42)");
-        sunGrad.addColorStop(1, "rgba(253, 224, 71, 0)");
-        ctx.fillStyle = sunGrad;
-        ctx.beginPath();
-        ctx.arc(295, 92, 85, 0, Math.PI * 2);
-        ctx.fill();
+        var sky = ctx.createLinearGradient(0, 0, 0, LOGICAL_SIZE * 0.75);
+        sky.addColorStop(0, theme.skyTop);
+        sky.addColorStop(0.6, theme.skyMid);
+        sky.addColorStop(1, "#1e3a5f");
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, LOGICAL_SIZE, LOGICAL_SIZE);
 
-        // Sanfte Hügel und Wolken im Hintergrund
-        ctx.fillStyle = "rgba(244, 180, 214, 0.28)";
-        ctx.beginPath();
-        ctx.moveTo(0, 250);
-        ctx.quadraticCurveTo(95, 185, 195, 245);
-        ctx.quadraticCurveTo(295, 195, 380, 240);
-        ctx.lineTo(380, 380);
-        ctx.lineTo(0, 380);
-        ctx.closePath();
-        ctx.fill();
+        // Hintergrund-Hochhäuser
+        ctx.fillStyle = "#162d52";
+        ctx.fillRect(156, 75, 24, 175);
+        ctx.fillStyle = "#1d3f70";
+        ctx.fillRect(184, 52, 28, 198);
+        ctx.fillStyle = "#2b245e";
+        ctx.fillRect(216, 86, 22, 164);
 
-        ctx.fillStyle = "rgba(255, 214, 165, 0.34)";
-        ctx.beginPath();
-        ctx.moveTo(0, 305);
-        ctx.quadraticCurveTo(120, 255, 235, 305);
-        ctx.quadraticCurveTo(315, 275, 380, 310);
-        ctx.lineTo(380, 380);
-        ctx.lineTo(0, 380);
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
-
-        ctx.strokeStyle = theme.grid;
-        ctx.lineWidth = 1;
-        for (var i = 0; i <= canvas.width; i += 24) {
-          ctx.beginPath();
-          ctx.moveTo(i, 0);
-          ctx.lineTo(i, canvas.height);
-          ctx.stroke();
-
-          ctx.beginPath();
-          ctx.moveTo(0, i);
-          ctx.lineTo(canvas.width, i);
-          ctx.stroke();
+        // Leuchtende Fenster im Hintergrund
+        ctx.fillStyle = "rgba(125, 211, 252, 0.35)";
+        for (var wy = 66; wy < 235; wy += 16) {
+          ctx.fillRect(190, wy, 5, 7);
+          ctx.fillRect(200, wy, 5, 7);
         }
+
+        // Linker Gebäudeblock + leuchtende Schild-Kästen (ohne Schrift)
+        ctx.fillStyle = "#172038";
+        ctx.fillRect(0, 20, 105, 295);
+        ctx.fillStyle = "#7c3f2b";
+        ctx.fillRect(12, 92, 74, 66);
+
+        var leftSigns = ["#38bdf8", "#facc15", "#fb923c", "#f472b6"];
+        for (var i = 0; i < leftSigns.length; i++) {
+          var sy = 64 + i * 24;
+          ctx.fillStyle = "#0f172a";
+          ctx.fillRect(92, sy, 22, 19);
+          ctx.strokeStyle = leftSigns[i];
+          ctx.lineWidth = 2;
+          ctx.strokeRect(93, sy + 1, 20, 17);
+          ctx.fillStyle = leftSigns[i];
+          ctx.fillRect(96, sy + 5, 14, 3);
+          ctx.fillRect(96, sy + 11, 10, 3);
+        }
+
+        // Linke Ladenfront mit warmem Licht & Neon-Akzent
+        ctx.fillStyle = "#0f172a";
+        ctx.fillRect(0, 182, 108, 128);
+        ctx.fillStyle = "#f59e0b";
+        ctx.fillRect(6, 192, 68, 10);
+        ctx.fillStyle = "rgba(253, 230, 138, 0.25)";
+        ctx.fillRect(8, 206, 44, 55);
+        ctx.fillRect(60, 206, 36, 85);
+
+        // Rechter Gebäudeblock + leuchtendes Neon-Panel (ohne Schrift)
+        ctx.fillStyle = "#161f36";
+        ctx.fillRect(272, 20, 108, 290);
+        ctx.fillStyle = "#1e1b4b";
+        ctx.fillRect(284, 52, 68, 86);
+        ctx.strokeStyle = "#e879f9";
+        ctx.lineWidth = 2.5;
+        ctx.strokeRect(285, 53, 66, 84);
+        ctx.fillStyle = "#f0abfc";
+        ctx.fillRect(294, 66, 48, 8);
+        ctx.fillRect(298, 84, 40, 14);
+        ctx.fillStyle = "#c084fc";
+        ctx.fillRect(294, 108, 48, 4);
+        ctx.fillRect(294, 116, 36, 4);
+
+        // Rote/Korallenrote Ladenfront rechts
+        ctx.fillStyle = "#e11d48";
+        ctx.beginPath();
+        ctx.moveTo(232, 196);
+        ctx.lineTo(354, 178);
+        ctx.lineTo(354, 212);
+        ctx.lineTo(232, 212);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = "#fecdd3";
+        ctx.fillRect(256, 192, 78, 8);
+        ctx.fillStyle = "rgba(56, 189, 248, 0.22)";
+        ctx.fillRect(246, 212, 102, 92);
+
+        // Vertikale Neon-Leisten in der Mitte
+        var midNeon = ["#f43f5e", "#22c55e", "#38bdf8", "#e879f9"];
+        ctx.fillStyle = midNeon[0];
+        ctx.fillRect(156, 106, 12, 54);
+        ctx.fillStyle = midNeon[1];
+        ctx.fillRect(162, 168, 12, 46);
+        ctx.fillStyle = midNeon[2];
+        ctx.fillRect(248, 118, 12, 48);
+
+        // Straße & bunte Reflexionen unten
+        var road = ctx.createLinearGradient(0, 292, 0, LOGICAL_SIZE);
+        road.addColorStop(0, "#1e1b38");
+        road.addColorStop(0.55, "#2b1d47");
+        road.addColorStop(1, "#18132b");
+        ctx.fillStyle = road;
+        ctx.fillRect(0, 292, LOGICAL_SIZE, LOGICAL_SIZE - 292);
+
+        var glowLeft = ctx.createRadialGradient(85, 330, 4, 85, 330, 85);
+        glowLeft.addColorStop(0, "rgba(251, 146, 60, 0.34)");
+        glowLeft.addColorStop(1, "rgba(251, 146, 60, 0)");
+        ctx.fillStyle = glowLeft;
+        ctx.fillRect(0, 285, 190, 95);
+
+        var glowRight = ctx.createRadialGradient(295, 332, 4, 295, 332, 95);
+        glowRight.addColorStop(0, "rgba(232, 121, 249, 0.32)");
+        glowRight.addColorStop(1, "rgba(232, 121, 249, 0)");
+        ctx.fillStyle = glowRight;
+        ctx.fillRect(185, 285, 195, 95);
+
+        ctx.restore();
       }
 
       function drawObstacles(obsType) {
         if (!obsType || obsType === "none") return;
         ctx.save();
-        var fillCol = "rgba(251, 113, 133, 0.45)";
-        var borderCol = "#e11d48";
+        var fillCol = "rgba(244, 63, 94, 0.55)";
+        var borderCol = "#fda4af";
         ctx.fillStyle = fillCol;
         ctx.strokeStyle = borderCol;
         ctx.lineWidth = 2.5;
@@ -2566,7 +2629,7 @@
 
       function draw() {
         var theme = save.useRetro ? THEMES.retro : THEMES.modern;
-        drawSoftLandscapeBackdrop(theme);
+        drawNeonStreetScene(theme);
 
         for (var j = 0; j < state.splatters.length; j++) {
           var s = state.splatters[j];
@@ -2642,7 +2705,7 @@
         ctx.stroke();
 
         if (state.effects.anchorTimer > 0) {
-          ctx.strokeStyle = "#0284c7";
+          ctx.strokeStyle = "#38bdf8";
           ctx.lineWidth = 3;
           ctx.setLineDash([6, 4]);
           ctx.beginPath();
@@ -2652,7 +2715,7 @@
         }
 
         if (state.target.block.type === "shieldShot") {
-          ctx.strokeStyle = "#0284c7";
+          ctx.strokeStyle = "#38bdf8";
           ctx.lineWidth = 3;
           ctx.beginPath();
           ctx.arc(state.target.x, state.target.y, state.target.radius + 4, 0, Math.PI * 2);
@@ -2668,7 +2731,7 @@
           var tok = state.assistToken;
           var aDef = getAssistDef(tok.id);
           ctx.save();
-          ctx.fillStyle = "rgba(255, 255, 255, 0.94)";
+          ctx.fillStyle = "rgba(15, 23, 42, 0.92)";
           ctx.strokeStyle = aDef.color;
           ctx.lineWidth = 2.5;
           ctx.beginPath();
@@ -2711,7 +2774,7 @@
         }
 
         ctx.save();
-        ctx.strokeStyle = state.effects.autoAimTimer > 0 ? "#9333ea" : theme.reticle;
+        ctx.strokeStyle = state.effects.autoAimTimer > 0 ? "#c084fc" : theme.reticle;
         ctx.lineWidth = 2.5;
         ctx.beginPath();
         ctx.arc(state.cursor.x, state.cursor.y, 11, 0, Math.PI * 2);
@@ -2724,9 +2787,9 @@
 
         if (state.running && state.effects.freezeTimer > 0) {
           ctx.save();
-          ctx.strokeStyle = "rgba(56, 189, 248, 0.75)";
+          ctx.strokeStyle = "rgba(103, 232, 249, 0.8)";
           ctx.lineWidth = 6;
-          ctx.strokeRect(3, 3, canvas.width - 6, canvas.height - 6);
+          ctx.strokeRect(3, 3, LOGICAL_SIZE - 6, LOGICAL_SIZE - 6);
           ctx.restore();
         }
 
@@ -2736,7 +2799,7 @@
           var twinkle = 0.6 + 0.4 * Math.sin(gl.swayPhase * 3);
           ctx.save();
           ctx.globalAlpha = gAlpha * twinkle;
-          ctx.fillStyle = twinkle > 0.85 ? "#ffffff" : "#f59e0b";
+          ctx.fillStyle = twinkle > 0.85 ? "#ffffff" : "#fde047";
           ctx.beginPath();
           ctx.arc(gl.x, gl.y, gl.size, 0, Math.PI * 2);
           ctx.fill();
@@ -2849,8 +2912,8 @@
         state.pulses = [];
         state.popups = [];
         state.glitters = [];
-        state.cursor.x = canvas.width / 2;
-        state.cursor.y = canvas.height / 2;
+        state.cursor.x = LOGICAL_SIZE / 2;
+        state.cursor.y = LOGICAL_SIZE / 2;
         state.cursor.vx = 0;
         state.cursor.vy = 0;
         state.target = pickTargetForRound(1, 75);
