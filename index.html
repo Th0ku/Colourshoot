@@ -1196,15 +1196,11 @@
 
       var THEMES = {
         modern: {
-          skyTop: "#091b3a",
-          skyMid: "#134e78",
-          skyGlow: "#1d9bf0",
+          bgFill: "#0f172a",
           reticle: "#ffffff"
         },
         retro: {
-          skyTop: "#131738",
-          skyMid: "#3b1d6e",
-          skyGlow: "#ec4899",
+          bgFill: "#1a142e",
           reticle: "#fde047"
         }
       };
@@ -1223,7 +1219,7 @@
       };
 
       try {
-        var rawSave = localStorage.getItem("colourshoot_save_v23");
+        var rawSave = localStorage.getItem("colourshoot_save_v24");
         if (rawSave) {
           var parsed = JSON.parse(rawSave);
           if (parsed.playerName) save.playerName = String(parsed.playerName).slice(0, 16);
@@ -1361,7 +1357,7 @@
 
       function persistSave() {
         try {
-          localStorage.setItem("colourshoot_save_v23", JSON.stringify(save));
+          localStorage.setItem("colourshoot_save_v24", JSON.stringify(save));
         } catch (e) {}
         refreshProfileUI();
         refreshShopUI();
@@ -2461,120 +2457,6 @@
         }
       }
 
-      // Bunte Neon-Straßenszene ohne Schriftzeichen
-      function drawNeonStreetScene(theme) {
-        ctx.save();
-        var sky = ctx.createLinearGradient(0, 0, 0, LOGICAL_SIZE * 0.75);
-        sky.addColorStop(0, theme.skyTop);
-        sky.addColorStop(0.6, theme.skyMid);
-        sky.addColorStop(1, "#1e3a5f");
-        ctx.fillStyle = sky;
-        ctx.fillRect(0, 0, LOGICAL_SIZE, LOGICAL_SIZE);
-
-        // Hintergrund-Hochhäuser
-        ctx.fillStyle = "#162d52";
-        ctx.fillRect(156, 75, 24, 175);
-        ctx.fillStyle = "#1d3f70";
-        ctx.fillRect(184, 52, 28, 198);
-        ctx.fillStyle = "#2b245e";
-        ctx.fillRect(216, 86, 22, 164);
-
-        // Leuchtende Fenster im Hintergrund
-        ctx.fillStyle = "rgba(125, 211, 252, 0.35)";
-        for (var wy = 66; wy < 235; wy += 16) {
-          ctx.fillRect(190, wy, 5, 7);
-          ctx.fillRect(200, wy, 5, 7);
-        }
-
-        // Linker Gebäudeblock + leuchtende Schild-Kästen (ohne Schrift)
-        ctx.fillStyle = "#172038";
-        ctx.fillRect(0, 20, 105, 295);
-        ctx.fillStyle = "#7c3f2b";
-        ctx.fillRect(12, 92, 74, 66);
-
-        var leftSigns = ["#38bdf8", "#facc15", "#fb923c", "#f472b6"];
-        for (var i = 0; i < leftSigns.length; i++) {
-          var sy = 64 + i * 24;
-          ctx.fillStyle = "#0f172a";
-          ctx.fillRect(92, sy, 22, 19);
-          ctx.strokeStyle = leftSigns[i];
-          ctx.lineWidth = 2;
-          ctx.strokeRect(93, sy + 1, 20, 17);
-          ctx.fillStyle = leftSigns[i];
-          ctx.fillRect(96, sy + 5, 14, 3);
-          ctx.fillRect(96, sy + 11, 10, 3);
-        }
-
-        // Linke Ladenfront mit warmem Licht & Neon-Akzent
-        ctx.fillStyle = "#0f172a";
-        ctx.fillRect(0, 182, 108, 128);
-        ctx.fillStyle = "#f59e0b";
-        ctx.fillRect(6, 192, 68, 10);
-        ctx.fillStyle = "rgba(253, 230, 138, 0.25)";
-        ctx.fillRect(8, 206, 44, 55);
-        ctx.fillRect(60, 206, 36, 85);
-
-        // Rechter Gebäudeblock + leuchtendes Neon-Panel (ohne Schrift)
-        ctx.fillStyle = "#161f36";
-        ctx.fillRect(272, 20, 108, 290);
-        ctx.fillStyle = "#1e1b4b";
-        ctx.fillRect(284, 52, 68, 86);
-        ctx.strokeStyle = "#e879f9";
-        ctx.lineWidth = 2.5;
-        ctx.strokeRect(285, 53, 66, 84);
-        ctx.fillStyle = "#f0abfc";
-        ctx.fillRect(294, 66, 48, 8);
-        ctx.fillRect(298, 84, 40, 14);
-        ctx.fillStyle = "#c084fc";
-        ctx.fillRect(294, 108, 48, 4);
-        ctx.fillRect(294, 116, 36, 4);
-
-        // Rote/Korallenrote Ladenfront rechts
-        ctx.fillStyle = "#e11d48";
-        ctx.beginPath();
-        ctx.moveTo(232, 196);
-        ctx.lineTo(354, 178);
-        ctx.lineTo(354, 212);
-        ctx.lineTo(232, 212);
-        ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = "#fecdd3";
-        ctx.fillRect(256, 192, 78, 8);
-        ctx.fillStyle = "rgba(56, 189, 248, 0.22)";
-        ctx.fillRect(246, 212, 102, 92);
-
-        // Vertikale Neon-Leisten in der Mitte
-        var midNeon = ["#f43f5e", "#22c55e", "#38bdf8", "#e879f9"];
-        ctx.fillStyle = midNeon[0];
-        ctx.fillRect(156, 106, 12, 54);
-        ctx.fillStyle = midNeon[1];
-        ctx.fillRect(162, 168, 12, 46);
-        ctx.fillStyle = midNeon[2];
-        ctx.fillRect(248, 118, 12, 48);
-
-        // Straße & bunte Reflexionen unten
-        var road = ctx.createLinearGradient(0, 292, 0, LOGICAL_SIZE);
-        road.addColorStop(0, "#1e1b38");
-        road.addColorStop(0.55, "#2b1d47");
-        road.addColorStop(1, "#18132b");
-        ctx.fillStyle = road;
-        ctx.fillRect(0, 292, LOGICAL_SIZE, LOGICAL_SIZE - 292);
-
-        var glowLeft = ctx.createRadialGradient(85, 330, 4, 85, 330, 85);
-        glowLeft.addColorStop(0, "rgba(251, 146, 60, 0.34)");
-        glowLeft.addColorStop(1, "rgba(251, 146, 60, 0)");
-        ctx.fillStyle = glowLeft;
-        ctx.fillRect(0, 285, 190, 95);
-
-        var glowRight = ctx.createRadialGradient(295, 332, 4, 295, 332, 95);
-        glowRight.addColorStop(0, "rgba(232, 121, 249, 0.32)");
-        glowRight.addColorStop(1, "rgba(232, 121, 249, 0)");
-        ctx.fillStyle = glowRight;
-        ctx.fillRect(185, 285, 195, 95);
-
-        ctx.restore();
-      }
-
       function drawObstacles(obsType) {
         if (!obsType || obsType === "none") return;
         ctx.save();
@@ -2629,7 +2511,8 @@
 
       function draw() {
         var theme = save.useRetro ? THEMES.retro : THEMES.modern;
-        drawNeonStreetScene(theme);
+        ctx.fillStyle = theme.bgFill;
+        ctx.fillRect(0, 0, LOGICAL_SIZE, LOGICAL_SIZE);
 
         for (var j = 0; j < state.splatters.length; j++) {
           var s = state.splatters[j];
