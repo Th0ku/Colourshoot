@@ -41,7 +41,7 @@
       box-shadow: 0 24px 55px rgba(4, 9, 24, 0.72);
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      gap: 6px;
     }
 
     .top-bar {
@@ -73,23 +73,6 @@
       font-size: 12.5px;
     }
 
-    .lives-strip {
-      display: none;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .lives-strip.active {
-      display: inline-flex;
-    }
-
-    .life-pip {
-      font-size: 16px;
-      line-height: 1;
-      color: #fb7185;
-      text-shadow: 0 0 8px rgba(251, 113, 133, 0.65);
-    }
-
     .coin-box {
       margin-left: auto;
       background: rgba(15, 23, 42, 0.85);
@@ -102,6 +85,43 @@
       white-space: nowrap;
     }
 
+    .above-board-strip {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 0 2px;
+    }
+
+    .outer-time-bar-wrap {
+      width: 100%;
+      height: 12px;
+      background: rgba(9, 14, 28, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .lives-strip {
+      display: none;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      min-height: 24px;
+      padding: 1px 4px;
+    }
+
+    .lives-strip.active {
+      display: flex;
+    }
+
+    .life-pip {
+      font-size: 22px;
+      line-height: 1;
+      color: #fb7185;
+      text-shadow: 0 0 10px rgba(251, 113, 133, 0.65);
+    }
+
     .screen-wrap {
       position: relative;
       width: 100%;
@@ -111,25 +131,6 @@
       border: 2px solid rgba(125, 211, 252, 0.45);
       box-shadow: inset 0 2px 16px rgba(15, 23, 42, 0.65);
       background: #0d1b36;
-    }
-
-    .inner-top-stack {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 8;
-      pointer-events: none;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .inner-time-bar-wrap {
-      width: 100%;
-      height: 12px;
-      background: rgba(9, 14, 28, 0.75);
-      border-bottom: 1px solid rgba(148, 163, 184, 0.3);
-      overflow: hidden;
     }
 
     .countdown-banner {
@@ -208,8 +209,8 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 11px;
-      gap: 6px;
+      padding: 10px;
+      gap: 5px;
       touch-action: manipulation;
     }
 
@@ -232,7 +233,7 @@
 
     .overlay h2 {
       margin: 0;
-      font-size: 18px;
+      font-size: 17px;
       color: #fde047;
     }
 
@@ -259,15 +260,15 @@
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
 
     .hub-btn {
       width: 100%;
       border: 1.5px solid rgba(255, 255, 255, 0.25);
-      border-radius: 14px;
-      padding: 8px 12px;
-      font-size: 12.5px;
+      border-radius: 13px;
+      padding: 7px 11px;
+      font-size: 12px;
       font-weight: 800;
       cursor: pointer;
       display: flex;
@@ -297,8 +298,13 @@
       color: #0c1942;
     }
 
+    .hub-btn.settings {
+      background: linear-gradient(90deg, #94a3b8 0%, #e2e8f0 100%);
+      color: #0f172a;
+    }
+
     .hub-sub {
-      font-size: 10px;
+      font-size: 9.5px;
       font-weight: 700;
       opacity: 0.92;
     }
@@ -363,7 +369,7 @@
       border: 1.5px solid #475569;
       border-radius: 9px;
       padding: 4px 3px;
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 700;
       cursor: pointer;
       touch-action: manipulation;
@@ -639,7 +645,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 8px;
-      padding: 2px 0;
+      padding: 4px 0;
       color: #e2e8f0;
     }
 
@@ -778,16 +784,17 @@
         <span>Score: <b id="hudScoreEl">0</b></span>
         <span>Stages: <b id="hudStagesEl">0</b></span>
       </div>
-      <div id="livesStrip" class="lives-strip"></div>
       <span class="coin-box">Coins: <span id="coinsEl">0</span></span>
     </div>
 
-    <div class="screen-wrap">
-      <div class="inner-top-stack">
-        <div class="inner-time-bar-wrap">
-          <div id="timeBarFill" class="time-bar-fill"></div>
-        </div>
+    <div class="above-board-strip">
+      <div class="outer-time-bar-wrap">
+        <div id="timeBarFill" class="time-bar-fill"></div>
       </div>
+      <div id="livesStrip" class="lives-strip"></div>
+    </div>
+
+    <div class="screen-wrap">
       <canvas id="gameCanvas" width="760" height="760"></canvas>
       <div id="countdownBanner" class="countdown-banner">
         <span id="countdownText" class="countdown-text">3</span>
@@ -815,6 +822,10 @@
             <button id="navSkinsBtn" class="hub-btn skins" type="button">
               <span>Skins & Sounds</span>
               <span class="hub-sub">Themes, Aids & Sound Packs</span>
+            </button>
+            <button id="navSettingsBtn" class="hub-btn settings" type="button">
+              <span>Settings</span>
+              <span class="hub-sub">Audio & Button Clicks</span>
             </button>
           </div>
         </div>
@@ -895,7 +906,7 @@
               <span>Player: <b id="tourneyPlayerNameEl">Player1</b></span>
               <button id="editNameBtn" class="small-btn" type="button">Edit Name</button>
             </div>
-            <div id="presetMeta" class="preset-meta">All 7 Assists Included | New Assist Every 2–3 Stages | Identical Spawns</div>
+            <div id="presetMeta" class="preset-meta">All 8 Assists Included | New Assist Every 2–3 Stages | Identical Spawns</div>
             <div class="panel-label">Top 20 Tournament Ranking</div>
             <div id="tournamentLeaderboard" class="leaderboard-box"></div>
             <div id="presetBriefing" class="briefing-box"></div>
@@ -938,6 +949,24 @@
 
           <div class="btn-row">
             <button id="backFromSkinsBtn" class="btn-back" type="button">Main Menu</button>
+          </div>
+        </div>
+
+        <div id="view_settings" class="subview">
+          <h2>Settings</h2>
+          <div class="panel-box">
+            <div class="panel-label">Audio Options</div>
+            <div class="shop-item">
+              <span><b>App Sound:</b> Overall audio in the app</span>
+              <button id="toggleSoundEnabledBtn" class="shop-btn" type="button">ON</button>
+            </div>
+            <div class="shop-item">
+              <span><b>Button Click Sound:</b> Click sound on buttons</span>
+              <button id="toggleButtonClickBtn" class="shop-btn" type="button">ON</button>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button id="backFromSettingsBtn" class="btn-back" type="button">Main Menu</button>
           </div>
         </div>
       </div>
@@ -1019,6 +1048,8 @@
       var soundSynthBtn = document.getElementById("sound_synth_btn");
       var soundStreakBtn = document.getElementById("sound_streak_btn");
       var soundRetroBtn = document.getElementById("sound_retro_btn");
+      var toggleSoundEnabledBtn = document.getElementById("toggleSoundEnabledBtn");
+      var toggleButtonClickBtn = document.getElementById("toggleButtonClickBtn");
       var assistSlotsEls = [
         document.getElementById("assistSlot0"),
         document.getElementById("assistSlot1"),
@@ -1041,10 +1072,11 @@
         "freezer",
         "coreMagnet",
         "anchor",
-        "inflate"
+        "inflate",
+        "magnet"
       ];
 
-      var VIEWS = ["home", "training", "levelmode", "matchresult", "tournament", "skins"];
+      var VIEWS = ["home", "training", "levelmode", "matchresult", "tournament", "skins", "settings"];
       var currentView = "home";
       var trainTab = "targets";
       var resultReturnView = "home";
@@ -1071,7 +1103,8 @@
         figureEight:   { shape: "octagon", color: "#f472b6", retroColor: "#f472b6", pattern: "cross" },
         telegraphJump: { shape: "circle",  color: "#818cf8", retroColor: "#a78bfa", pattern: "ghost" },
         elasticBounce: { shape: "octagon", color: "#34d399", retroColor: "#4ade80", pattern: "pulseRing" },
-        shieldShot:    { shape: "circle",  color: "#60a5fa", retroColor: "#2dd4bf", pattern: "shield" }
+        shieldShot:    { shape: "circle",  color: "#60a5fa", retroColor: "#2dd4bf", pattern: "shield" },
+        sequenceTarget:{ shape: "circle",  color: "#f59e0b", retroColor: "#fde047", pattern: "sequence" }
       };
 
       var TRAINING_LEVELS = [
@@ -1123,6 +1156,13 @@
           block: { type: "shieldShot", label: "Shield", speed: 34 },
           does: "Prevents radius shrink on a non-core hit.",
           spotBy: "Blue circle with outer shield ring."
+        },
+        {
+          id: "sequenceTarget",
+          shortLabel: "8. Seq 1-2-3",
+          block: { type: "sequenceTarget", label: "Seq 1-2-3", speed: 24 },
+          does: "3 targets (1, 2, 3) spawn together; shoot 1, then 2, then 3 with 2x time and 3x slower time drain.",
+          spotBy: "Amber targets numbered 1, 2, and 3."
         }
       ];
 
@@ -1203,6 +1243,17 @@
           labTarget: { type: "figureEight", label: "Fig-8", speed: 1.05 },
           does: "Expands the target radius by +12px (up to 84px).",
           whenToUse: "Use after outer hits shrink the target."
+        },
+        {
+          id: "magnet",
+          code: "MAGNET",
+          glyph: "🧲",
+          name: "Magnet",
+          color: "#f87171",
+          passive: false,
+          labTarget: { type: "moveX", label: "Sweep X", speed: 44 },
+          does: "Pulls targets and assists toward the reticle for 5.0s and sticks on contact.",
+          whenToUse: "Active for 5s; pulls 1 much faster than 2 and 3 in sequence targets."
         }
       ];
 
@@ -1221,7 +1272,8 @@
         { type: "figureEight",   label: "Fig-8",    speed: 1.1 },
         { type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.7, jumpInterval: 1.8 },
         { type: "elasticBounce", label: "Elastic",  speed: 55 },
-        { type: "shieldShot",    label: "Shield",   speed: 36 }
+        { type: "shieldShot",    label: "Shield",   speed: 36 },
+        { type: "sequenceTarget",label: "Seq 1-2-3",speed: 24 }
       ];
 
       var LEVEL_MODES = [];
@@ -1235,7 +1287,7 @@
           centerCircle: "Center Circle",
           checkerboard: "Checkerboard"
         };
-        var focusText = "Fixed Seed & All 7 Assists | " + obsNames[obsType];
+        var focusText = "Fixed Seed & All 8 Assists | " + obsNames[obsType];
         LEVEL_MODES.push({
           id: lv,
           seed: 70000 + lv * 1047,
@@ -1304,12 +1356,14 @@
         useRetro: false,
         ownedSounds: { synth: true, streak: false, retro: false },
         soundPack: "synth",
+        soundEnabled: true,
+        buttonClickSound: true,
         levelScores: {},
         tournamentEntries: []
       };
 
       try {
-        var rawSave = localStorage.getItem("colourshoot_save_v26");
+        var rawSave = localStorage.getItem("colourshoot_save_v28");
         if (rawSave) {
           var parsed = JSON.parse(rawSave);
           if (parsed.playerName) save.playerName = String(parsed.playerName).slice(0, 16);
@@ -1319,6 +1373,8 @@
           save.hasGuide = !!parsed.hasGuide;
           save.hasRetro = !!parsed.hasRetro;
           save.useRetro = !!parsed.useRetro;
+          if (typeof parsed.soundEnabled === "boolean") save.soundEnabled = parsed.soundEnabled;
+          if (typeof parsed.buttonClickSound === "boolean") save.buttonClickSound = parsed.buttonClickSound;
           if (parsed.ownedSounds) {
             save.ownedSounds.synth = true;
             save.ownedSounds.streak = !!parsed.ownedSounds.streak;
@@ -1417,6 +1473,12 @@
         tourneyPlayerNameEl.textContent = save.playerName;
       }
 
+      function refreshSettingsUI() {
+        toggleSoundEnabledBtn.textContent = save.soundEnabled ? "ON" : "OFF";
+        toggleButtonClickBtn.textContent = save.buttonClickSound ? "ON" : "OFF";
+        toggleButtonClickBtn.disabled = !save.soundEnabled;
+      }
+
       function refreshShopUI() {
         coinsEl.textContent = save.coins;
 
@@ -1454,11 +1516,13 @@
           soundRetroBtn.textContent = "35 Coins";
           soundRetroBtn.disabled = save.coins < 35;
         }
+
+        refreshSettingsUI();
       }
 
       function persistSave() {
         try {
-          localStorage.setItem("colourshoot_save_v26", JSON.stringify(save));
+          localStorage.setItem("colourshoot_save_v28", JSON.stringify(save));
         } catch (e) {}
         refreshProfileUI();
         refreshShopUI();
@@ -1597,25 +1661,27 @@
         shrinkFactor: 0.28,
         ringShrinkFactor: 0.44,
         minRadius: 15,
-        summary: "Identical sequence, target spawns and all 7 assists (+TIME, NET, AUTO, FREEZE, CORE+, ANCHOR, SIZE+) spawning every 2–3 stages throughout the entire match.",
+        summary: "Identical sequence, target spawns and all 8 assists (+TIME, NET, AUTO, FREEZE, CORE+, ANCHOR, SIZE+, MAGNET) spawning every 2–3 stages throughout the entire match.",
         sequence: [
           { untilRound: 3,  type: "static",        label: "Static",   speed: 0 },
           { untilRound: 6,  type: "moveX",         label: "Sweep X",  speed: 42 },
           { untilRound: 9,  type: "ringTarget",    label: "DualRing", speed: 0 },
           { untilRound: 12, type: "figureEight",   label: "Fig-8",    speed: 1.08 },
           { untilRound: 15, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.7, jumpInterval: 1.8 },
+          { untilRound: 18, type: "sequenceTarget",label: "Seq 1-2-3",speed: 24 },
           { untilRound: 999,type: "elasticBounce", label: "Elastic",  speed: 55 }
         ]
       };
 
       function initTournamentInfo() {
-        presetMeta.textContent = "All 7 Assists Included | New Assist Every 2–3 Stages | Identical Spawns";
+        presetMeta.textContent = "All 8 Assists Included | New Assist Every 2–3 Stages | Identical Spawns";
         presetBriefing.innerHTML = "<b>Fair Tournament:</b> " + CLASSIC_TOURNAMENT.summary;
         renderTournamentLeaderboard();
       }
 
       var audioCtx = null;
       function ensureAudio() {
+        if (!save.soundEnabled) return;
         try {
           if (!audioCtx) {
             var AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -1630,6 +1696,7 @@
       }
 
       function playTone(freq, endFreq, duration, type, gainVal, delaySec) {
+        if (!save.soundEnabled) return;
         try {
           if (!audioCtx) return;
           var now = audioCtx.currentTime + (delaySec || 0);
@@ -1647,6 +1714,12 @@
           osc.start(now);
           osc.stop(now + duration);
         } catch (e) {}
+      }
+
+      function playButtonClickSound() {
+        if (!save.soundEnabled || !save.buttonClickSound) return;
+        ensureAudio();
+        playTone(720, 960, 0.045, "triangle", 0.09, 0);
       }
 
       function getStreakCallout(streakCount) {
@@ -1726,6 +1799,7 @@
         activeLevelObj: null,
         assistSpawnCount: 0,
         nextAssistRound: 3,
+        deferAssistUntilSequenceDone: false,
         score: 0,
         round: 1,
         stagesCleared: 0,
@@ -1744,10 +1818,13 @@
           anchorTimer: 0,
           autoAimTimer: 0,
           coreMagnetTimer: 0,
+          magnetTimer: 0,
           extraLives: 0
         },
         inventory: [null, null, null, null],
         assistToken: null,
+        sequenceTargets: [],
+        sequenceNextNum: 1,
         cursor: {
           x: 190,
           y: 190,
@@ -2006,6 +2083,11 @@
           state.effects.coreMagnetTimer = 3.5;
         } else if (assistId === "inflate") {
           state.target.radius = Math.min(84, state.target.radius + 12);
+          for (var i = 0; i < state.sequenceTargets.length; i++) {
+            state.sequenceTargets[i].radius = Math.min(60, state.sequenceTargets[i].radius + 8);
+          }
+        } else if (assistId === "magnet") {
+          state.effects.magnetTimer = 5.0;
         }
 
         refreshAssistButtons(false);
@@ -2034,6 +2116,9 @@
           id: chosenId,
           x: x,
           y: y,
+          vx: 0,
+          vy: 0,
+          stuck: false,
           radius: 17
         };
       }
@@ -2041,6 +2126,37 @@
       function scheduleNextAssistRound(currentRound) {
         var step = activeRng() < 0.5 ? 2 : 3;
         state.nextAssistRound = currentRound + step;
+      }
+
+      function setupSequenceTargets(baseRadius, speedVal) {
+        var r = Math.max(18, Math.min(34, baseRadius * 0.42));
+        var spots = [
+          { x: 95,  y: 120 },
+          { x: 285, y: 145 },
+          { x: 190, y: 275 }
+        ];
+        var list = [];
+        for (var n = 1; n <= 3; n++) {
+          var s = spots[n - 1];
+          var jx = (activeRng() - 0.5) * 32;
+          var jy = (activeRng() - 0.5) * 32;
+          var px = Math.max(r + 16, Math.min(LOGICAL_SIZE - r - 16, s.x + jx));
+          var py = Math.max(r + 16, Math.min(LOGICAL_SIZE - r - 16, s.y + jy));
+          var ang = activeRng() * Math.PI * 2;
+          var spd = speedVal || 24;
+          list.push({
+            num: n,
+            x: px,
+            y: py,
+            vx: Math.cos(ang) * spd,
+            vy: Math.sin(ang) * spd,
+            stuck: false,
+            radius: r,
+            hit: false
+          });
+        }
+        state.sequenceTargets = list;
+        state.sequenceNextNum = 1;
       }
 
       function setKnobPosition(dx, dy) {
@@ -2160,6 +2276,13 @@
         var spd = block.speed || 48;
         var ang = activeRng() * Math.PI * 2;
 
+        if (block.type === "sequenceTarget") {
+          setupSequenceTargets(currentRadius, spd);
+        } else {
+          state.sequenceTargets = [];
+          state.sequenceNextNum = 1;
+        }
+
         return {
           x: pos.x,
           y: pos.y,
@@ -2167,6 +2290,7 @@
           baseY: pos.y,
           vx: Math.cos(ang) * spd,
           vy: Math.sin(ang) * spd,
+          stuck: false,
           angle: ang,
           jumpTimer: block.jumpInterval || 1.85,
           nextX: null,
@@ -2230,6 +2354,7 @@
         state.countingDown = false;
         state.shotLockLeft = 0;
         state.assistToken = null;
+        state.sequenceTargets = [];
         state.inventory = [null, null, null, null];
         resetJoystick();
         refreshMatchHudStrip();
@@ -2280,6 +2405,116 @@
         return false;
       }
 
+      function advanceAfterCompletedTarget(hitX, hitY, hitRadius, hitDist, isShielded, isRing) {
+        var coreFactor = state.effects.coreMagnetTimer > 0 ? 0.42 : 0.26;
+        var innerCoreRadius = Math.max(7, hitRadius * coreFactor);
+        var isBullseye = hitDist <= innerCoreRadius;
+
+        state.streak += 1;
+        state.stagesCleared += 1;
+        var callout = getStreakCallout(state.streak);
+        if (callout) {
+          addPopup(hitX, hitY - 28, callout, "#e879f9");
+        }
+
+        if (isBullseye) {
+          state.combo += 1;
+          if (state.combo >= FEVER_STREAK_REQUIRED) {
+            state.feverLeft = 3;
+            state.combo = 0;
+            addPopup(hitX, hitY - 42, "FEVER MODE!", "#fb923c");
+          }
+          playBullseyeSound(state.streak);
+          triggerScreenFlash();
+          addPulse(hitX, hitY, hitRadius, "#fde047", true);
+        } else {
+          state.combo = 0;
+          playHitSound();
+          addPulse(hitX, hitY, hitRadius, "#34d399", false);
+        }
+
+        var leftover = Math.max(0, state.timeLeft);
+        var accuracy = Math.max(0, 1 - hitDist / Math.max(1, hitRadius));
+        var feverMult = state.feverLeft > 0 ? 1.45 : 1.0;
+        var streakMult = 1 + Math.min(0.4, (state.streak - 1) * 0.05);
+        var timeBonus = Math.round(leftover * 18);
+        var shotPoints = Math.round((45 + accuracy * 75) * feverMult * streakMult + timeBonus);
+        state.score += shotPoints;
+
+        if (state.feverLeft > 0) {
+          state.feverLeft -= 1;
+        }
+
+        if (isBullseye) {
+          addPopup(hitX, hitY - 12, "CORE HIT! +" + shotPoints, "#fde047");
+        } else {
+          addPopup(hitX, hitY - 12, "HIT +" + shotPoints, "#4ade80");
+        }
+
+        if (state.mode === "training") {
+          state.runCoins += isBullseye ? 5 : 2;
+        }
+
+        var nextRadius = state.target.radius;
+
+        if (state.mode === "tournament") {
+          var newStage = computeStageIndex(state.score);
+          if (newStage > state.stageIndex) {
+            state.stageIndex = newStage;
+            state.score += 100;
+            nextRadius = Math.min(78, nextRadius + 6);
+            addPopup(LOGICAL_SIZE / 2, 46, "TIER " + state.stageIndex + " (+100)", "#7dd3fc");
+          }
+        }
+
+        if (isBullseye) {
+          nextRadius = Math.min(82, nextRadius + 4);
+        } else if (isShielded) {
+          addPopup(hitX, hitY + 14, "SHIELD SAVED", "#38bdf8");
+        } else {
+          var shrinkFactor = isRing
+            ? CLASSIC_TOURNAMENT.ringShrinkFactor
+            : CLASSIC_TOURNAMENT.shrinkFactor;
+          nextRadius = nextRadius - hitDist * shrinkFactor;
+        }
+
+        var minAllowedRadius = state.mode === "tournament" ? CLASSIC_TOURNAMENT.minRadius : 14;
+        if (nextRadius < minAllowedRadius) {
+          tryConsumeSafetyNet("Target became too small");
+          return;
+        }
+
+        state.round += 1;
+
+        var roundGain = state.mode === "training"
+          ? 2.2
+          : (state.mode === "levelmode" && state.activeLevelObj ? state.activeLevelObj.roundTimeGain : CLASSIC_TOURNAMENT.roundTimeGain);
+        state.target = pickTargetForRound(state.round, nextRadius);
+
+        if (state.target.block.type === "sequenceTarget") {
+          roundGain = roundGain * 2;
+          state.deferAssistUntilSequenceDone = true;
+        } else {
+          state.deferAssistUntilSequenceDone = false;
+        }
+
+        addTimeToBar(roundGain);
+
+        var drainStep = state.mode === "training"
+          ? 0.035
+          : (state.mode === "levelmode" && state.activeLevelObj ? state.activeLevelObj.drainStepPerRound : CLASSIC_TOURNAMENT.drainStepPerRound);
+        state.timeDrainRate = 1.0 + (state.round - 1) * drainStep;
+
+        if (state.labMode) {
+          spawnAssistToken(getSelectedAssistLab().id);
+        } else if (!state.deferAssistUntilSequenceDone && state.round >= state.nextAssistRound) {
+          spawnAssistToken(null);
+          scheduleNextAssistRound(state.round);
+        }
+
+        updateHud();
+      }
+
       function fireShot(isManual) {
         if (!state.running || state.countingDown) return;
         if (isManual && state.shotLockLeft > 0) return;
@@ -2315,6 +2550,60 @@
           return;
         }
 
+        if (state.target.block.type === "sequenceTarget" && state.sequenceTargets.length > 0) {
+          var hitSeq = null;
+          for (var i = 0; i < state.sequenceTargets.length; i++) {
+            var st = state.sequenceTargets[i];
+            if (!st.hit && Math.hypot(state.cursor.x - st.x, state.cursor.y - st.y) <= st.radius) {
+              hitSeq = st;
+              break;
+            }
+          }
+
+          if (!hitSeq) {
+            state.splatters.push({
+              x: state.cursor.x,
+              y: state.cursor.y,
+              radius: 12,
+              color: getTargetColor("sequenceTarget")
+            });
+            tryConsumeSafetyNet("");
+            return;
+          }
+
+          if (hitSeq.num !== state.sequenceNextNum) {
+            tryConsumeSafetyNet("Wrong sequence order (expected " + state.sequenceNextNum + ")");
+            return;
+          }
+
+          hitSeq.hit = true;
+          state.splatters.push({
+            x: hitSeq.x,
+            y: hitSeq.y,
+            radius: Math.max(10, hitSeq.radius * 0.45),
+            color: getTargetColor("sequenceTarget")
+          });
+
+          if (state.sequenceNextNum < 3) {
+            state.sequenceNextNum += 1;
+            playHitSound();
+            addPulse(hitSeq.x, hitSeq.y, hitSeq.radius, "#fde047", false);
+            addPopup(hitSeq.x, hitSeq.y - 12, "#" + hitSeq.num + " OK!", "#fde047");
+            updateHud();
+            return;
+          }
+
+          if (state.deferAssistUntilSequenceDone && !state.labMode && state.round >= state.nextAssistRound) {
+            state.deferAssistUntilSequenceDone = false;
+            spawnAssistToken(null);
+            scheduleNextAssistRound(state.round);
+          }
+
+          var distSeq = Math.hypot(state.cursor.x - hitSeq.x, state.cursor.y - hitSeq.y);
+          advanceAfterCompletedTarget(hitSeq.x, hitSeq.y, hitSeq.radius, distSeq, false, false);
+          return;
+        }
+
         var dx = state.cursor.x - state.target.x;
         var dy = state.cursor.y - state.target.y;
         var dist = Math.hypot(dx, dy);
@@ -2332,106 +2621,36 @@
           return;
         }
 
-        var coreFactor = state.effects.coreMagnetTimer > 0 ? 0.42 : 0.26;
-        var innerCoreRadius = Math.max(7, state.target.radius * coreFactor);
-        var isBullseye = dist <= innerCoreRadius;
+        advanceAfterCompletedTarget(
+          state.cursor.x,
+          state.cursor.y,
+          state.target.radius,
+          dist,
+          state.target.block.type === "shieldShot",
+          state.target.block.type === "ringTarget"
+        );
+      }
 
-        state.streak += 1;
-        state.stagesCleared += 1;
-        var callout = getStreakCallout(state.streak);
-        if (callout) {
-          addPopup(state.cursor.x, state.cursor.y - 28, callout, "#e879f9");
-        }
-
-        if (isBullseye) {
-          state.combo += 1;
-          if (state.combo >= FEVER_STREAK_REQUIRED) {
-            state.feverLeft = 3;
-            state.combo = 0;
-            addPopup(state.cursor.x, state.cursor.y - 42, "FEVER MODE!", "#fb923c");
-          }
-          playBullseyeSound(state.streak);
-          triggerScreenFlash();
-          addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#fde047", true);
-        } else {
-          state.combo = 0;
-          playHitSound();
-          addPulse(state.cursor.x, state.cursor.y, state.target.radius, "#34d399", false);
-        }
-
-        var leftover = Math.max(0, state.timeLeft);
-        var accuracy = Math.max(0, 1 - dist / state.target.radius);
-        var feverMult = state.feverLeft > 0 ? 1.45 : 1.0;
-        var streakMult = 1 + Math.min(0.4, (state.streak - 1) * 0.05);
-        var timeBonus = Math.round(leftover * 18);
-        var shotPoints = Math.round((45 + accuracy * 75) * feverMult * streakMult + timeBonus);
-        state.score += shotPoints;
-
-        if (state.feverLeft > 0) {
-          state.feverLeft -= 1;
-        }
-
-        if (isBullseye) {
-          addPopup(state.cursor.x, state.cursor.y - 12, "CORE HIT! +" + shotPoints, "#fde047");
-        } else {
-          addPopup(state.cursor.x, state.cursor.y - 12, "HIT +" + shotPoints, "#4ade80");
-        }
-
-        if (state.mode === "training") {
-          state.runCoins += isBullseye ? 5 : 2;
-        }
-
-        var nextRadius = state.target.radius;
-
-        if (state.mode === "tournament") {
-          var newStage = computeStageIndex(state.score);
-          if (newStage > state.stageIndex) {
-            state.stageIndex = newStage;
-            state.score += 100;
-            nextRadius = Math.min(78, nextRadius + 6);
-            addPopup(LOGICAL_SIZE / 2, 46, "TIER " + state.stageIndex + " (+100)", "#7dd3fc");
-          }
-        }
-
-        if (isBullseye) {
-          nextRadius = Math.min(82, nextRadius + 4);
-        } else if (state.target.block.type === "shieldShot") {
-          addPopup(state.cursor.x, state.cursor.y + 14, "SHIELD SAVED", "#38bdf8");
-        } else {
-          var shrinkFactor = state.target.block.type === "ringTarget"
-            ? CLASSIC_TOURNAMENT.ringShrinkFactor
-            : CLASSIC_TOURNAMENT.shrinkFactor;
-          nextRadius = nextRadius - dist * shrinkFactor;
-        }
-
-        var minAllowedRadius = state.mode === "tournament" ? CLASSIC_TOURNAMENT.minRadius : 14;
-        if (nextRadius < minAllowedRadius) {
-          tryConsumeSafetyNet("Target became too small");
+      function applyMagnetPullToBody(body, dt, pullSpeed) {
+        var dx = state.cursor.x - body.x;
+        var dy = state.cursor.y - body.y;
+        var dist = Math.hypot(dx, dy);
+        if (dist <= 2) {
+          body.x = state.cursor.x;
+          body.y = state.cursor.y;
+          body.vx = 0;
+          body.vy = 0;
+          body.stuck = true;
           return;
         }
-
-        state.round += 1;
-
-        var roundGain = state.mode === "training"
-          ? 2.2
-          : (state.mode === "levelmode" && state.activeLevelObj ? state.activeLevelObj.roundTimeGain : CLASSIC_TOURNAMENT.roundTimeGain);
-        addTimeToBar(roundGain);
-
-        var drainStep = state.mode === "training"
-          ? 0.035
-          : (state.mode === "levelmode" && state.activeLevelObj ? state.activeLevelObj.drainStepPerRound : CLASSIC_TOURNAMENT.drainStepPerRound);
-        state.timeDrainRate = 1.0 + (state.round - 1) * drainStep;
-
-        state.target = pickTargetForRound(state.round, nextRadius);
-
-        if (state.labMode) {
-          spawnAssistToken(getSelectedAssistLab().id);
-        } else if (state.round >= state.nextAssistRound) {
-          spawnAssistToken(null);
-          scheduleNextAssistRound(state.round);
-        }
-
-        updateHud();
+        body.stuck = false;
+        var step = Math.min(dist, pullSpeed * dt);
+        var nx = dx / dist;
+        var ny = dy / dist;
+        body.x += nx * step;
+        body.y += ny * step;
+        body.vx = nx * pullSpeed;
+        body.vy = ny * pullSpeed;
       }
 
       function update(dt) {
@@ -2447,6 +2666,9 @@
         if (state.effects.coreMagnetTimer > 0) {
           state.effects.coreMagnetTimer = Math.max(0, state.effects.coreMagnetTimer - dt);
         }
+        if (state.effects.magnetTimer > 0) {
+          state.effects.magnetTimer = Math.max(0, state.effects.magnetTimer - dt);
+        }
         if (state.shotLockLeft > 0) {
           state.shotLockLeft = Math.max(0, state.shotLockLeft - dt);
         }
@@ -2456,11 +2678,14 @@
           return;
         }
 
+        var isSequenceRound = state.target.block.type === "sequenceTarget";
+        var seqDrainFactor = isSequenceRound ? (1 / 3) : 1;
+
         var frozen = state.effects.freezeTimer > 0;
         if (frozen) {
           state.effects.freezeTimer = Math.max(0, state.effects.freezeTimer - dt);
         } else {
-          state.timeLeft -= dt * state.timeDrainRate;
+          state.timeLeft -= dt * state.timeDrainRate * seqDrainFactor;
         }
 
         if (!frozen && state.timeLeft <= 0) {
@@ -2502,66 +2727,105 @@
         var t = state.target;
         var pad = t.radius + 14;
         var anchored = state.effects.anchorTimer > 0;
+        var magnetActive = state.effects.magnetTimer > 0;
 
         if (!frozen && !anchored) {
-          if (t.block.type === "moveX") {
-            t.x += t.dir * (t.block.speed || 42) * dt;
-            if (t.x < pad) { t.x = pad; t.dir = 1; }
-            if (t.x > LOGICAL_SIZE - pad) { t.x = LOGICAL_SIZE - pad; t.dir = -1; }
-          } else if (t.block.type === "figureEight") {
-            t.angle += (t.block.speed || 1.08) * dt;
-            var ampX = Math.min(72, LOGICAL_SIZE * 0.5 - pad - 10);
-            var ampY = Math.min(44, LOGICAL_SIZE * 0.5 - pad - 10);
-            t.x = Math.max(pad, Math.min(LOGICAL_SIZE - pad, t.baseX + Math.sin(t.angle) * Math.max(20, ampX)));
-            t.y = Math.max(pad, Math.min(LOGICAL_SIZE - pad, t.baseY + Math.sin(t.angle * 2) * 0.5 * Math.max(16, ampY)));
-          } else if (t.block.type === "elasticBounce") {
-            t.x += t.vx * dt;
-            t.y += t.vy * dt;
-            var bounced = false;
-            if (t.x < pad) { t.x = pad; t.vx = Math.abs(t.vx); bounced = true; }
-            if (t.x > LOGICAL_SIZE - pad) { t.x = LOGICAL_SIZE - pad; t.vx = -Math.abs(t.vx); bounced = true; }
-            if (t.y < pad) { t.y = pad; t.vy = Math.abs(t.vy); bounced = true; }
-            if (t.y > LOGICAL_SIZE - pad) { t.y = LOGICAL_SIZE - pad; t.vy = -Math.abs(t.vy); bounced = true; }
-            if (bounced) {
-              var curSpd = Math.hypot(t.vx, t.vy) || 50;
-              var baseSpd = t.block.speed || 54;
-              var nextSpd = curSpd > baseSpd ? baseSpd * 0.75 : baseSpd * 1.32;
-              var ang = Math.atan2(t.vy, t.vx);
-              t.vx = Math.cos(ang) * nextSpd;
-              t.vy = Math.sin(ang) * nextSpd;
-            }
-          } else if (t.block.type === "telegraphJump") {
-            var interval = t.block.jumpInterval || 1.85;
-            var teleTime = t.block.telegraphTime || 0.72;
-            t.jumpTimer -= dt;
-            if (t.jumpTimer <= teleTime && t.nextX === null) {
-              var cand = randomTargetPos(t.radius);
-              t.nextX = cand.x;
-              t.nextY = cand.y;
-            }
-            if (t.jumpTimer <= 0) {
-              addPulse(t.x, t.y, t.radius, "#818cf8", false);
-              if (t.nextX !== null) {
-                t.x = t.nextX;
-                t.y = t.nextY;
+          if (t.block.type === "sequenceTarget" && state.sequenceTargets.length > 0) {
+            for (var si = 0; si < state.sequenceTargets.length; si++) {
+              var st = state.sequenceTargets[si];
+              if (st.hit) continue;
+              if (magnetActive) {
+                var seqSpeed = st.num === 1 ? 150 : (st.num === 2 ? 48 : 28);
+                applyMagnetPullToBody(st, dt, seqSpeed);
               } else {
-                var fallback = randomTargetPos(t.radius);
-                t.x = fallback.x;
-                t.y = fallback.y;
+                st.stuck = false;
+                st.x += st.vx * dt;
+                st.y += st.vy * dt;
+                var spad = st.radius + 12;
+                if (st.x < spad) { st.x = spad; st.vx = Math.abs(st.vx); }
+                if (st.x > LOGICAL_SIZE - spad) { st.x = LOGICAL_SIZE - spad; st.vx = -Math.abs(st.vx); }
+                if (st.y < spad) { st.y = spad; st.vy = Math.abs(st.vy); }
+                if (st.y > LOGICAL_SIZE - spad) { st.y = LOGICAL_SIZE - spad; st.vy = -Math.abs(st.vy); }
               }
-              t.nextX = null;
-              t.nextY = null;
-              t.jumpTimer = interval;
-              playJumpSound();
+            }
+          } else if (magnetActive) {
+            applyMagnetPullToBody(t, dt, 120);
+          } else {
+            t.stuck = false;
+            if (t.block.type === "moveX") {
+              t.x += t.dir * (t.block.speed || 42) * dt;
+              if (t.x < pad) { t.x = pad; t.dir = 1; }
+              if (t.x > LOGICAL_SIZE - pad) { t.x = LOGICAL_SIZE - pad; t.dir = -1; }
+            } else if (t.block.type === "figureEight") {
+              t.angle += (t.block.speed || 1.08) * dt;
+              var ampX = Math.min(72, LOGICAL_SIZE * 0.5 - pad - 10);
+              var ampY = Math.min(44, LOGICAL_SIZE * 0.5 - pad - 10);
+              t.x = Math.max(pad, Math.min(LOGICAL_SIZE - pad, t.baseX + Math.sin(t.angle) * Math.max(20, ampX)));
+              t.y = Math.max(pad, Math.min(LOGICAL_SIZE - pad, t.baseY + Math.sin(t.angle * 2) * 0.5 * Math.max(16, ampY)));
+            } else if (t.block.type === "elasticBounce") {
+              t.x += t.vx * dt;
+              t.y += t.vy * dt;
+              var bounced = false;
+              if (t.x < pad) { t.x = pad; t.vx = Math.abs(t.vx); bounced = true; }
+              if (t.x > LOGICAL_SIZE - pad) { t.x = LOGICAL_SIZE - pad; t.vx = -Math.abs(t.vx); bounced = true; }
+              if (t.y < pad) { t.y = pad; t.vy = Math.abs(t.vy); bounced = true; }
+              if (t.y > LOGICAL_SIZE - pad) { t.y = LOGICAL_SIZE - pad; t.vy = -Math.abs(t.vy); bounced = true; }
+              if (bounced) {
+                var curSpd = Math.hypot(t.vx, t.vy) || 50;
+                var baseSpd = t.block.speed || 54;
+                var nextSpd = curSpd > baseSpd ? baseSpd * 0.75 : baseSpd * 1.32;
+                var ang = Math.atan2(t.vy, t.vx);
+                t.vx = Math.cos(ang) * nextSpd;
+                t.vy = Math.sin(ang) * nextSpd;
+              }
+            } else if (t.block.type === "telegraphJump") {
+              var interval = t.block.jumpInterval || 1.85;
+              var teleTime = t.block.telegraphTime || 0.72;
+              t.jumpTimer -= dt;
+              if (t.jumpTimer <= teleTime && t.nextX === null) {
+                var cand = randomTargetPos(t.radius);
+                t.nextX = cand.x;
+                t.nextY = cand.y;
+              }
+              if (t.jumpTimer <= 0) {
+                addPulse(t.x, t.y, t.radius, "#818cf8", false);
+                if (t.nextX !== null) {
+                  t.x = t.nextX;
+                  t.y = t.nextY;
+                } else {
+                  var fallback = randomTargetPos(t.radius);
+                  t.x = fallback.x;
+                  t.y = fallback.y;
+                }
+                t.nextX = null;
+                t.nextY = null;
+                t.jumpTimer = interval;
+                playJumpSound();
+              }
             }
           }
         }
 
+        if (!frozen && magnetActive && state.assistToken) {
+          applyMagnetPullToBody(state.assistToken, dt, 130);
+        }
+
         var c = state.cursor;
         if (state.effects.autoAimTimer > 0) {
+          var aimX = t.x;
+          var aimY = t.y;
+          if (t.block.type === "sequenceTarget" && state.sequenceTargets.length > 0) {
+            for (var ai = 0; ai < state.sequenceTargets.length; ai++) {
+              if (!state.sequenceTargets[ai].hit && state.sequenceTargets[ai].num === state.sequenceNextNum) {
+                aimX = state.sequenceTargets[ai].x;
+                aimY = state.sequenceTargets[ai].y;
+                break;
+              }
+            }
+          }
           var aimBlend = 1 - Math.exp(-14 * dt);
-          c.x += (t.x - c.x) * aimBlend;
-          c.y += (t.y - c.y) * aimBlend;
+          c.x += (aimX - c.x) * aimBlend;
+          c.y += (aimY - c.y) * aimBlend;
           c.vx = 0;
           c.vy = 0;
         } else {
@@ -2602,7 +2866,25 @@
           }
 
           c.x = Math.max(10, Math.min(LOGICAL_SIZE - 10, c.x + c.vx * dt));
-          c.y = Math.max(24, Math.min(LOGICAL_SIZE - 10, c.y + c.vy * dt));
+          c.y = Math.max(14, Math.min(LOGICAL_SIZE - 10, c.y + c.vy * dt));
+        }
+
+        if (magnetActive) {
+          if (t.stuck) {
+            t.x = c.x;
+            t.y = c.y;
+          }
+          if (state.assistToken && state.assistToken.stuck) {
+            state.assistToken.x = c.x;
+            state.assistToken.y = c.y;
+          }
+          for (var ssi = 0; ssi < state.sequenceTargets.length; ssi++) {
+            var sBody = state.sequenceTargets[ssi];
+            if (!sBody.hit && sBody.stuck) {
+              sBody.x = c.x;
+              sBody.y = c.y;
+            }
+          }
         }
 
         updateHud();
@@ -2695,83 +2977,111 @@
         var vis = TARGET_VISUALS[state.target.block.type] || TARGET_VISUALS.static;
         var tColor = getTargetColor(state.target.block.type);
 
-        if (state.running && !state.countingDown && state.target.block.type === "telegraphJump" && state.target.nextX !== null) {
+        if (state.target.block.type === "sequenceTarget" && state.sequenceTargets.length > 0) {
+          for (var si = 0; si < state.sequenceTargets.length; si++) {
+            var st = state.sequenceTargets[si];
+            if (st.hit) continue;
+            var isNext = st.num === state.sequenceNextNum;
+            ctx.save();
+            ctx.shadowColor = tColor;
+            ctx.shadowBlur = isNext ? 14 : 6;
+            ctx.fillStyle = tColor;
+            ctx.globalAlpha = isNext ? 0.92 : 0.65;
+            ctx.beginPath();
+            ctx.arc(st.x, st.y, st.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = isNext ? "#ffffff" : "rgba(255,255,255,0.55)";
+            ctx.lineWidth = isNext ? 2.8 : 1.8;
+            ctx.stroke();
+
+            ctx.fillStyle = "#090e1c";
+            ctx.font = "bold 14px Arial, sans-serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(String(st.num), st.x, st.y);
+            ctx.restore();
+          }
+        } else {
+          if (state.running && !state.countingDown && state.target.block.type === "telegraphJump" && state.target.nextX !== null) {
+            ctx.save();
+            ctx.strokeStyle = theme.reticle;
+            ctx.setLineDash([5, 4]);
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(state.target.nextX, state.target.nextY, state.target.radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+          }
+
           ctx.save();
-          ctx.strokeStyle = theme.reticle;
-          ctx.setLineDash([5, 4]);
+          ctx.shadowColor = tColor;
+          ctx.shadowBlur = 14;
+          ctx.fillStyle = tColor;
+          ctx.globalAlpha = 0.88;
+          traceTargetShape(ctx, state.target.x, state.target.y, state.target.radius, vis.shape);
+          ctx.fill();
+
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
           ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.arc(state.target.nextX, state.target.nextY, state.target.radius, 0, Math.PI * 2);
+          traceTargetShape(ctx, state.target.x, state.target.y, state.target.radius, vis.shape);
           ctx.stroke();
+
+          if (vis.pattern === "stripesX") {
+            ctx.strokeStyle = "rgba(255,255,255,0.65)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(state.target.x - state.target.radius * 0.7, state.target.y);
+            ctx.lineTo(state.target.x + state.target.radius * 0.7, state.target.y);
+            ctx.stroke();
+          } else if (vis.pattern === "cross") {
+            ctx.strokeStyle = "rgba(255,255,255,0.65)";
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.moveTo(state.target.x - state.target.radius * 0.55, state.target.y - state.target.radius * 0.55);
+            ctx.lineTo(state.target.x + state.target.radius * 0.55, state.target.y + state.target.radius * 0.55);
+            ctx.moveTo(state.target.x + state.target.radius * 0.55, state.target.y - state.target.radius * 0.55);
+            ctx.lineTo(state.target.x - state.target.radius * 0.55, state.target.y + state.target.radius * 0.55);
+            ctx.stroke();
+          } else if (vis.pattern === "pulseRing") {
+            ctx.strokeStyle = "rgba(255,255,255,0.65)";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(state.target.x, state.target.y, state.target.radius * 0.65, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+
+          var coreFactor = state.effects.coreMagnetTimer > 0 ? 0.42 : 0.26;
+          var coreR = Math.max(7, state.target.radius * coreFactor);
+          ctx.strokeStyle = state.effects.coreMagnetTimer > 0
+            ? "#fde047"
+            : (state.target.block.type === "ringTarget" ? "#fef08a" : "#ffffff");
+          ctx.lineWidth = state.effects.coreMagnetTimer > 0 ? 3 : (state.target.block.type === "ringTarget" ? 2.5 : 2);
+          ctx.beginPath();
+          ctx.arc(state.target.x, state.target.y, coreR, 0, Math.PI * 2);
+          ctx.stroke();
+
+          if (state.effects.anchorTimer > 0) {
+            ctx.strokeStyle = "#38bdf8";
+            ctx.lineWidth = 3;
+            ctx.setLineDash([6, 4]);
+            ctx.beginPath();
+            ctx.arc(state.target.x, state.target.y, state.target.radius + 5, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+
+          if (state.target.block.type === "shieldShot") {
+            ctx.strokeStyle = "#38bdf8";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(state.target.x, state.target.y, state.target.radius + 4, 0, Math.PI * 2);
+            ctx.stroke();
+          }
           ctx.restore();
         }
-
-        ctx.save();
-        ctx.shadowColor = tColor;
-        ctx.shadowBlur = 14;
-        ctx.fillStyle = tColor;
-        ctx.globalAlpha = 0.88;
-        traceTargetShape(ctx, state.target.x, state.target.y, state.target.radius, vis.shape);
-        ctx.fill();
-
-        ctx.shadowBlur = 0;
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
-        ctx.lineWidth = 2;
-        traceTargetShape(ctx, state.target.x, state.target.y, state.target.radius, vis.shape);
-        ctx.stroke();
-
-        if (vis.pattern === "stripesX") {
-          ctx.strokeStyle = "rgba(255,255,255,0.65)";
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.moveTo(state.target.x - state.target.radius * 0.7, state.target.y);
-          ctx.lineTo(state.target.x + state.target.radius * 0.7, state.target.y);
-          ctx.stroke();
-        } else if (vis.pattern === "cross") {
-          ctx.strokeStyle = "rgba(255,255,255,0.65)";
-          ctx.lineWidth = 1.8;
-          ctx.beginPath();
-          ctx.moveTo(state.target.x - state.target.radius * 0.55, state.target.y - state.target.radius * 0.55);
-          ctx.lineTo(state.target.x + state.target.radius * 0.55, state.target.y + state.target.radius * 0.55);
-          ctx.moveTo(state.target.x + state.target.radius * 0.55, state.target.y - state.target.radius * 0.55);
-          ctx.lineTo(state.target.x - state.target.radius * 0.55, state.target.y + state.target.radius * 0.55);
-          ctx.stroke();
-        } else if (vis.pattern === "pulseRing") {
-          ctx.strokeStyle = "rgba(255,255,255,0.65)";
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          ctx.arc(state.target.x, state.target.y, state.target.radius * 0.65, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-
-        var coreFactor = state.effects.coreMagnetTimer > 0 ? 0.42 : 0.26;
-        var coreR = Math.max(7, state.target.radius * coreFactor);
-        ctx.strokeStyle = state.effects.coreMagnetTimer > 0
-          ? "#fde047"
-          : (state.target.block.type === "ringTarget" ? "#fef08a" : "#ffffff");
-        ctx.lineWidth = state.effects.coreMagnetTimer > 0 ? 3 : (state.target.block.type === "ringTarget" ? 2.5 : 2);
-        ctx.beginPath();
-        ctx.arc(state.target.x, state.target.y, coreR, 0, Math.PI * 2);
-        ctx.stroke();
-
-        if (state.effects.anchorTimer > 0) {
-          ctx.strokeStyle = "#38bdf8";
-          ctx.lineWidth = 3;
-          ctx.setLineDash([6, 4]);
-          ctx.beginPath();
-          ctx.arc(state.target.x, state.target.y, state.target.radius + 5, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.setLineDash([]);
-        }
-
-        if (state.target.block.type === "shieldShot") {
-          ctx.strokeStyle = "#38bdf8";
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-          ctx.arc(state.target.x, state.target.y, state.target.radius + 4, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-        ctx.restore();
 
         if (state.mode === "levelmode" && state.activeLevelObj) {
           drawObstacles(state.activeLevelObj.obstacle);
@@ -2819,6 +3129,17 @@
           ctx.beginPath();
           ctx.moveTo(state.cursor.x, state.cursor.y);
           ctx.lineTo(state.target.x, state.target.y);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        if (state.running && state.effects.magnetTimer > 0) {
+          ctx.save();
+          ctx.strokeStyle = "rgba(248, 113, 113, 0.65)";
+          ctx.setLineDash([4, 4]);
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(state.cursor.x, state.cursor.y, 38, 0, Math.PI * 2);
           ctx.stroke();
           ctx.restore();
         }
@@ -2934,6 +3255,7 @@
         }
 
         state.assistSpawnCount = 0;
+        state.deferAssistUntilSequenceDone = false;
         state.running = true;
         state.score = 0;
         state.round = 1;
@@ -2950,6 +3272,7 @@
         state.effects.anchorTimer = 0;
         state.effects.autoAimTimer = 0;
         state.effects.coreMagnetTimer = 0;
+        state.effects.magnetTimer = 0;
         state.effects.extraLives = 0;
         state.inventory = [null, null, null, null];
         state.assistToken = null;
@@ -2971,11 +3294,18 @@
         state.cursor.vy = 0;
         state.target = pickTargetForRound(1, 75);
 
+        if (state.target.block.type === "sequenceTarget") {
+          state.timeLeft = Math.min(MAX_TIME_BAR, state.timeLeft * 2);
+          state.deferAssistUntilSequenceDone = true;
+        }
+
         if (state.labMode) {
           var ast = getSelectedAssistLab();
           spawnAssistToken(ast.id);
         } else {
-          spawnAssistToken(null);
+          if (!state.deferAssistUntilSequenceDone) {
+            spawnAssistToken(null);
+          }
           scheduleNextAssistRound(1);
         }
 
@@ -2989,6 +3319,7 @@
       }
 
       document.getElementById("editNameBtn").addEventListener("click", function () {
+        playButtonClickSound();
         var nextName = window.prompt("Enter player name (max. 16 characters):", save.playerName);
         if (nextName !== null) {
           var trimmed = nextName.trim().slice(0, 16);
@@ -3000,25 +3331,47 @@
         }
       });
 
-      document.getElementById("navTrainBtn").addEventListener("click", function () { openView("training"); });
-      document.getElementById("navLevelBtn").addEventListener("click", function () { openView("levelmode"); });
-      document.getElementById("navTourneyBtn").addEventListener("click", function () { openView("tournament"); });
-      document.getElementById("navSkinsBtn").addEventListener("click", function () { openView("skins"); });
+      document.getElementById("navTrainBtn").addEventListener("click", function () { playButtonClickSound(); openView("training"); });
+      document.getElementById("navLevelBtn").addEventListener("click", function () { playButtonClickSound(); openView("levelmode"); });
+      document.getElementById("navTourneyBtn").addEventListener("click", function () { playButtonClickSound(); openView("tournament"); });
+      document.getElementById("navSkinsBtn").addEventListener("click", function () { playButtonClickSound(); openView("skins"); });
+      document.getElementById("navSettingsBtn").addEventListener("click", function () { playButtonClickSound(); openView("settings"); });
 
-      document.getElementById("tab_targets").addEventListener("click", function () { switchTrainTab("targets"); });
-      document.getElementById("tab_assists").addEventListener("click", function () { switchTrainTab("assists"); });
+      document.getElementById("tab_targets").addEventListener("click", function () { playButtonClickSound(); switchTrainTab("targets"); });
+      document.getElementById("tab_assists").addEventListener("click", function () { playButtonClickSound(); switchTrainTab("assists"); });
 
-      document.getElementById("backFromTrainBtn").addEventListener("click", function () { openView("home"); });
-      document.getElementById("backFromLevelBtn").addEventListener("click", function () { openView("home"); });
-      closeMatchResultBtn.addEventListener("click", function () { openView(resultReturnView); });
-      document.getElementById("backFromTourneyBtn").addEventListener("click", function () { openView("home"); });
-      document.getElementById("backFromSkinsBtn").addEventListener("click", function () { openView("home"); });
+      document.getElementById("backFromTrainBtn").addEventListener("click", function () { playButtonClickSound(); openView("home"); });
+      document.getElementById("backFromLevelBtn").addEventListener("click", function () { playButtonClickSound(); openView("home"); });
+      closeMatchResultBtn.addEventListener("click", function () { playButtonClickSound(); openView(resultReturnView); });
+      document.getElementById("backFromTourneyBtn").addEventListener("click", function () { playButtonClickSound(); openView("home"); });
+      document.getElementById("backFromSkinsBtn").addEventListener("click", function () { playButtonClickSound(); openView("home"); });
+      document.getElementById("backFromSettingsBtn").addEventListener("click", function () { playButtonClickSound(); openView("home"); });
 
-      startTrainBtn.addEventListener("click", function () { startGame("training"); });
-      startLevelModeBtn.addEventListener("click", function () { startGame("levelmode"); });
-      startTourneyBtn.addEventListener("click", function () { startGame("tournament"); });
+      startTrainBtn.addEventListener("click", function () { playButtonClickSound(); startGame("training"); });
+      startLevelModeBtn.addEventListener("click", function () { playButtonClickSound(); startGame("levelmode"); });
+      startTourneyBtn.addEventListener("click", function () { playButtonClickSound(); startGame("tournament"); });
+
+      toggleSoundEnabledBtn.addEventListener("click", function () {
+        if (save.soundEnabled && save.buttonClickSound) {
+          playButtonClickSound();
+        }
+        save.soundEnabled = !save.soundEnabled;
+        if (save.soundEnabled) {
+          ensureAudio();
+        }
+        persistSave();
+      });
+
+      toggleButtonClickBtn.addEventListener("click", function () {
+        save.buttonClickSound = !save.buttonClickSound;
+        if (save.soundEnabled && save.buttonClickSound) {
+          playButtonClickSound();
+        }
+        persistSave();
+      });
 
       buyRetroBtn.addEventListener("click", function () {
+        playButtonClickSound();
         if (!save.hasRetro) {
           if (save.coins >= 50) {
             save.coins -= 50;
@@ -3035,6 +3388,7 @@
       });
 
       buyGuideBtn.addEventListener("click", function () {
+        playButtonClickSound();
         if (!save.hasGuide && save.coins >= 30) {
           save.coins -= 30;
           save.hasGuide = true;
@@ -3043,6 +3397,7 @@
       });
 
       soundSynthBtn.addEventListener("click", function () {
+        playButtonClickSound();
         ensureAudio();
         save.soundPack = "synth";
         persistSave();
@@ -3050,6 +3405,7 @@
       });
 
       soundStreakBtn.addEventListener("click", function () {
+        playButtonClickSound();
         ensureAudio();
         if (!save.ownedSounds.streak && save.coins >= 40) {
           save.coins -= 40;
@@ -3063,6 +3419,7 @@
       });
 
       soundRetroBtn.addEventListener("click", function () {
+        playButtonClickSound();
         ensureAudio();
         if (!save.ownedSounds.retro && save.coins >= 35) {
           save.coins -= 35;
@@ -3077,7 +3434,7 @@
 
       for (var s = 0; s < 4; s++) {
         (function (idx) {
-          assistSlotsEls[idx].addEventListener("click", function () { useAssist(idx); });
+          assistSlotsEls[idx].addEventListener("click", function () { playButtonClickSound(); useAssist(idx); });
         })(s);
       }
 
