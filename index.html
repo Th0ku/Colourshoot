@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -92,14 +92,35 @@
       overflow: hidden;
     }
 
+    .match-hud-strip {
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 12px;
+      background: rgba(9, 15, 32, 0.62);
+      font-size: 12px;
+      font-weight: 800;
+      color: #e2e8f0;
+      letter-spacing: 0.3px;
+    }
+
+    .match-hud-strip.active {
+      display: flex;
+    }
+
+    .match-hud-strip span b {
+      color: #fde047;
+      font-size: 13px;
+    }
+
     .lives-strip {
       display: none;
       align-items: center;
       gap: 8px;
-      padding: 6px 12px;
+      padding: 5px 12px;
       background: rgba(11, 18, 38, 0.78);
       backdrop-filter: blur(4px);
-      min-height: 36px;
+      min-height: 34px;
     }
 
     .lives-strip.active {
@@ -107,7 +128,7 @@
     }
 
     .life-pip {
-      font-size: 25px;
+      font-size: 24px;
       line-height: 1;
       color: #fb7185;
       text-shadow: 0 0 10px rgba(251, 113, 133, 0.65);
@@ -507,22 +528,30 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 8px;
+    }
+
+    .result-header h2 {
+      text-align: left;
+      font-size: 16px;
     }
 
     .close-x-btn {
-      width: 30px;
-      height: 30px;
-      border-radius: 10px;
-      background: #334155;
-      color: #f8fafc;
-      border: 1.5px solid #64748b;
-      font-size: 15px;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #ef4444 0%, #b91c1c 100%);
+      color: #ffffff;
+      border: 2px solid #fecaca;
+      font-size: 20px;
       font-weight: 900;
       line-height: 1;
       cursor: pointer;
+      flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.55);
       touch-action: manipulation;
     }
 
@@ -531,10 +560,10 @@
       background: rgba(15, 23, 42, 0.9);
       border: 1.5px solid #e879f9;
       border-radius: 14px;
-      padding: 12px;
+      padding: 11px 12px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
       text-align: left;
       font-size: 12px;
     }
@@ -707,6 +736,10 @@
         <div class="inner-time-bar-wrap">
           <div id="timeBarFill" class="time-bar-fill"></div>
         </div>
+        <div id="matchHudStrip" class="match-hud-strip">
+          <span>Score: <b id="hudScoreEl">0</b></span>
+          <span>Stages: <b id="hudStagesEl">0</b></span>
+        </div>
         <div id="livesStrip" class="lives-strip"></div>
       </div>
       <canvas id="gameCanvas" width="760" height="760"></canvas>
@@ -778,22 +811,26 @@
           </div>
         </div>
 
-        <div id="view_levelresult" class="subview">
+        <div id="view_matchresult" class="subview">
           <div class="result-header">
-            <h2 id="levelResultTitle">Level Result</h2>
-            <button id="closeLevelResultBtn" class="close-x-btn" type="button" title="Close">✕</button>
+            <h2 id="matchResultTitle">Match Summary</h2>
+            <button id="closeMatchResultBtn" class="close-x-btn" type="button" title="Close">✕</button>
           </div>
           <div class="result-card">
             <div class="result-row">
-              <span>Erreichte Punktzahl:</span>
+              <span>Score Achieved:</span>
               <b id="resultScoreVal">0</b>
             </div>
             <div class="result-row">
-              <span>Bisheriger Best-Score:</span>
+              <span>Stages Cleared:</span>
+              <b id="resultStagesVal">0</b>
+            </div>
+            <div class="result-row">
+              <span>Previous Best Score:</span>
               <b id="resultPrevBestVal">0</b>
             </div>
             <div class="result-row">
-              <span>Aktueller Best-Score:</span>
+              <span>Current Best Score:</span>
               <b id="resultNewBestVal">0</b>
             </div>
             <div id="resultComparisonBox" class="result-compare"></div>
@@ -805,10 +842,10 @@
           <h2>Fair Tournament</h2>
           <div class="panel-box">
             <div class="tourney-name-row">
-              <span>Spieler: <b id="tourneyPlayerNameEl">Player1</b></span>
-              <button id="editNameBtn" class="small-btn" type="button">Name ändern</button>
+              <span>Player: <b id="tourneyPlayerNameEl">Player1</b></span>
+              <button id="editNameBtn" class="small-btn" type="button">Edit Name</button>
             </div>
-            <div id="presetMeta" class="preset-meta">Fixed Assist Sequence (+TIME & AUTO incl.) | Identical Spawns</div>
+            <div id="presetMeta" class="preset-meta">All 7 Assists Included | New Assist Every 2–3 Stages | Identical Spawns</div>
             <div class="panel-label">Top 20 Tournament Ranking</div>
             <div id="tournamentLeaderboard" class="leaderboard-box"></div>
             <div id="presetBriefing" class="briefing-box"></div>
@@ -896,6 +933,9 @@
       }
       setupHighResCanvas();
 
+      var matchHudStrip = document.getElementById("matchHudStrip");
+      var hudScoreEl = document.getElementById("hudScoreEl");
+      var hudStagesEl = document.getElementById("hudStagesEl");
       var livesStrip = document.getElementById("livesStrip");
       var coinsEl = document.getElementById("coinsEl");
       var timeBarFill = document.getElementById("timeBarFill");
@@ -913,12 +953,13 @@
       var levelModeGrid = document.getElementById("levelModeGrid");
       var levelModeBriefing = document.getElementById("levelModeBriefing");
       var startLevelModeBtn = document.getElementById("startLevelModeBtn");
-      var levelResultTitle = document.getElementById("levelResultTitle");
+      var matchResultTitle = document.getElementById("matchResultTitle");
       var resultScoreVal = document.getElementById("resultScoreVal");
+      var resultStagesVal = document.getElementById("resultStagesVal");
       var resultPrevBestVal = document.getElementById("resultPrevBestVal");
       var resultNewBestVal = document.getElementById("resultNewBestVal");
       var resultComparisonBox = document.getElementById("resultComparisonBox");
-      var closeLevelResultBtn = document.getElementById("closeLevelResultBtn");
+      var closeMatchResultBtn = document.getElementById("closeMatchResultBtn");
       var startTourneyBtn = document.getElementById("startTourneyBtn");
       var presetMeta = document.getElementById("presetMeta");
       var presetBriefing = document.getElementById("presetBriefing");
@@ -939,35 +980,25 @@
 
       var SHOT_LOCK_DURATION = 0.22;
       var FEVER_STREAK_REQUIRED = 3;
-      var TOURNAMENT_ASSIST_ROUNDS = [3, 6, 9, 12, 15, 18, 21, 24];
       var MAX_TIME_BAR = 6.0;
       var MAX_LIVES = 10;
 
-      var FAIR_TOURNAMENT_ASSISTS = [
+      var ALL_ASSISTS_CYCLE = [
         "timeStitch",
+        "safetyNet",
         "autoAim",
         "freezer",
         "coreMagnet",
-        "timeStitch",
-        "autoAim",
         "anchor",
         "inflate"
       ];
 
-      var FAIR_LEVEL_ASSISTS = [
-        "timeStitch",
-        "autoAim",
-        "coreMagnet",
-        "freezer",
-        "timeStitch",
-        "autoAim",
-        "anchor"
-      ];
-
-      var VIEWS = ["home", "training", "levelmode", "levelresult", "tournament", "skins"];
+      var VIEWS = ["home", "training", "levelmode", "matchresult", "tournament", "skins"];
       var currentView = "home";
       var trainTab = "targets";
+      var resultReturnView = "home";
       var countdownTimerId = null;
+      var countdownStepTimers = [];
 
       function createSeededRng(seed) {
         var a = (seed >>> 0) || 1;
@@ -1004,7 +1035,7 @@
           id: "moveX",
           shortLabel: "2. Sweep X",
           block: { type: "moveX", label: "Sweep X", speed: 42 },
-          does: "Glides horizontally left and right across the street.",
+          does: "Glides horizontally left and right across the arena.",
           spotBy: "Cyan circle with horizontal line."
         },
         {
@@ -1140,13 +1171,13 @@
         var obsType = OBSTACLE_STYLES[(lv - 1) % OBSTACLE_STYLES.length];
         var primaryVariant = VARIANT_POOL[(lv - 1) % VARIANT_POOL.length];
         var obsNames = {
-          none: "Open Street",
+          none: "Open Arena",
           centerBarH: "Center Bar",
           centerSquare: "Center Square",
           centerCircle: "Center Circle",
           checkerboard: "Checkerboard"
         };
-        var focusText = "Fixed Seed & Assists (+TIME & AUTO) | " + obsNames[obsType];
+        var focusText = "Fixed Seed & All 7 Assists | " + obsNames[obsType];
         LEVEL_MODES.push({
           id: lv,
           seed: 70000 + lv * 1047,
@@ -1208,6 +1239,7 @@
       var save = {
         playerName: "Player1",
         bestScore: 0,
+        trainingBestScore: 0,
         coins: 0,
         hasGuide: false,
         hasRetro: false,
@@ -1219,11 +1251,12 @@
       };
 
       try {
-        var rawSave = localStorage.getItem("colourshoot_save_v24");
+        var rawSave = localStorage.getItem("colourshoot_save_v25");
         if (rawSave) {
           var parsed = JSON.parse(rawSave);
           if (parsed.playerName) save.playerName = String(parsed.playerName).slice(0, 16);
           save.bestScore = parsed.bestScore || 0;
+          save.trainingBestScore = parsed.trainingBestScore || 0;
           save.coins = parsed.coins || 0;
           save.hasGuide = !!parsed.hasGuide;
           save.hasRetro = !!parsed.hasRetro;
@@ -1263,6 +1296,16 @@
         };
       }
 
+      function getUserTournamentBest(playerName) {
+        var cleanName = String(playerName || "Player1").trim().slice(0, 16) || "Player1";
+        for (var i = 0; i < save.tournamentEntries.length; i++) {
+          if (save.tournamentEntries[i].name.toLowerCase() === cleanName.toLowerCase()) {
+            return save.tournamentEntries[i].score;
+          }
+        }
+        return null;
+      }
+
       function recordTournamentScore(playerName, scoreVal) {
         var cleanName = String(playerName || "Player1").trim().slice(0, 16) || "Player1";
         var entries = save.tournamentEntries.slice();
@@ -1294,7 +1337,7 @@
         if (entries.length === 0) {
           var emptyRow = document.createElement("div");
           emptyRow.className = "lb-row";
-          emptyRow.textContent = "Noch keine Tournament-Durchläufe vorhanden.";
+          emptyRow.textContent = "No tournament runs recorded yet.";
           tournamentLeaderboard.appendChild(emptyRow);
           return;
         }
@@ -1357,7 +1400,7 @@
 
       function persistSave() {
         try {
-          localStorage.setItem("colourshoot_save_v24", JSON.stringify(save));
+          localStorage.setItem("colourshoot_save_v25", JSON.stringify(save));
         } catch (e) {}
         refreshProfileUI();
         refreshShopUI();
@@ -1368,6 +1411,10 @@
           clearTimeout(countdownTimerId);
           countdownTimerId = null;
         }
+        for (var i = 0; i < countdownStepTimers.length; i++) {
+          clearTimeout(countdownStepTimers[i]);
+        }
+        countdownStepTimers = [];
         countdownBanner.className = "countdown-banner";
         countdownText.textContent = "";
       }
@@ -1492,7 +1539,7 @@
         shrinkFactor: 0.28,
         ringShrinkFactor: 0.44,
         minRadius: 15,
-        summary: "Identical sequence, target spawns and fixed assists (+TIME & AUTO included) for every player. Uncollected assists are overwritten on the next assist round.",
+        summary: "Identical sequence, target spawns and all 7 assists (+TIME, NET, AUTO, FREEZE, CORE+, ANCHOR, SIZE+) spawning every 2–3 stages throughout the entire match.",
         sequence: [
           { untilRound: 3,  type: "static",        label: "Static",   speed: 0 },
           { untilRound: 6,  type: "moveX",         label: "Sweep X",  speed: 42 },
@@ -1504,7 +1551,7 @@
       };
 
       function initTournamentInfo() {
-        presetMeta.textContent = "Fixed Assist Order (+TIME & AUTO) | Identical Spawns | Uncollected Assists Overwritten";
+        presetMeta.textContent = "All 7 Assists Included | New Assist Every 2–3 Stages | Identical Spawns";
         presetBriefing.innerHTML = "<b>Fair Tournament:</b> " + CLASSIC_TOURNAMENT.summary;
         renderTournamentLeaderboard();
       }
@@ -1620,8 +1667,10 @@
         labMode: false,
         activeLevelObj: null,
         assistSpawnCount: 0,
+        nextAssistRound: 3,
         score: 0,
         round: 1,
+        stagesCleared: 0,
         stageIndex: 1,
         combo: 0,
         streak: 0,
@@ -1682,6 +1731,16 @@
       function getTargetColor(type) {
         var vis = TARGET_VISUALS[type] || TARGET_VISUALS.static;
         return save.useRetro ? vis.retroColor : vis.color;
+      }
+
+      function refreshMatchHudStrip() {
+        if (!state.running && !state.countingDown) {
+          matchHudStrip.className = "match-hud-strip";
+          return;
+        }
+        matchHudStrip.className = "match-hud-strip active";
+        hudScoreEl.textContent = String(state.score);
+        hudStagesEl.textContent = String(state.stagesCleared);
       }
 
       function refreshLivesStrip() {
@@ -1826,6 +1885,7 @@
           timeBarFill.className = "time-bar-fill";
           timeBarFill.style.backgroundColor = getTimeBarColor(ratio);
         }
+        refreshMatchHudStrip();
       }
 
       function useAssist(slotIndex) {
@@ -1860,14 +1920,11 @@
       function pickDeterministicAssistId() {
         var idx = state.assistSpawnCount;
         state.assistSpawnCount += 1;
-        if (state.mode === "tournament") {
-          return FAIR_TOURNAMENT_ASSISTS[idx % FAIR_TOURNAMENT_ASSISTS.length];
-        }
         if (state.mode === "levelmode" && state.activeLevelObj) {
-          var offset = (state.activeLevelObj.id - 1) % FAIR_LEVEL_ASSISTS.length;
-          return FAIR_LEVEL_ASSISTS[(idx + offset) % FAIR_LEVEL_ASSISTS.length];
+          var offset = (state.activeLevelObj.id - 1) % ALL_ASSISTS_CYCLE.length;
+          return ALL_ASSISTS_CYCLE[(idx + offset) % ALL_ASSISTS_CYCLE.length];
         }
-        return FAIR_LEVEL_ASSISTS[idx % FAIR_LEVEL_ASSISTS.length];
+        return ALL_ASSISTS_CYCLE[idx % ALL_ASSISTS_CYCLE.length];
       }
 
       function spawnAssistToken(specificId) {
@@ -1886,8 +1943,9 @@
         };
       }
 
-      function shouldSpawnTournamentAssist(round) {
-        return TOURNAMENT_ASSIST_ROUNDS.indexOf(round) !== -1;
+      function scheduleNextAssistRound(currentRound) {
+        var step = activeRng() < 0.5 ? 2 : 3;
+        state.nextAssistRound = currentRound + step;
       }
 
       function setKnobPosition(dx, dy) {
@@ -2031,18 +2089,45 @@
 
       function endGame(reason) {
         clearCountdown();
-        var wasLevelMode = (state.mode === "levelmode" && state.activeLevelObj);
-        var wasTournament = (state.mode === "tournament");
+        var currentMode = state.mode;
         var lvObj = state.activeLevelObj;
-        var prevRec = wasLevelMode ? getUserLevelRecord(lvObj.id) : null;
-        var prevBest = prevRec ? prevRec.best : 0;
 
-        if (wasLevelMode) {
+        var hasPrevRecord = false;
+        var prevBest = 0;
+
+        if (currentMode === "levelmode" && lvObj) {
+          var prevRec = getUserLevelRecord(lvObj.id);
+          if (prevRec) {
+            hasPrevRecord = true;
+            prevBest = prevRec.best;
+          }
           setUserLevelRecord(lvObj.id, state.score);
-        }
-
-        if (wasTournament) {
+          var updatedRec = getUserLevelRecord(lvObj.id);
+          var newBest = updatedRec ? updatedRec.best : state.score;
+          matchResultTitle.textContent = lvObj.title + " – Summary";
+          resultReturnView = "levelmode";
+        } else if (currentMode === "tournament") {
+          var prevTourneyBest = getUserTournamentBest(save.playerName);
+          if (prevTourneyBest !== null) {
+            hasPrevRecord = true;
+            prevBest = prevTourneyBest;
+          }
           recordTournamentScore(save.playerName, state.score);
+          var newTourneyBest = getUserTournamentBest(save.playerName);
+          var newBest = newTourneyBest !== null ? newTourneyBest : state.score;
+          matchResultTitle.textContent = "Tournament – Summary";
+          resultReturnView = "tournament";
+        } else {
+          if (save.trainingBestScore > 0) {
+            hasPrevRecord = true;
+            prevBest = save.trainingBestScore;
+          }
+          if (state.score > save.trainingBestScore) {
+            save.trainingBestScore = state.score;
+          }
+          var newBest = save.trainingBestScore;
+          matchResultTitle.textContent = "Training – Summary";
+          resultReturnView = "home";
         }
 
         state.running = false;
@@ -2050,51 +2135,37 @@
         state.shotLockLeft = 0;
         state.assistToken = null;
         resetJoystick();
+        refreshMatchHudStrip();
         refreshLivesStrip();
         playMissSound();
 
         if (state.score > save.bestScore) {
           save.bestScore = state.score;
         }
-        if (state.mode === "training" && state.runCoins > 0) {
+        if (currentMode === "training" && state.runCoins > 0) {
           save.coins += state.runCoins;
         }
         persistSave();
 
-        if (wasLevelMode) {
-          var updatedRec = getUserLevelRecord(lvObj.id);
-          var newBest = updatedRec ? updatedRec.best : state.score;
-          levelResultTitle.textContent = lvObj.title + " – Ergebnis";
-          resultScoreVal.textContent = String(state.score);
-          resultPrevBestVal.textContent = String(prevBest);
-          resultNewBestVal.textContent = String(newBest);
+        resultScoreVal.textContent = String(state.score);
+        resultStagesVal.textContent = String(state.stagesCleared);
+        resultPrevBestVal.textContent = String(prevBest);
+        resultNewBestVal.textContent = String(newBest);
 
-          if (!prevRec) {
-            resultComparisonBox.innerHTML = "Ergebnis: <b>Erster Abschluss gespeichert</b> (" + reason + ")";
-          } else if (state.score > prevBest) {
-            resultComparisonBox.innerHTML = "Ergebnis: <b>BESSER</b> als bisheriger Best-Score (+" + (state.score - prevBest) + ") – " + reason;
-          } else if (state.score < prevBest) {
-            resultComparisonBox.innerHTML = "Ergebnis: <b>SCHLECHTER</b> als bisheriger Best-Score (" + (state.score - prevBest) + ") – " + reason;
-          } else {
-            resultComparisonBox.innerHTML = "Ergebnis: <b>GLEICH</b> wie bisheriger Best-Score – " + reason;
-          }
+        var reasonSuffix = reason ? (" (" + reason + ")") : "";
 
-          overlay.className = "overlay";
-          openView("levelresult");
-          return;
+        if (!hasPrevRecord) {
+          resultComparisonBox.innerHTML = "Result: <b>First run saved</b>" + reasonSuffix;
+        } else if (state.score > prevBest) {
+          resultComparisonBox.innerHTML = "Result: <b>BETTER</b> than previous best score (+" + (state.score - prevBest) + ")" + reasonSuffix;
+        } else if (state.score < prevBest) {
+          resultComparisonBox.innerHTML = "Result: <b>LOWER</b> than previous best score (" + (state.score - prevBest) + ")" + reasonSuffix;
+        } else {
+          resultComparisonBox.innerHTML = "Result: <b>TIED</b> with previous best score" + reasonSuffix;
         }
 
-        var trainLvl = getSelectedTrainingLevel();
-        var extra = state.mode === "training"
-          ? (state.labMode ? "Lab: <b>" + getSelectedAssistLab().name + "</b>" : "Level: <b>" + trainLvl.shortLabel + "</b>") + " | Coins: <b>+" + state.runCoins + "</b>"
-          : "Mode: <b>Fair Tournament</b>";
-
-        homeSummary.innerHTML =
-          "<b>Run Over</b> - " + reason + "<br />" +
-          "Score: <b>" + state.score + "</b> | " + extra;
-
         overlay.className = "overlay";
-        openView("home");
+        openView("matchresult");
       }
 
       function tryConsumeSafetyNet(reasonText) {
@@ -2142,7 +2213,7 @@
 
         var obsType = (state.mode === "levelmode" && state.activeLevelObj) ? state.activeLevelObj.obstacle : "none";
         if (obsType !== "none" && pointHitsObstacle(state.cursor.x, state.cursor.y, obsType)) {
-          tryConsumeSafetyNet("Hit a blocked obstacle!");
+          tryConsumeSafetyNet("Hit a blocked obstacle");
           return;
         }
 
@@ -2159,7 +2230,7 @@
         });
 
         if (dist > state.target.radius) {
-          tryConsumeSafetyNet("Missed the target!");
+          tryConsumeSafetyNet("");
           return;
         }
 
@@ -2168,6 +2239,7 @@
         var isBullseye = dist <= innerCoreRadius;
 
         state.streak += 1;
+        state.stagesCleared += 1;
         var callout = getStreakCallout(state.streak);
         if (callout) {
           addPopup(state.cursor.x, state.cursor.y - 28, callout, "#e879f9");
@@ -2219,7 +2291,7 @@
             state.stageIndex = newStage;
             state.score += 100;
             nextRadius = Math.min(78, nextRadius + 6);
-            addPopup(LOGICAL_SIZE / 2, 46, "STAGE " + state.stageIndex + " (+100)", "#7dd3fc");
+            addPopup(LOGICAL_SIZE / 2, 46, "TIER " + state.stageIndex + " (+100)", "#7dd3fc");
           }
         }
 
@@ -2236,7 +2308,7 @@
 
         var minAllowedRadius = state.mode === "tournament" ? CLASSIC_TOURNAMENT.minRadius : 14;
         if (nextRadius < minAllowedRadius) {
-          tryConsumeSafetyNet("Target became too small!");
+          tryConsumeSafetyNet("Target became too small");
           return;
         }
 
@@ -2256,12 +2328,9 @@
 
         if (state.labMode) {
           spawnAssistToken(getSelectedAssistLab().id);
-        } else if (state.mode === "tournament" && shouldSpawnTournamentAssist(state.round)) {
+        } else if (state.round >= state.nextAssistRound) {
           spawnAssistToken(null);
-        } else if (state.mode === "levelmode" && (state.round % 2 === 0)) {
-          spawnAssistToken(null);
-        } else if (state.mode === "training" && state.round % 3 === 0) {
-          spawnAssistToken(null);
+          scheduleNextAssistRound(state.round);
         }
 
         updateHud();
@@ -2435,7 +2504,7 @@
           }
 
           c.x = Math.max(10, Math.min(LOGICAL_SIZE - 10, c.x + c.vx * dt));
-          c.y = Math.max(26, Math.min(LOGICAL_SIZE - 10, c.y + c.vy * dt));
+          c.y = Math.max(36, Math.min(LOGICAL_SIZE - 10, c.y + c.vy * dt));
         }
 
         updateHud();
@@ -2719,21 +2788,22 @@
 
         var steps = [
           { label: "3", tone: 440, delay: 0 },
-          { label: "2", tone: 554, delay: 550 },
-          { label: "1", tone: 659, delay: 1100 },
-          { label: "Go", tone: 880, delay: 1650 }
+          { label: "2", tone: 554, delay: 950 },
+          { label: "1", tone: 659, delay: 1900 },
+          { label: "Go", tone: 880, delay: 2850 }
         ];
 
         countdownText.textContent = steps[0].label;
-        playTone(steps[0].tone, steps[0].tone, 0.14, "triangle", 0.15, 0);
+        playTone(steps[0].tone, steps[0].tone, 0.16, "triangle", 0.15, 0);
 
         for (var i = 1; i < steps.length; i++) {
           (function (step) {
-            setTimeout(function () {
+            var tid = setTimeout(function () {
               if (!state.running || !state.countingDown) return;
               countdownText.textContent = step.label;
-              playTone(step.tone, step.label === "Go" ? 1174 : step.tone, 0.16, "triangle", 0.17, 0);
+              playTone(step.tone, step.label === "Go" ? 1174 : step.tone, 0.18, "triangle", 0.17, 0);
             }, step.delay);
+            countdownStepTimers.push(tid);
           })(steps[i]);
         }
 
@@ -2744,7 +2814,7 @@
           countdownBanner.className = "countdown-banner";
           countdownText.textContent = "";
           state.lastFrame = performance.now();
-        }, 2150);
+        }, 3600);
       }
 
       function startGame(selectedMode) {
@@ -2768,6 +2838,7 @@
         state.running = true;
         state.score = 0;
         state.round = 1;
+        state.stagesCleared = 0;
         state.stageIndex = 1;
         state.combo = 0;
         state.streak = 0;
@@ -2804,8 +2875,9 @@
         if (state.labMode) {
           var ast = getSelectedAssistLab();
           spawnAssistToken(ast.id);
-        } else if (state.mode === "levelmode") {
+        } else {
           spawnAssistToken(null);
+          scheduleNextAssistRound(1);
         }
 
         refreshAssistButtons();
@@ -2818,7 +2890,7 @@
       }
 
       document.getElementById("editNameBtn").addEventListener("click", function () {
-        var nextName = window.prompt("Spielername eingeben (max. 16 Zeichen):", save.playerName);
+        var nextName = window.prompt("Enter player name (max. 16 characters):", save.playerName);
         if (nextName !== null) {
           var trimmed = nextName.trim().slice(0, 16);
           if (trimmed.length > 0) {
@@ -2839,7 +2911,7 @@
 
       document.getElementById("backFromTrainBtn").addEventListener("click", function () { openView("home"); });
       document.getElementById("backFromLevelBtn").addEventListener("click", function () { openView("home"); });
-      closeLevelResultBtn.addEventListener("click", function () { openView("levelmode"); });
+      closeMatchResultBtn.addEventListener("click", function () { openView(resultReturnView); });
       document.getElementById("backFromTourneyBtn").addEventListener("click", function () { openView("home"); });
       document.getElementById("backFromSkinsBtn").addEventListener("click", function () { openView("home"); });
 
