@@ -41,18 +41,57 @@
       box-shadow: 0 24px 55px rgba(4, 9, 24, 0.72);
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
     }
 
     .top-bar {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
+      gap: 8px;
       font-size: 12px;
       padding: 0 4px;
+      min-height: 28px;
+    }
+
+    .match-hud-strip {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #e2e8f0;
+      letter-spacing: 0.2px;
+    }
+
+    .match-hud-strip.active {
+      display: flex;
+    }
+
+    .match-hud-strip span b {
+      color: #fde047;
+      font-size: 12.5px;
+    }
+
+    .lives-strip {
+      display: none;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .lives-strip.active {
+      display: inline-flex;
+    }
+
+    .life-pip {
+      font-size: 16px;
+      line-height: 1;
+      color: #fb7185;
+      text-shadow: 0 0 8px rgba(251, 113, 133, 0.65);
     }
 
     .coin-box {
+      margin-left: auto;
       background: rgba(15, 23, 42, 0.85);
       padding: 4px 12px;
       border-radius: 999px;
@@ -60,6 +99,7 @@
       color: #fde047;
       font-weight: 800;
       box-shadow: 0 4px 14px rgba(251, 191, 36, 0.16);
+      white-space: nowrap;
     }
 
     .screen-wrap {
@@ -90,48 +130,6 @@
       background: rgba(9, 14, 28, 0.75);
       border-bottom: 1px solid rgba(148, 163, 184, 0.3);
       overflow: hidden;
-    }
-
-    .match-hud-strip {
-      display: none;
-      justify-content: space-between;
-      align-items: center;
-      padding: 5px 12px;
-      background: rgba(9, 15, 32, 0.62);
-      font-size: 12px;
-      font-weight: 800;
-      color: #e2e8f0;
-      letter-spacing: 0.3px;
-    }
-
-    .match-hud-strip.active {
-      display: flex;
-    }
-
-    .match-hud-strip span b {
-      color: #fde047;
-      font-size: 13px;
-    }
-
-    .lives-strip {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      padding: 5px 12px;
-      background: rgba(11, 18, 38, 0.78);
-      backdrop-filter: blur(4px);
-      min-height: 34px;
-    }
-
-    .lives-strip.active {
-      display: flex;
-    }
-
-    .life-pip {
-      font-size: 24px;
-      line-height: 1;
-      color: #fb7185;
-      text-shadow: 0 0 10px rgba(251, 113, 133, 0.65);
     }
 
     .countdown-banner {
@@ -540,9 +538,9 @@
       width: 38px;
       height: 38px;
       border-radius: 12px;
-      background: linear-gradient(145deg, #ef4444 0%, #b91c1c 100%);
+      background: radial-gradient(circle at 32% 28%, #fb7185 0%, #e11d48 60%, #9f1239 100%);
       color: #ffffff;
-      border: 2px solid #fecaca;
+      border: 2px solid #fecdd3;
       font-size: 20px;
       font-weight: 900;
       line-height: 1;
@@ -551,7 +549,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.55);
+      box-shadow: 0 6px 16px rgba(225, 29, 72, 0.45);
       touch-action: manipulation;
     }
 
@@ -560,12 +558,12 @@
       background: rgba(15, 23, 42, 0.9);
       border: 1.5px solid #e879f9;
       border-radius: 14px;
-      padding: 11px 12px;
+      padding: 10px 12px;
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      gap: 6px;
       text-align: left;
-      font-size: 12px;
+      font-size: 11.5px;
     }
 
     .result-row {
@@ -576,14 +574,62 @@
 
     .result-row b {
       color: #34d399;
-      font-size: 14px;
+      font-size: 13.5px;
+    }
+
+    .remaining-assists-box {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding-top: 2px;
+    }
+
+    .remaining-assists-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #7dd3fc;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .remaining-assists-icons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 28px;
+      align-items: center;
+    }
+
+    .assist-icon-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(30, 41, 59, 0.95);
+      border: 1.5px solid #64748b;
+      font-size: 10px;
+      font-weight: 800;
+      color: #f8fafc;
+    }
+
+    .assist-icon-glyph {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 900;
+      color: #090e1c;
     }
 
     .result-compare {
-      padding: 8px 10px;
+      padding: 7px 9px;
       border-radius: 10px;
       background: rgba(30, 41, 59, 0.88);
-      font-size: 11.5px;
+      font-size: 11px;
       line-height: 1.35;
       color: #f8fafc;
     }
@@ -728,6 +774,11 @@
 <body>
   <div class="gb-shell">
     <div class="top-bar">
+      <div id="matchHudStrip" class="match-hud-strip">
+        <span>Score: <b id="hudScoreEl">0</b></span>
+        <span>Stages: <b id="hudStagesEl">0</b></span>
+      </div>
+      <div id="livesStrip" class="lives-strip"></div>
       <span class="coin-box">Coins: <span id="coinsEl">0</span></span>
     </div>
 
@@ -736,11 +787,6 @@
         <div class="inner-time-bar-wrap">
           <div id="timeBarFill" class="time-bar-fill"></div>
         </div>
-        <div id="matchHudStrip" class="match-hud-strip">
-          <span>Score: <b id="hudScoreEl">0</b></span>
-          <span>Stages: <b id="hudStagesEl">0</b></span>
-        </div>
-        <div id="livesStrip" class="lives-strip"></div>
       </div>
       <canvas id="gameCanvas" width="760" height="760"></canvas>
       <div id="countdownBanner" class="countdown-banner">
@@ -751,7 +797,7 @@
       <div id="overlay" class="overlay">
         <div id="view_home" class="subview active">
           <h2>ColourShoot</h2>
-          <p id="homeSummary">Drag <b>Joystick</b> to aim, tap <b>A</b> to fire, and shoot <b>Assist</b> tokens to store active powers.</p>
+          <p id="homeSummary">Drag <b>Joystick</b> to aim, tap the fire button to shoot, and shoot <b>Assist</b> tokens to store active powers.</p>
 
           <div class="hub-menu">
             <button id="navTrainBtn" class="hub-btn train" type="button">
@@ -833,6 +879,10 @@
               <span>Current Best Score:</span>
               <b id="resultNewBestVal">0</b>
             </div>
+            <div class="remaining-assists-box">
+              <span class="remaining-assists-label">Remaining Assists:</span>
+              <div id="resultRemainingAssistsEl" class="remaining-assists-icons"></div>
+            </div>
             <div id="resultComparisonBox" class="result-compare"></div>
           </div>
           <div></div>
@@ -909,7 +959,7 @@
         </div>
       </div>
 
-      <button id="fireBtn" class="fire-btn" type="button" title="Fire (Space)">A</button>
+      <button id="fireBtn" class="fire-btn" type="button" title="Fire (Space)"></button>
     </div>
   </div>
 
@@ -958,6 +1008,7 @@
       var resultStagesVal = document.getElementById("resultStagesVal");
       var resultPrevBestVal = document.getElementById("resultPrevBestVal");
       var resultNewBestVal = document.getElementById("resultNewBestVal");
+      var resultRemainingAssistsEl = document.getElementById("resultRemainingAssistsEl");
       var resultComparisonBox = document.getElementById("resultComparisonBox");
       var closeMatchResultBtn = document.getElementById("closeMatchResultBtn");
       var startTourneyBtn = document.getElementById("startTourneyBtn");
@@ -1079,6 +1130,7 @@
         {
           id: "timeStitch",
           code: "+TIME",
+          glyph: "⏱",
           name: "Time-Stitch",
           color: "#4ade80",
           passive: true,
@@ -1089,16 +1141,18 @@
         {
           id: "safetyNet",
           code: "NET",
+          glyph: "♥",
           name: "Safety Net",
           color: "#f472b6",
           passive: true,
           labTarget: { type: "elasticBounce", label: "Elastic", speed: 52 },
-          does: "Adds +1 life (up to 10 lives) shown below time bar.",
+          does: "Adds +1 life (up to 10 lives) shown at the top.",
           whenToUse: "Triggers automatically on pickup."
         },
         {
           id: "anchor",
           code: "ANCHOR",
+          glyph: "⚓",
           name: "Anchor",
           color: "#38bdf8",
           passive: false,
@@ -1109,6 +1163,7 @@
         {
           id: "freezer",
           code: "FREEZE",
+          glyph: "❄",
           name: "Freezer",
           color: "#67e8f9",
           passive: false,
@@ -1119,6 +1174,7 @@
         {
           id: "autoAim",
           code: "AUTO",
+          glyph: "◎",
           name: "Auto-Aim",
           color: "#c084fc",
           passive: false,
@@ -1129,6 +1185,7 @@
         {
           id: "coreMagnet",
           code: "CORE+",
+          glyph: "✦",
           name: "Core Magnet",
           color: "#facc15",
           passive: false,
@@ -1139,6 +1196,7 @@
         {
           id: "inflate",
           code: "SIZE+",
+          glyph: "⤢",
           name: "Inflate",
           color: "#fb923c",
           passive: false,
@@ -1251,7 +1309,7 @@
       };
 
       try {
-        var rawSave = localStorage.getItem("colourshoot_save_v25");
+        var rawSave = localStorage.getItem("colourshoot_save_v26");
         if (rawSave) {
           var parsed = JSON.parse(rawSave);
           if (parsed.playerName) save.playerName = String(parsed.playerName).slice(0, 16);
@@ -1400,7 +1458,7 @@
 
       function persistSave() {
         try {
-          localStorage.setItem("colourshoot_save_v25", JSON.stringify(save));
+          localStorage.setItem("colourshoot_save_v26", JSON.stringify(save));
         } catch (e) {}
         refreshProfileUI();
         refreshShopUI();
@@ -1758,10 +1816,10 @@
         livesStrip.innerHTML = html;
       }
 
-      function refreshAssistButtons() {
+      function refreshAssistButtons(clearAll) {
         for (var i = 0; i < 4; i++) {
           var btn = assistSlotsEls[i];
-          var itemId = state.inventory[i];
+          var itemId = clearAll ? null : state.inventory[i];
           if (!itemId) {
             btn.className = "assist-btn";
             btn.textContent = "-";
@@ -1774,11 +1832,48 @@
         refreshLivesStrip();
       }
 
+      function renderRemainingAssistsInSummary(invSnapshot) {
+        resultRemainingAssistsEl.innerHTML = "";
+        var items = [];
+        for (var i = 0; i < 4; i++) {
+          if (invSnapshot && invSnapshot[i]) {
+            items.push(invSnapshot[i]);
+          }
+        }
+        if (items.length === 0) {
+          var noneSpan = document.createElement("span");
+          noneSpan.style.color = "#94a3b8";
+          noneSpan.style.fontSize = "11px";
+          noneSpan.textContent = "None";
+          resultRemainingAssistsEl.appendChild(noneSpan);
+          return;
+        }
+        for (var j = 0; j < items.length; j++) {
+          var def = getAssistDef(items[j]);
+          var badge = document.createElement("span");
+          badge.className = "assist-icon-badge";
+          badge.style.borderColor = def.color;
+
+          var glyph = document.createElement("span");
+          glyph.className = "assist-icon-glyph";
+          glyph.style.backgroundColor = def.color;
+          glyph.textContent = def.glyph;
+
+          var codeSpan = document.createElement("span");
+          codeSpan.style.color = def.color;
+          codeSpan.textContent = def.code;
+
+          badge.appendChild(glyph);
+          badge.appendChild(codeSpan);
+          resultRemainingAssistsEl.appendChild(badge);
+        }
+      }
+
       function storeAssist(assistId) {
         for (var i = 0; i < 4; i++) {
           if (state.inventory[i] === null) {
             state.inventory[i] = assistId;
-            refreshAssistButtons();
+            refreshAssistButtons(false);
             return;
           }
         }
@@ -1786,7 +1881,7 @@
         state.inventory[1] = state.inventory[2];
         state.inventory[2] = state.inventory[3];
         state.inventory[3] = assistId;
-        refreshAssistButtons();
+        refreshAssistButtons(false);
       }
 
       function spawnGoldGlitterBurst() {
@@ -1913,7 +2008,7 @@
           state.target.radius = Math.min(84, state.target.radius + 12);
         }
 
-        refreshAssistButtons();
+        refreshAssistButtons(false);
         updateHud();
       }
 
@@ -2091,6 +2186,7 @@
         clearCountdown();
         var currentMode = state.mode;
         var lvObj = state.activeLevelObj;
+        var remainingInv = state.inventory.slice();
 
         var hasPrevRecord = false;
         var prevBest = 0;
@@ -2134,9 +2230,10 @@
         state.countingDown = false;
         state.shotLockLeft = 0;
         state.assistToken = null;
+        state.inventory = [null, null, null, null];
         resetJoystick();
         refreshMatchHudStrip();
-        refreshLivesStrip();
+        refreshAssistButtons(true);
         playMissSound();
 
         if (state.score > save.bestScore) {
@@ -2151,6 +2248,7 @@
         resultStagesVal.textContent = String(state.stagesCleared);
         resultPrevBestVal.textContent = String(prevBest);
         resultNewBestVal.textContent = String(newBest);
+        renderRemainingAssistsInSummary(remainingInv);
 
         var reasonSuffix = reason ? (" (" + reason + ")") : "";
 
@@ -2504,7 +2602,7 @@
           }
 
           c.x = Math.max(10, Math.min(LOGICAL_SIZE - 10, c.x + c.vx * dt));
-          c.y = Math.max(36, Math.min(LOGICAL_SIZE - 10, c.y + c.vy * dt));
+          c.y = Math.max(24, Math.min(LOGICAL_SIZE - 10, c.y + c.vy * dt));
         }
 
         updateHud();
@@ -2786,11 +2884,12 @@
         state.countingDown = true;
         countdownBanner.className = "countdown-banner active";
 
+        var stepIntervalMs = 1000;
         var steps = [
           { label: "3", tone: 440, delay: 0 },
-          { label: "2", tone: 554, delay: 950 },
-          { label: "1", tone: 659, delay: 1900 },
-          { label: "Go", tone: 880, delay: 2850 }
+          { label: "2", tone: 554, delay: stepIntervalMs },
+          { label: "1", tone: 659, delay: stepIntervalMs * 2 },
+          { label: "Go", tone: 880, delay: stepIntervalMs * 3 }
         ];
 
         countdownText.textContent = steps[0].label;
@@ -2814,7 +2913,7 @@
           countdownBanner.className = "countdown-banner";
           countdownText.textContent = "";
           state.lastFrame = performance.now();
-        }, 3600);
+        }, stepIntervalMs * 4);
       }
 
       function startGame(selectedMode) {
@@ -2880,7 +2979,7 @@
           scheduleNextAssistRound(1);
         }
 
-        refreshAssistButtons();
+        refreshAssistButtons(false);
         overlay.className = "overlay hidden";
         updateHud();
         draw();
@@ -3040,7 +3139,7 @@
       renderTrainingUI();
       renderLevelModeUI();
       initTournamentInfo();
-      refreshAssistButtons();
+      refreshAssistButtons(true);
       openView("home");
       draw();
     })();
