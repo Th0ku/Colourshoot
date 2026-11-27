@@ -103,16 +103,13 @@
     }
 
     .lives-strip {
-      display: none;
+      display: flex;
       align-items: center;
       flex-wrap: wrap;
       gap: 5px;
+      height: 24px;
       min-height: 24px;
       padding: 1px 4px;
-    }
-
-    .lives-strip.active {
-      display: flex;
     }
 
     .life-pip {
@@ -242,6 +239,34 @@
       font-size: 10.5px;
       color: #cbd5e1;
       line-height: 1.35;
+    }
+
+    .home-name-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .home-name-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #7dd3fc;
+    }
+
+    .home-name-input {
+      background: rgba(15, 23, 42, 0.9);
+      color: #f8fafc;
+      border: 1.5px solid rgba(125, 211, 252, 0.5);
+      border-radius: 9px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      width: 145px;
+      outline: none;
+      user-select: text;
+      -webkit-user-select: text;
     }
 
     .small-btn {
@@ -805,6 +830,10 @@
         <div id="view_home" class="subview active">
           <h2>ColourShoot</h2>
           <p id="homeSummary">Drag <b>Joystick</b> to aim, tap the fire button to shoot, and shoot <b>Assist</b> tokens to store active powers.</p>
+          <div class="home-name-row">
+            <label for="homePlayerNameInput" class="home-name-label">Name:</label>
+            <input id="homePlayerNameInput" class="home-name-input" type="text" maxlength="16" placeholder="Player1" />
+          </div>
 
           <div class="hub-menu">
             <button id="navTrainBtn" class="hub-btn train" type="button">
@@ -904,7 +933,6 @@
           <div class="panel-box">
             <div class="tourney-name-row">
               <span>Player: <b id="tourneyPlayerNameEl">Player1</b></span>
-              <button id="editNameBtn" class="small-btn" type="button">Edit Name</button>
             </div>
             <div id="presetMeta" class="preset-meta">All 8 Assists Included | New Assist Every 2–3 Stages | Identical Spawns</div>
             <div class="panel-label">Top 20 Tournament Ranking</div>
@@ -1019,6 +1047,7 @@
       var coinsEl = document.getElementById("coinsEl");
       var timeBarFill = document.getElementById("timeBarFill");
       var overlay = document.getElementById("overlay");
+      var homePlayerNameInput = document.getElementById("homePlayerNameInput");
       var tourneyPlayerNameEl = document.getElementById("tourneyPlayerNameEl");
       var tournamentLeaderboard = document.getElementById("tournamentLeaderboard");
       var homeSummary = document.getElementById("homeSummary");
@@ -1104,7 +1133,8 @@
         telegraphJump: { shape: "circle",  color: "#818cf8", retroColor: "#a78bfa", pattern: "ghost" },
         elasticBounce: { shape: "octagon", color: "#34d399", retroColor: "#4ade80", pattern: "pulseRing" },
         shieldShot:    { shape: "circle",  color: "#60a5fa", retroColor: "#2dd4bf", pattern: "shield" },
-        sequenceTarget:{ shape: "circle",  color: "#f59e0b", retroColor: "#fde047", pattern: "sequence" }
+        sequenceTarget:{ shape: "circle",  color: "#f59e0b", retroColor: "#fde047", pattern: "sequence" },
+        swarmOdd:      { shape: "circle",  color: "#a78bfa", retroColor: "#34d399", pattern: "swarmOdd" }
       };
 
       var TRAINING_LEVELS = [
@@ -1163,6 +1193,13 @@
           block: { type: "sequenceTarget", label: "Seq 1-2-3", speed: 24 },
           does: "3 targets (1, 2, 3) spawn together; shoot 1, then 2, then 3 with 2x time and 3x slower time drain.",
           spotBy: "Amber targets numbered 1, 2, and 3."
+        },
+        {
+          id: "swarmOdd",
+          shortLabel: "9. Odd Swarm",
+          block: { type: "swarmOdd", label: "Odd Swarm", speed: 68 },
+          does: "16 small discs repel each other and fly around wildly; only ONE target differs subtly (larger inner ring, gold ring, slightly rippled edge, or slightly shifted hue).",
+          spotBy: "The single disc with a subtle difference among the repelling discs."
         }
       ];
 
@@ -1273,7 +1310,8 @@
         { type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.7, jumpInterval: 1.8 },
         { type: "elasticBounce", label: "Elastic",  speed: 55 },
         { type: "shieldShot",    label: "Shield",   speed: 36 },
-        { type: "sequenceTarget",label: "Seq 1-2-3",speed: 24 }
+        { type: "sequenceTarget",label: "Seq 1-2-3",speed: 24 },
+        { type: "swarmOdd",      label: "Odd Swarm",speed: 68 }
       ];
 
       var LEVEL_MODES = [];
@@ -1471,6 +1509,20 @@
 
       function refreshProfileUI() {
         tourneyPlayerNameEl.textContent = save.playerName;
+        if (homePlayerNameInput && document.activeElement !== homePlayerNameInput) {
+          homePlayerNameInput.value = save.playerName;
+        }
+      }
+
+      function applyPlayerNameInput(rawVal) {
+        var trimmed = String(rawVal || "").trim().slice(0, 16);
+        if (!trimmed) trimmed = "Player1";
+        if (trimmed !== save.playerName) {
+          save.playerName = trimmed;
+          persistSave();
+          if (currentView === "levelmode") renderLevelModeUI();
+          if (currentView === "tournament") renderTournamentLeaderboard();
+        }
       }
 
       function refreshSettingsUI() {
@@ -1669,6 +1721,7 @@
           { untilRound: 12, type: "figureEight",   label: "Fig-8",    speed: 1.08 },
           { untilRound: 15, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.7, jumpInterval: 1.8 },
           { untilRound: 18, type: "sequenceTarget",label: "Seq 1-2-3",speed: 24 },
+          { untilRound: 21, type: "swarmOdd",      label: "Odd Swarm",speed: 68 },
           { untilRound: 999,type: "elasticBounce", label: "Elastic",  speed: 55 }
         ]
       };
@@ -1825,6 +1878,7 @@
         assistToken: null,
         sequenceTargets: [],
         sequenceNextNum: 1,
+        swarmDiscs: [],
         cursor: {
           x: 190,
           y: 190,
@@ -1881,11 +1935,9 @@
       function refreshLivesStrip() {
         var count = Math.max(0, Math.min(MAX_LIVES, state.effects.extraLives));
         if ((!state.running && !state.countingDown) || count <= 0) {
-          livesStrip.className = "lives-strip";
           livesStrip.innerHTML = "";
           return;
         }
-        livesStrip.className = "lives-strip active";
         var html = "";
         for (var i = 0; i < count; i++) {
           html += '<span class="life-pip">♥</span>';
@@ -2086,6 +2138,9 @@
           for (var i = 0; i < state.sequenceTargets.length; i++) {
             state.sequenceTargets[i].radius = Math.min(60, state.sequenceTargets[i].radius + 8);
           }
+          for (var sw = 0; sw < state.swarmDiscs.length; sw++) {
+            state.swarmDiscs[sw].radius = Math.min(24, state.swarmDiscs[sw].radius + 3);
+          }
         } else if (assistId === "magnet") {
           state.effects.magnetTimer = 5.0;
         }
@@ -2157,6 +2212,44 @@
         }
         state.sequenceTargets = list;
         state.sequenceNextNum = 1;
+      }
+
+      function setupSwarmDiscs(speedVal) {
+        var count = 16;
+        var r = 16;
+        var spd = speedVal || 68;
+        var oddIndex = Math.floor(activeRng() * count);
+        var oddKindIndex = Math.floor(activeRng() * 4);
+        var discs = [];
+        var pad = r + 14;
+        for (var i = 0; i < count; i++) {
+          var px = pad + activeRng() * (LOGICAL_SIZE - pad * 2);
+          var py = pad + activeRng() * (LOGICAL_SIZE - pad * 2);
+          for (var attempt = 0; attempt < 18; attempt++) {
+            var tooClose = false;
+            for (var k = 0; k < discs.length; k++) {
+              if (Math.hypot(px - discs[k].x, py - discs[k].y) < r * 2.35) {
+                tooClose = true;
+                break;
+              }
+            }
+            if (!tooClose) break;
+            px = pad + activeRng() * (LOGICAL_SIZE - pad * 2);
+            py = pad + activeRng() * (LOGICAL_SIZE - pad * 2);
+          }
+          var ang = activeRng() * Math.PI * 2;
+          discs.push({
+            isOdd: i === oddIndex,
+            oddKind: oddKindIndex,
+            x: px,
+            y: py,
+            vx: Math.cos(ang) * spd,
+            vy: Math.sin(ang) * spd,
+            stuck: false,
+            radius: r
+          });
+        }
+        state.swarmDiscs = discs;
       }
 
       function setKnobPosition(dx, dy) {
@@ -2278,9 +2371,15 @@
 
         if (block.type === "sequenceTarget") {
           setupSequenceTargets(currentRadius, spd);
+          state.swarmDiscs = [];
+        } else if (block.type === "swarmOdd") {
+          setupSwarmDiscs(spd);
+          state.sequenceTargets = [];
+          state.sequenceNextNum = 1;
         } else {
           state.sequenceTargets = [];
           state.sequenceNextNum = 1;
+          state.swarmDiscs = [];
         }
 
         return {
@@ -2355,6 +2454,7 @@
         state.shotLockLeft = 0;
         state.assistToken = null;
         state.sequenceTargets = [];
+        state.swarmDiscs = [];
         state.inventory = [null, null, null, null];
         resetJoystick();
         refreshMatchHudStrip();
@@ -2550,6 +2650,49 @@
           return;
         }
 
+        if (state.target.block.type === "swarmOdd" && state.swarmDiscs.length > 0) {
+          var hitDisc = null;
+          for (var dwi = 0; dwi < state.swarmDiscs.length; dwi++) {
+            var dw = state.swarmDiscs[dwi];
+            if (Math.hypot(state.cursor.x - dw.x, state.cursor.y - dw.y) <= dw.radius) {
+              hitDisc = dw;
+              break;
+            }
+          }
+
+          if (!hitDisc) {
+            state.splatters.push({
+              x: state.cursor.x,
+              y: state.cursor.y,
+              radius: 11,
+              color: getTargetColor("swarmOdd")
+            });
+            tryConsumeSafetyNet("");
+            return;
+          }
+
+          if (!hitDisc.isOdd) {
+            state.splatters.push({
+              x: hitDisc.x,
+              y: hitDisc.y,
+              radius: 10,
+              color: getTargetColor("swarmOdd")
+            });
+            tryConsumeSafetyNet("Hit a decoy disc instead of the odd target");
+            return;
+          }
+
+          state.splatters.push({
+            x: hitDisc.x,
+            y: hitDisc.y,
+            radius: 12,
+            color: getTargetColor("swarmOdd")
+          });
+          var distOdd = Math.hypot(state.cursor.x - hitDisc.x, state.cursor.y - hitDisc.y);
+          advanceAfterCompletedTarget(hitDisc.x, hitDisc.y, hitDisc.radius, distOdd, false, false);
+          return;
+        }
+
         if (state.target.block.type === "sequenceTarget" && state.sequenceTargets.length > 0) {
           var hitSeq = null;
           for (var i = 0; i < state.sequenceTargets.length; i++) {
@@ -2730,7 +2873,63 @@
         var magnetActive = state.effects.magnetTimer > 0;
 
         if (!frozen && !anchored) {
-          if (t.block.type === "sequenceTarget" && state.sequenceTargets.length > 0) {
+          if (t.block.type === "swarmOdd" && state.swarmDiscs.length > 0) {
+            var baseSwarmSpd = t.block.speed || 68;
+            for (var swi = 0; swi < state.swarmDiscs.length; swi++) {
+              var swa = state.swarmDiscs[swi];
+              if (magnetActive) {
+                applyMagnetPullToBody(swa, dt, swa.isOdd ? 135 : 65);
+              } else {
+                swa.stuck = false;
+                for (var swj = swi + 1; swj < state.swarmDiscs.length; swj++) {
+                  var swb = state.swarmDiscs[swj];
+                  var rdx = swb.x - swa.x;
+                  var rdy = swb.y - swa.y;
+                  var rdist = Math.hypot(rdx, rdy);
+                  var minSep = swa.radius + swb.radius + 6;
+                  if (rdist > 0.001 && rdist < minSep) {
+                    var nx = rdx / rdist;
+                    var ny = rdy / rdist;
+                    var overlap = (minSep - rdist) * 0.5;
+                    swa.x -= nx * overlap;
+                    swa.y -= ny * overlap;
+                    swb.x += nx * overlap;
+                    swb.y += ny * overlap;
+                    var repulse = 190 * dt;
+                    swa.vx -= nx * repulse;
+                    swa.vy -= ny * repulse;
+                    swb.vx += nx * repulse;
+                    swb.vy += ny * repulse;
+                  }
+                }
+              }
+            }
+
+            for (var swk = 0; swk < state.swarmDiscs.length; swk++) {
+              var swc = state.swarmDiscs[swk];
+              if (magnetActive && swc.stuck) continue;
+              if (!magnetActive) {
+                swc.vx += (activeRng() - 0.5) * 140 * dt;
+                swc.vy += (activeRng() - 0.5) * 140 * dt;
+                var curV = Math.hypot(swc.vx, swc.vy) || 1;
+                var desiredV = baseSwarmSpd * (0.85 + 0.35 * Math.sin(swk * 1.7 + state.round));
+                swc.vx = (swc.vx / curV) * desiredV;
+                swc.vy = (swc.vy / curV) * desiredV;
+                swc.x += swc.vx * dt;
+                swc.y += swc.vy * dt;
+              }
+              var wpad = swc.radius + 10;
+              if (swc.x < wpad) { swc.x = wpad; swc.vx = Math.abs(swc.vx); }
+              if (swc.x > LOGICAL_SIZE - wpad) { swc.x = LOGICAL_SIZE - wpad; swc.vx = -Math.abs(swc.vx); }
+              if (swc.y < wpad) { swc.y = wpad; swc.vy = Math.abs(swc.vy); }
+              if (swc.y > LOGICAL_SIZE - wpad) { swc.y = LOGICAL_SIZE - wpad; swc.vy = -Math.abs(swc.vy); }
+              if (swc.isOdd) {
+                t.x = swc.x;
+                t.y = swc.y;
+                t.radius = swc.radius;
+              }
+            }
+          } else if (t.block.type === "sequenceTarget" && state.sequenceTargets.length > 0) {
             for (var si = 0; si < state.sequenceTargets.length; si++) {
               var st = state.sequenceTargets[si];
               if (st.hit) continue;
@@ -2885,6 +3084,13 @@
               sBody.y = c.y;
             }
           }
+          for (var swsi = 0; swsi < state.swarmDiscs.length; swsi++) {
+            var swBody = state.swarmDiscs[swsi];
+            if (swBody.stuck) {
+              swBody.x = c.x;
+              swBody.y = c.y;
+            }
+          }
         }
 
         updateHud();
@@ -2904,6 +3110,21 @@
         } else {
           ctxRef.arc(x, y, r, 0, Math.PI * 2);
         }
+      }
+
+      function traceRippledCircle(ctxRef, x, y, r) {
+        ctxRef.beginPath();
+        var lobes = 16;
+        var steps = 64;
+        for (var i = 0; i <= steps; i++) {
+          var a = (i / steps) * Math.PI * 2;
+          var rad = r + Math.sin(a * lobes) * 1.4;
+          var px = x + Math.cos(a) * rad;
+          var py = y + Math.sin(a) * rad;
+          if (i === 0) ctxRef.moveTo(px, py);
+          else ctxRef.lineTo(px, py);
+        }
+        ctxRef.closePath();
       }
 
       function drawObstacles(obsType) {
@@ -2977,23 +3198,53 @@
         var vis = TARGET_VISUALS[state.target.block.type] || TARGET_VISUALS.static;
         var tColor = getTargetColor(state.target.block.type);
 
-        if (state.target.block.type === "sequenceTarget" && state.sequenceTargets.length > 0) {
+        if (state.target.block.type === "swarmOdd" && state.swarmDiscs.length > 0) {
+          for (var dwi = 0; dwi < state.swarmDiscs.length; dwi++) {
+            var dw = state.swarmDiscs[dwi];
+            var isOdd = dw.isOdd;
+            var discFill = tColor;
+            if (isOdd && dw.oddKind === 3) {
+              discFill = save.useRetro ? "#4ade80" : "#c084fc";
+            }
+            ctx.save();
+            ctx.fillStyle = discFill;
+            ctx.globalAlpha = 0.88;
+            if (isOdd && dw.oddKind === 2) {
+              traceRippledCircle(ctx, dw.x, dw.y, dw.radius);
+            } else {
+              ctx.beginPath();
+              ctx.arc(dw.x, dw.y, dw.radius, 0, Math.PI * 2);
+            }
+            ctx.fill();
+
+            ctx.strokeStyle = (isOdd && dw.oddKind === 1) ? "#fbbf24" : "rgba(255, 255, 255, 0.78)";
+            ctx.lineWidth = (isOdd && dw.oddKind === 1) ? 2.4 : 1.7;
+            ctx.stroke();
+
+            var innerR = (isOdd && dw.oddKind === 0) ? dw.radius * 0.56 : dw.radius * 0.28;
+            ctx.strokeStyle = (isOdd && dw.oddKind === 1) ? "#fde047" : "rgba(255, 255, 255, 0.72)";
+            ctx.lineWidth = 1.6;
+            ctx.beginPath();
+            ctx.arc(dw.x, dw.y, innerR, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+          }
+        } else if (state.target.block.type === "sequenceTarget" && state.sequenceTargets.length > 0) {
           for (var si = 0; si < state.sequenceTargets.length; si++) {
             var st = state.sequenceTargets[si];
             if (st.hit) continue;
-            var isNext = st.num === state.sequenceNextNum;
             ctx.save();
             ctx.shadowColor = tColor;
-            ctx.shadowBlur = isNext ? 14 : 6;
+            ctx.shadowBlur = 10;
             ctx.fillStyle = tColor;
-            ctx.globalAlpha = isNext ? 0.92 : 0.65;
+            ctx.globalAlpha = 0.88;
             ctx.beginPath();
             ctx.arc(st.x, st.y, st.radius, 0, Math.PI * 2);
             ctx.fill();
 
             ctx.shadowBlur = 0;
-            ctx.strokeStyle = isNext ? "#ffffff" : "rgba(255,255,255,0.55)";
-            ctx.lineWidth = isNext ? 2.8 : 1.8;
+            ctx.strokeStyle = "rgba(255,255,255,0.85)";
+            ctx.lineWidth = 2;
             ctx.stroke();
 
             ctx.fillStyle = "#090e1c";
@@ -3238,6 +3489,9 @@
       }
 
       function startGame(selectedMode) {
+        if (currentView === "home" && homePlayerNameInput) {
+          applyPlayerNameInput(homePlayerNameInput.value);
+        }
         ensureAudio();
         clearCountdown();
         resetJoystick();
@@ -3318,16 +3572,17 @@
         requestAnimationFrame(loop);
       }
 
-      document.getElementById("editNameBtn").addEventListener("click", function () {
-        playButtonClickSound();
-        var nextName = window.prompt("Enter player name (max. 16 characters):", save.playerName);
-        if (nextName !== null) {
-          var trimmed = nextName.trim().slice(0, 16);
-          if (trimmed.length > 0) {
-            save.playerName = trimmed;
-            persistSave();
-            renderTournamentLeaderboard();
-          }
+      homePlayerNameInput.addEventListener("change", function () {
+        applyPlayerNameInput(homePlayerNameInput.value);
+      });
+      homePlayerNameInput.addEventListener("blur", function () {
+        applyPlayerNameInput(homePlayerNameInput.value);
+      });
+      homePlayerNameInput.addEventListener("keydown", function (e) {
+        e.stopPropagation();
+        if (e.key === "Enter") {
+          applyPlayerNameInput(homePlayerNameInput.value);
+          homePlayerNameInput.blur();
         }
       });
 
@@ -3473,6 +3728,7 @@
       });
 
       window.addEventListener("keydown", function (e) {
+        if (document.activeElement === homePlayerNameInput) return;
         if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") state.keys.up = true;
         if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") state.keys.down = true;
         if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") state.keys.left = true;
