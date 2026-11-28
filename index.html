@@ -1214,8 +1214,8 @@
           id: "sequenceTarget",
           shortLabel: "8. Seq 1-2-3",
           block: { type: "sequenceTarget", label: "Seq 1-2-3", speed: 24 },
-          does: "3 targets (1, 2, 3) spawn together; shoot 1, then 2, then 3 with 3x time to hit all targets.",
-          spotBy: "Amber targets numbered 1, 2, and 3."
+          does: "3 targets spawn in ascending order (1-2-3, A-B-C, α-β-γ, I-II-III, ascending +, ascending -, sizes, polygons, or dots) at 1/3 time drain.",
+          spotBy: "Ascending sequence targets (1..3, A..C, α..γ, I..III, sums, diffs, sizes, shapes, dots)."
         },
         {
           id: "swarmOdd",
@@ -1876,6 +1876,7 @@
         assistSpawnCount: 0,
         nextAssistRound: 3,
         deferAssistUntilSequenceDone: false,
+        preSwarmRadius: null,
         score: 0,
         round: 1,
         stagesCleared: 0,
@@ -2158,6 +2159,9 @@
           state.effects.coreMagnetTimer = 3.5;
         } else if (assistId === "inflate") {
           state.target.radius = Math.min(84, state.target.radius + 12);
+          if (state.preSwarmRadius !== null) {
+            state.preSwarmRadius = Math.min(84, state.preSwarmRadius + 12);
+          }
           for (var i = 0; i < state.sequenceTargets.length; i++) {
             state.sequenceTargets[i].radius = Math.min(60, state.sequenceTargets[i].radius + 8);
           }
@@ -2206,8 +2210,67 @@
         state.nextAssistRound = currentRound + step;
       }
 
-      function setupSequenceTargets(baseRadius, speedVal) {
+      var SEQ_SUBTYPES = [1, 2, 3, 5, 6, 8, 13, 14, 15];
+
+      function buildSequenceStepItems(subType, baseRadius) {
         var r = Math.max(18, Math.min(34, baseRadius * 0.42));
+        var items = [];
+        var i;
+
+        if (subType === 1) {
+          var labels1 = ["A", "B", "C"];
+          for (i = 0; i < 3; i++) items.push({ kind: "text", label: labels1[i], radius: r });
+        } else if (subType === 2) {
+          var labels2 = ["α", "β", "γ"];
+          for (i = 0; i < 3; i++) items.push({ kind: "text", label: labels2[i], radius: r });
+        } else if (subType === 3) {
+          var labels3 = ["I", "II", "III"];
+          for (i = 0; i < 3; i++) items.push({ kind: "text", label: labels3[i], radius: r });
+        } else if (subType === 5) {
+          var pool5 = [
+            [{ a: 1, b: 1 }, { a: 2, b: 2 }, { a: 3, b: 3 }],
+            [{ a: 1, b: 2 }, { a: 2, b: 4 }, { a: 4, b: 5 }],
+            [{ a: 1, b: 1 }, { a: 2, b: 3 }, { a: 3, b: 4 }]
+          ];
+          var pick5 = pool5[Math.floor(activeRng() * pool5.length)];
+          for (i = 0; i < 3; i++) {
+            items.push({ kind: "text", label: pick5[i].a + "+" + pick5[i].b, radius: r });
+          }
+        } else if (subType === 6) {
+          var pool6 = [
+            [{ a: 5, b: 3 }, { a: 7, b: 2 }, { a: 9, b: 1 }],
+            [{ a: 4, b: 2 }, { a: 8, b: 3 }, { a: 9, b: 1 }],
+            [{ a: 6, b: 4 }, { a: 7, b: 2 }, { a: 8, b: 1 }]
+          ];
+          var pick6 = pool6[Math.floor(activeRng() * pool6.length)];
+          for (i = 0; i < 3; i++) {
+            items.push({ kind: "text", label: pick6[i].a + "-" + pick6[i].b, radius: r });
+          }
+        } else if (subType === 8) {
+          var oddPool = [
+            ["1", "3", "5"],
+            ["3", "5", "7"],
+            ["5", "7", "9"]
+          ];
+          var pick8 = oddPool[Math.floor(activeRng() * oddPool.length)];
+          for (i = 0; i < 3; i++) items.push({ kind: "text", label: pick8[i], radius: r });
+        } else if (subType === 13) {
+          var sizes13 = [15, 22, 30];
+          for (i = 0; i < 3; i++) items.push({ kind: "sizeOnly", label: "", radius: sizes13[i] });
+        } else if (subType === 14) {
+          var polySides = [3, 4, 6];
+          for (i = 0; i < 3; i++) items.push({ kind: "polygon", sides: polySides[i], label: "", radius: r });
+        } else if (subType === 15) {
+          for (i = 0; i < 3; i++) items.push({ kind: "dots", dotsCount: i + 1, label: "", radius: r });
+        } else {
+          for (i = 0; i < 3; i++) items.push({ kind: "text", label: String(i + 1), radius: r });
+        }
+        return items;
+      }
+
+      function setupSequenceTargets(baseRadius, speedVal) {
+        var subType = SEQ_SUBTYPES[Math.floor(activeRng() * SEQ_SUBTYPES.length)];
+        var stepItems = buildSequenceStepItems(subType, baseRadius);
         var spots = [
           { x: 95,  y: 120 },
           { x: 285, y: 145 },
@@ -2216,20 +2279,26 @@
         var list = [];
         for (var n = 1; n <= 3; n++) {
           var s = spots[n - 1];
+          var item = stepItems[n - 1];
+          var rad = item.radius;
           var jx = (activeRng() - 0.5) * 32;
           var jy = (activeRng() - 0.5) * 32;
-          var px = Math.max(r + 16, Math.min(LOGICAL_SIZE - r - 16, s.x + jx));
-          var py = Math.max(r + 16, Math.min(LOGICAL_SIZE - r - 16, s.y + jy));
+          var px = Math.max(rad + 16, Math.min(LOGICAL_SIZE - rad - 16, s.x + jx));
+          var py = Math.max(rad + 16, Math.min(LOGICAL_SIZE - rad - 16, s.y + jy));
           var ang = activeRng() * Math.PI * 2;
           var spd = speedVal || 24;
           list.push({
             num: n,
+            kind: item.kind,
+            label: item.label,
+            sides: item.sides || 0,
+            dotsCount: item.dotsCount || 0,
             x: px,
             y: py,
             vx: Math.cos(ang) * spd,
             vy: Math.sin(ang) * spd,
             stuck: false,
-            radius: r,
+            radius: rad,
             hit: false
           });
         }
@@ -2387,13 +2456,28 @@
       }
 
       function pickTargetForRound(round, currentRadius) {
+        var prevType = (state.target && state.target.block) ? state.target.block.type : null;
+        var radiusForNext = currentRadius;
+
+        if (prevType === "swarmOdd" && state.preSwarmRadius !== null) {
+          radiusForNext = state.preSwarmRadius;
+          state.preSwarmRadius = null;
+        }
+
         var block = getBlockForRound(round);
-        var pos = randomTargetPos(currentRadius);
+
+        if (block.type === "swarmOdd" && prevType !== "swarmOdd") {
+          state.preSwarmRadius = radiusForNext;
+        } else if (block.type !== "swarmOdd") {
+          state.preSwarmRadius = null;
+        }
+
+        var pos = randomTargetPos(radiusForNext);
         var spd = block.speed || 48;
         var ang = activeRng() * Math.PI * 2;
 
         if (block.type === "sequenceTarget") {
-          setupSequenceTargets(currentRadius, spd);
+          setupSequenceTargets(radiusForNext, spd);
           state.swarmDiscs = [];
         } else if (block.type === "swarmOdd") {
           setupSwarmDiscs(spd);
@@ -2417,7 +2501,7 @@
           jumpTimer: block.jumpInterval || 1.85,
           nextX: null,
           nextY: null,
-          radius: currentRadius,
+          radius: radiusForNext,
           block: block,
           dir: activeRng() < 0.5 ? -1 : 1
         };
@@ -2478,6 +2562,7 @@
         state.assistToken = null;
         state.sequenceTargets = [];
         state.swarmDiscs = [];
+        state.preSwarmRadius = null;
         state.inventory = [null, null, null, null];
         resetJoystick();
         refreshMatchHudStrip();
@@ -2615,7 +2700,7 @@
         state.target = pickTargetForRound(state.round, nextRadius);
 
         if (state.target.block.type === "sequenceTarget") {
-          state.timeLeft = MAX_TIME_BAR;
+          addTimeToBar(roundGain);
           state.deferAssistUntilSequenceDone = true;
         } else if (state.target.block.type === "swarmOdd") {
           addTimeToBar(roundGain * 1.45);
@@ -2740,7 +2825,7 @@
           }
 
           if (hitSeq.num !== state.sequenceNextNum) {
-            tryConsumeSafetyNet("Wrong sequence order (expected " + state.sequenceNextNum + ")");
+            tryConsumeSafetyNet("Wrong sequence order (expected step " + state.sequenceNextNum + ")");
             return;
           }
 
@@ -3121,6 +3206,18 @@
         updateHud();
       }
 
+      function tracePolygon(ctxRef, x, y, r, sides) {
+        ctxRef.beginPath();
+        for (var i = 0; i < sides; i++) {
+          var a = -Math.PI / 2 + (i * Math.PI * 2) / sides;
+          var px = x + Math.cos(a) * r;
+          var py = y + Math.sin(a) * r;
+          if (i === 0) ctxRef.moveTo(px, py);
+          else ctxRef.lineTo(px, py);
+        }
+        ctxRef.closePath();
+      }
+
       function traceTargetShape(ctxRef, x, y, r, shape) {
         ctxRef.beginPath();
         if (shape === "octagon") {
@@ -3263,8 +3360,12 @@
             ctx.shadowBlur = 10;
             ctx.fillStyle = tColor;
             ctx.globalAlpha = 0.88;
-            ctx.beginPath();
-            ctx.arc(st.x, st.y, st.radius, 0, Math.PI * 2);
+            if (st.kind === "polygon" && st.sides >= 3) {
+              tracePolygon(ctx, st.x, st.y, st.radius, st.sides);
+            } else {
+              ctx.beginPath();
+              ctx.arc(st.x, st.y, st.radius, 0, Math.PI * 2);
+            }
             ctx.fill();
 
             ctx.shadowBlur = 0;
@@ -3272,11 +3373,28 @@
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            ctx.fillStyle = "#090e1c";
-            ctx.font = "bold 14px Arial, sans-serif";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(String(st.num), st.x, st.y);
+            if (st.kind === "dots" && st.dotsCount > 0) {
+              ctx.fillStyle = "#090e1c";
+              var dotOffsets = [];
+              if (st.dotsCount === 1) {
+                dotOffsets = [{ dx: 0, dy: 0 }];
+              } else if (st.dotsCount === 2) {
+                dotOffsets = [{ dx: -6, dy: 0 }, { dx: 6, dy: 0 }];
+              } else {
+                dotOffsets = [{ dx: 0, dy: -5.5 }, { dx: -6, dy: 5 }, { dx: 6, dy: 5 }];
+              }
+              for (var di = 0; di < dotOffsets.length; di++) {
+                ctx.beginPath();
+                ctx.arc(st.x + dotOffsets[di].dx, st.y + dotOffsets[di].dy, 2.7, 0, Math.PI * 2);
+                ctx.fill();
+              }
+            } else if (st.kind === "text") {
+              ctx.fillStyle = "#090e1c";
+              ctx.font = "bold 12px Arial, sans-serif";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.fillText(st.label, st.x, st.y);
+            }
             ctx.restore();
           }
         } else {
@@ -3535,6 +3653,7 @@
 
         state.assistSpawnCount = 0;
         state.deferAssistUntilSequenceDone = false;
+        state.preSwarmRadius = null;
         state.running = true;
         state.score = 0;
         state.round = 1;
@@ -3574,7 +3693,6 @@
         state.target = pickTargetForRound(1, 75);
 
         if (state.target.block.type === "sequenceTarget") {
-          state.timeLeft = MAX_TIME_BAR;
           state.deferAssistUntilSequenceDone = true;
         } else if (state.target.block.type === "swarmOdd") {
           state.timeLeft = Math.min(MAX_TIME_BAR, state.timeLeft + 1.8);
