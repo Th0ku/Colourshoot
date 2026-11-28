@@ -1147,6 +1147,26 @@
       }
 
       var activeRng = Math.random;
+      var deterministicSpawnRng = null;
+
+      function getSpawnRng() {
+        if ((state.mode === "tournament" || state.mode === "levelmode") && deterministicSpawnRng) {
+          return deterministicSpawnRng;
+        }
+        return activeRng;
+      }
+
+      function isStandardTargetType(type) {
+        return (
+          type === "static" ||
+          type === "moveX" ||
+          type === "ringTarget" ||
+          type === "figureEight" ||
+          type === "telegraphJump" ||
+          type === "elasticBounce" ||
+          type === "shieldShot"
+        );
+      }
 
       var TARGET_VISUALS = {
         static:        { shape: "circle",  color: "#c084fc", retroColor: "#22c55e", pattern: "ring" },
@@ -1876,7 +1896,7 @@
         assistSpawnCount: 0,
         nextAssistRound: 3,
         deferAssistUntilSequenceDone: false,
-        preSwarmRadius: null,
+        lastStandardRadius: 75,
         score: 0,
         round: 1,
         stagesCleared: 0,
@@ -2038,17 +2058,18 @@
       }
 
       function spawnGoldGlitterBurst() {
+        var rng = getSpawnRng();
         state.goldBarTimer = 1.25;
         playMaxBarSound();
         for (var i = 0; i < 42; i++) {
           state.glitters.push({
-            x: activeRng() * LOGICAL_SIZE,
-            y: -10 - activeRng() * 65,
-            vy: 65 + activeRng() * 85,
-            vx: (activeRng() - 0.5) * 32,
-            swayPhase: activeRng() * Math.PI * 2,
-            size: 2 + activeRng() * 2.5,
-            life: 1.8 + activeRng() * 0.9,
+            x: rng() * LOGICAL_SIZE,
+            y: -10 - rng() * 65,
+            vy: 65 + rng() * 85,
+            vx: (rng() - 0.5) * 32,
+            swayPhase: rng() * Math.PI * 2,
+            size: 2 + rng() * 2.5,
+            life: 1.8 + rng() * 0.9,
             maxLife: 2.7
           });
         }
@@ -2159,8 +2180,8 @@
           state.effects.coreMagnetTimer = 3.5;
         } else if (assistId === "inflate") {
           state.target.radius = Math.min(84, state.target.radius + 12);
-          if (state.preSwarmRadius !== null) {
-            state.preSwarmRadius = Math.min(84, state.preSwarmRadius + 12);
+          if (isStandardTargetType(state.target.block.type)) {
+            state.lastStandardRadius = state.target.radius;
           }
           for (var i = 0; i < state.sequenceTargets.length; i++) {
             state.sequenceTargets[i].radius = Math.min(60, state.sequenceTargets[i].radius + 8);
@@ -2187,10 +2208,11 @@
       }
 
       function spawnAssistToken(specificId) {
+        var rng = getSpawnRng();
         var chosenId = specificId || pickDeterministicAssistId();
         var margin = 56;
-        var x = margin + activeRng() * (LOGICAL_SIZE - margin * 2);
-        var y = margin + activeRng() * (LOGICAL_SIZE - margin * 2);
+        var x = margin + rng() * (LOGICAL_SIZE - margin * 2);
+        var y = margin + rng() * (LOGICAL_SIZE - margin * 2);
         if (Math.hypot(x - state.target.x, y - state.target.y) < 58) {
           x = x < LOGICAL_SIZE * 0.5 ? LOGICAL_SIZE - margin : margin;
         }
@@ -2206,13 +2228,15 @@
       }
 
       function scheduleNextAssistRound(currentRound) {
-        var step = activeRng() < 0.5 ? 2 : 3;
+        var rng = getSpawnRng();
+        var step = rng() < 0.5 ? 2 : 3;
         state.nextAssistRound = currentRound + step;
       }
 
       var SEQ_SUBTYPES = [1, 2, 3, 5, 6, 8, 13, 14, 15];
 
       function buildSequenceStepItems(subType, baseRadius) {
+        var rng = getSpawnRng();
         var r = Math.max(18, Math.min(34, baseRadius * 0.42));
         var items = [];
         var i;
@@ -2232,7 +2256,7 @@
             [{ a: 1, b: 2 }, { a: 2, b: 4 }, { a: 4, b: 5 }],
             [{ a: 1, b: 1 }, { a: 2, b: 3 }, { a: 3, b: 4 }]
           ];
-          var pick5 = pool5[Math.floor(activeRng() * pool5.length)];
+          var pick5 = pool5[Math.floor(rng() * pool5.length)];
           for (i = 0; i < 3; i++) {
             items.push({ kind: "text", label: pick5[i].a + "+" + pick5[i].b, radius: r });
           }
@@ -2242,7 +2266,7 @@
             [{ a: 4, b: 2 }, { a: 8, b: 3 }, { a: 9, b: 1 }],
             [{ a: 6, b: 4 }, { a: 7, b: 2 }, { a: 8, b: 1 }]
           ];
-          var pick6 = pool6[Math.floor(activeRng() * pool6.length)];
+          var pick6 = pool6[Math.floor(rng() * pool6.length)];
           for (i = 0; i < 3; i++) {
             items.push({ kind: "text", label: pick6[i].a + "-" + pick6[i].b, radius: r });
           }
@@ -2252,7 +2276,7 @@
             ["3", "5", "7"],
             ["5", "7", "9"]
           ];
-          var pick8 = oddPool[Math.floor(activeRng() * oddPool.length)];
+          var pick8 = oddPool[Math.floor(rng() * oddPool.length)];
           for (i = 0; i < 3; i++) items.push({ kind: "text", label: pick8[i], radius: r });
         } else if (subType === 13) {
           var sizes13 = [15, 22, 30];
@@ -2269,7 +2293,8 @@
       }
 
       function setupSequenceTargets(baseRadius, speedVal) {
-        var subType = SEQ_SUBTYPES[Math.floor(activeRng() * SEQ_SUBTYPES.length)];
+        var rng = getSpawnRng();
+        var subType = SEQ_SUBTYPES[Math.floor(rng() * SEQ_SUBTYPES.length)];
         var stepItems = buildSequenceStepItems(subType, baseRadius);
         var spots = [
           { x: 95,  y: 120 },
@@ -2281,11 +2306,11 @@
           var s = spots[n - 1];
           var item = stepItems[n - 1];
           var rad = item.radius;
-          var jx = (activeRng() - 0.5) * 32;
-          var jy = (activeRng() - 0.5) * 32;
+          var jx = (rng() - 0.5) * 32;
+          var jy = (rng() - 0.5) * 32;
           var px = Math.max(rad + 16, Math.min(LOGICAL_SIZE - rad - 16, s.x + jx));
           var py = Math.max(rad + 16, Math.min(LOGICAL_SIZE - rad - 16, s.y + jy));
-          var ang = activeRng() * Math.PI * 2;
+          var ang = rng() * Math.PI * 2;
           var spd = speedVal || 24;
           list.push({
             num: n,
@@ -2307,16 +2332,17 @@
       }
 
       function setupSwarmDiscs(speedVal) {
+        var rng = getSpawnRng();
         var count = 15;
         var r = 21;
         var spd = speedVal || 62;
-        var oddIndex = Math.floor(activeRng() * count);
-        var oddKindIndex = Math.floor(activeRng() * 4);
+        var oddIndex = Math.floor(rng() * count);
+        var oddKindIndex = Math.floor(rng() * 4);
         var discs = [];
         var pad = r + 14;
         for (var i = 0; i < count; i++) {
-          var px = pad + activeRng() * (LOGICAL_SIZE - pad * 2);
-          var py = pad + activeRng() * (LOGICAL_SIZE - pad * 2);
+          var px = pad + rng() * (LOGICAL_SIZE - pad * 2);
+          var py = pad + rng() * (LOGICAL_SIZE - pad * 2);
           for (var attempt = 0; attempt < 18; attempt++) {
             var tooClose = false;
             for (var k = 0; k < discs.length; k++) {
@@ -2326,10 +2352,10 @@
               }
             }
             if (!tooClose) break;
-            px = pad + activeRng() * (LOGICAL_SIZE - pad * 2);
-            py = pad + activeRng() * (LOGICAL_SIZE - pad * 2);
+            px = pad + rng() * (LOGICAL_SIZE - pad * 2);
+            py = pad + rng() * (LOGICAL_SIZE - pad * 2);
           }
-          var ang = activeRng() * Math.PI * 2;
+          var ang = rng() * Math.PI * 2;
           discs.push({
             isOdd: i === oddIndex,
             oddKind: oddKindIndex,
@@ -2448,33 +2474,30 @@
       }
 
       function randomTargetPos(radius) {
+        var rng = getSpawnRng();
         var margin = Math.max(60, radius + 32);
         return {
-          x: margin + activeRng() * Math.max(20, LOGICAL_SIZE - margin * 2),
-          y: margin + activeRng() * Math.max(20, LOGICAL_SIZE - margin * 2)
+          x: margin + rng() * Math.max(20, LOGICAL_SIZE - margin * 2),
+          y: margin + rng() * Math.max(20, LOGICAL_SIZE - margin * 2)
         };
       }
 
       function pickTargetForRound(round, currentRadius) {
+        var rng = getSpawnRng();
         var prevType = (state.target && state.target.block) ? state.target.block.type : null;
-        var radiusForNext = currentRadius;
-
-        if (prevType === "swarmOdd" && state.preSwarmRadius !== null) {
-          radiusForNext = state.preSwarmRadius;
-          state.preSwarmRadius = null;
-        }
-
         var block = getBlockForRound(round);
 
-        if (block.type === "swarmOdd" && prevType !== "swarmOdd") {
-          state.preSwarmRadius = radiusForNext;
-        } else if (block.type !== "swarmOdd") {
-          state.preSwarmRadius = null;
+        var radiusForNext = currentRadius;
+        if (
+          isStandardTargetType(block.type) &&
+          (prevType === "swarmOdd" || prevType === "sequenceTarget")
+        ) {
+          radiusForNext = state.lastStandardRadius;
         }
 
         var pos = randomTargetPos(radiusForNext);
         var spd = block.speed || 48;
-        var ang = activeRng() * Math.PI * 2;
+        var ang = rng() * Math.PI * 2;
 
         if (block.type === "sequenceTarget") {
           setupSequenceTargets(radiusForNext, spd);
@@ -2503,7 +2526,7 @@
           nextY: null,
           radius: radiusForNext,
           block: block,
-          dir: activeRng() < 0.5 ? -1 : 1
+          dir: rng() < 0.5 ? -1 : 1
         };
       }
 
@@ -2562,7 +2585,7 @@
         state.assistToken = null;
         state.sequenceTargets = [];
         state.swarmDiscs = [];
-        state.preSwarmRadius = null;
+        state.lastStandardRadius = 75;
         state.inventory = [null, null, null, null];
         resetJoystick();
         refreshMatchHudStrip();
@@ -2604,6 +2627,9 @@
           state.effects.extraLives -= 1;
           state.timeLeft = MAX_TIME_BAR * 0.75;
           state.target.radius = Math.max(32, state.target.radius + 10);
+          if (isStandardTargetType(state.target.block.type)) {
+            state.lastStandardRadius = state.target.radius;
+          }
           addPopup(state.cursor.x, state.cursor.y - 16, "LIFE USED (" + state.effects.extraLives + " LEFT)", "#f472b6");
           refreshLivesStrip();
           updateHud();
@@ -2663,7 +2689,10 @@
           state.runCoins += isBullseye ? 5 : 2;
         }
 
-        var nextRadius = state.target.radius;
+        var completedType = state.target.block.type;
+        var nextRadius = isStandardTargetType(completedType)
+          ? state.target.radius
+          : state.lastStandardRadius;
 
         if (state.mode === "tournament") {
           var newStage = computeStageIndex(state.score);
@@ -2675,15 +2704,18 @@
           }
         }
 
-        if (isBullseye) {
-          nextRadius = Math.min(82, nextRadius + 4);
-        } else if (isShielded) {
-          addPopup(hitX, hitY + 14, "SHIELD SAVED", "#38bdf8");
-        } else {
-          var shrinkFactor = isRing
-            ? CLASSIC_TOURNAMENT.ringShrinkFactor
-            : CLASSIC_TOURNAMENT.shrinkFactor;
-          nextRadius = nextRadius - hitDist * shrinkFactor;
+        if (isStandardTargetType(completedType)) {
+          if (isBullseye) {
+            nextRadius = Math.min(82, nextRadius + 4);
+          } else if (isShielded) {
+            addPopup(hitX, hitY + 14, "SHIELD SAVED", "#38bdf8");
+          } else {
+            var shrinkFactor = isRing
+              ? CLASSIC_TOURNAMENT.ringShrinkFactor
+              : CLASSIC_TOURNAMENT.shrinkFactor;
+            nextRadius = nextRadius - hitDist * shrinkFactor;
+          }
+          state.lastStandardRadius = nextRadius;
         }
 
         var minAllowedRadius = state.mode === "tournament" ? CLASSIC_TOURNAMENT.minRadius : 14;
@@ -3019,8 +3051,6 @@
               var swc = state.swarmDiscs[swk];
               if (magnetActive && swc.stuck) continue;
               if (!magnetActive) {
-                swc.vx += (activeRng() - 0.5) * 140 * dt;
-                swc.vy += (activeRng() - 0.5) * 140 * dt;
                 var curV = Math.hypot(swc.vx, swc.vy) || 1;
                 var desiredV = baseSwarmSpd * (0.85 + 0.35 * Math.sin(swk * 1.7 + state.round));
                 swc.vx = (swc.vx / curV) * desiredV;
@@ -3645,15 +3675,18 @@
 
         if (state.mode === "tournament") {
           activeRng = createSeededRng(CLASSIC_TOURNAMENT.seed);
+          deterministicSpawnRng = createSeededRng(CLASSIC_TOURNAMENT.seed);
         } else if (state.mode === "levelmode" && lvModeObj) {
           activeRng = createSeededRng(lvModeObj.seed);
+          deterministicSpawnRng = createSeededRng(lvModeObj.seed);
         } else {
           activeRng = Math.random;
+          deterministicSpawnRng = null;
         }
 
         state.assistSpawnCount = 0;
         state.deferAssistUntilSequenceDone = false;
-        state.preSwarmRadius = null;
+        state.lastStandardRadius = 75;
         state.running = true;
         state.score = 0;
         state.round = 1;
@@ -3691,6 +3724,9 @@
         state.cursor.vx = 0;
         state.cursor.vy = 0;
         state.target = pickTargetForRound(1, 75);
+        if (isStandardTargetType(state.target.block.type)) {
+          state.lastStandardRadius = state.target.radius;
+        }
 
         if (state.target.block.type === "sequenceTarget") {
           state.deferAssistUntilSequenceDone = true;
