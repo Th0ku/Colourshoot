@@ -32,6 +32,7 @@
     }
 
     .gb-shell {
+      position: relative;
       width: 100%;
       max-width: 440px;
       background: linear-gradient(165deg, #212b48 0%, #11182c 100%);
@@ -216,6 +217,7 @@
     }
 
     .subview {
+      position: relative;
       width: 100%;
       height: 100%;
       display: none;
@@ -281,51 +283,74 @@
       touch-action: manipulation;
     }
 
+    .app-gear-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 40;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(226, 232, 240, 0.55);
+      background: linear-gradient(145deg, #94a3b8 0%, #e2e8f0 100%);
+      color: #0f172a;
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+      touch-action: manipulation;
+    }
+
     .hub-menu {
       width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+      flex: 1;
     }
 
     .hub-btn {
       width: 100%;
+      height: 100%;
+      min-height: 76px;
       border: 1.5px solid rgba(255, 255, 255, 0.25);
-      border-radius: 13px;
-      padding: 7px 11px;
-      font-size: 12px;
+      border-radius: 14px;
+      padding: 9px 10px;
+      font-size: 12.5px;
       font-weight: 800;
       cursor: pointer;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
+      text-align: center;
+      gap: 4px;
       box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
       touch-action: manipulation;
     }
 
     .hub-btn.train {
-      background: linear-gradient(90deg, #34d399 0%, #22d3ee 100%);
+      background: linear-gradient(135deg, #34d399 0%, #22d3ee 100%);
       color: #06281e;
     }
 
     .hub-btn.levelmode {
-      background: linear-gradient(90deg, #c084fc 0%, #f472b6 100%);
+      background: linear-gradient(135deg, #c084fc 0%, #f472b6 100%);
       color: #2e0838;
     }
 
     .hub-btn.tourney {
-      background: linear-gradient(90deg, #fbbf24 0%, #fb7185 100%);
+      background: linear-gradient(135deg, #fbbf24 0%, #fb7185 100%);
       color: #3b0d14;
     }
 
     .hub-btn.skins {
-      background: linear-gradient(90deg, #38bdf8 0%, #818cf8 100%);
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
       color: #0c1942;
-    }
-
-    .hub-btn.settings {
-      background: linear-gradient(90deg, #94a3b8 0%, #e2e8f0 100%);
-      color: #0f172a;
     }
 
     .hub-sub {
@@ -803,6 +828,8 @@
   </style>
 </head>
 <body>
+  <button id="appSettingsGearBtn" class="app-gear-btn" type="button" title="Settings" aria-label="Settings">⚙</button>
+
   <div class="gb-shell">
     <div class="top-bar">
       <div id="matchHudStrip" class="match-hud-strip">
@@ -851,10 +878,6 @@
             <button id="navSkinsBtn" class="hub-btn skins" type="button">
               <span>Skins & Sounds</span>
               <span class="hub-sub">Themes, Aids & Sound Packs</span>
-            </button>
-            <button id="navSettingsBtn" class="hub-btn settings" type="button">
-              <span>Settings</span>
-              <span class="hub-sub">Audio & Button Clicks</span>
             </button>
           </div>
         </div>
@@ -1191,14 +1214,14 @@
           id: "sequenceTarget",
           shortLabel: "8. Seq 1-2-3",
           block: { type: "sequenceTarget", label: "Seq 1-2-3", speed: 24 },
-          does: "3 targets (1, 2, 3) spawn together; shoot 1, then 2, then 3 with 2x time and 3x slower time drain.",
+          does: "3 targets (1, 2, 3) spawn together; shoot 1, then 2, then 3 with 3x time to hit all targets.",
           spotBy: "Amber targets numbered 1, 2, and 3."
         },
         {
           id: "swarmOdd",
           shortLabel: "9. Odd Swarm",
-          block: { type: "swarmOdd", label: "Odd Swarm", speed: 68 },
-          does: "16 small discs repel each other and fly around wildly; only ONE target differs subtly (larger inner ring, gold ring, slightly rippled edge, or slightly shifted hue).",
+          block: { type: "swarmOdd", label: "Odd Swarm", speed: 62 },
+          does: "Larger repelling discs fly around with extra time; only ONE target differs subtly (larger inner ring, gold ring, slightly rippled edge, or slightly shifted hue).",
           spotBy: "The single disc with a subtle difference among the repelling discs."
         }
       ];
@@ -1311,7 +1334,7 @@
         { type: "elasticBounce", label: "Elastic",  speed: 55 },
         { type: "shieldShot",    label: "Shield",   speed: 36 },
         { type: "sequenceTarget",label: "Seq 1-2-3",speed: 24 },
-        { type: "swarmOdd",      label: "Odd Swarm",speed: 68 }
+        { type: "swarmOdd",      label: "Odd Swarm",speed: 62 }
       ];
 
       var LEVEL_MODES = [];
@@ -1721,7 +1744,7 @@
           { untilRound: 12, type: "figureEight",   label: "Fig-8",    speed: 1.08 },
           { untilRound: 15, type: "telegraphJump", label: "JumpPlan", telegraphTime: 0.7, jumpInterval: 1.8 },
           { untilRound: 18, type: "sequenceTarget",label: "Seq 1-2-3",speed: 24 },
-          { untilRound: 21, type: "swarmOdd",      label: "Odd Swarm",speed: 68 },
+          { untilRound: 21, type: "swarmOdd",      label: "Odd Swarm",speed: 62 },
           { untilRound: 999,type: "elasticBounce", label: "Elastic",  speed: 55 }
         ]
       };
@@ -2139,7 +2162,7 @@
             state.sequenceTargets[i].radius = Math.min(60, state.sequenceTargets[i].radius + 8);
           }
           for (var sw = 0; sw < state.swarmDiscs.length; sw++) {
-            state.swarmDiscs[sw].radius = Math.min(24, state.swarmDiscs[sw].radius + 3);
+            state.swarmDiscs[sw].radius = Math.min(28, state.swarmDiscs[sw].radius + 3);
           }
         } else if (assistId === "magnet") {
           state.effects.magnetTimer = 5.0;
@@ -2215,9 +2238,9 @@
       }
 
       function setupSwarmDiscs(speedVal) {
-        var count = 16;
-        var r = 16;
-        var spd = speedVal || 68;
+        var count = 15;
+        var r = 21;
+        var spd = speedVal || 62;
         var oddIndex = Math.floor(activeRng() * count);
         var oddKindIndex = Math.floor(activeRng() * 4);
         var discs = [];
@@ -2592,13 +2615,15 @@
         state.target = pickTargetForRound(state.round, nextRadius);
 
         if (state.target.block.type === "sequenceTarget") {
-          roundGain = roundGain * 2;
+          state.timeLeft = MAX_TIME_BAR;
           state.deferAssistUntilSequenceDone = true;
+        } else if (state.target.block.type === "swarmOdd") {
+          addTimeToBar(roundGain * 1.45);
+          state.deferAssistUntilSequenceDone = false;
         } else {
+          addTimeToBar(roundGain);
           state.deferAssistUntilSequenceDone = false;
         }
-
-        addTimeToBar(roundGain);
 
         var drainStep = state.mode === "training"
           ? 0.035
@@ -2874,7 +2899,7 @@
 
         if (!frozen && !anchored) {
           if (t.block.type === "swarmOdd" && state.swarmDiscs.length > 0) {
-            var baseSwarmSpd = t.block.speed || 68;
+            var baseSwarmSpd = t.block.speed || 62;
             for (var swi = 0; swi < state.swarmDiscs.length; swi++) {
               var swa = state.swarmDiscs[swi];
               if (magnetActive) {
@@ -3549,8 +3574,10 @@
         state.target = pickTargetForRound(1, 75);
 
         if (state.target.block.type === "sequenceTarget") {
-          state.timeLeft = Math.min(MAX_TIME_BAR, state.timeLeft * 2);
+          state.timeLeft = MAX_TIME_BAR;
           state.deferAssistUntilSequenceDone = true;
+        } else if (state.target.block.type === "swarmOdd") {
+          state.timeLeft = Math.min(MAX_TIME_BAR, state.timeLeft + 1.8);
         }
 
         if (state.labMode) {
@@ -3586,11 +3613,17 @@
         }
       });
 
+      document.getElementById("appSettingsGearBtn").addEventListener("click", function () {
+        playButtonClickSound();
+        if (overlay.className.indexOf("hidden") !== -1) {
+          overlay.className = "overlay";
+        }
+        openView("settings");
+      });
       document.getElementById("navTrainBtn").addEventListener("click", function () { playButtonClickSound(); openView("training"); });
       document.getElementById("navLevelBtn").addEventListener("click", function () { playButtonClickSound(); openView("levelmode"); });
       document.getElementById("navTourneyBtn").addEventListener("click", function () { playButtonClickSound(); openView("tournament"); });
       document.getElementById("navSkinsBtn").addEventListener("click", function () { playButtonClickSound(); openView("skins"); });
-      document.getElementById("navSettingsBtn").addEventListener("click", function () { playButtonClickSound(); openView("settings"); });
 
       document.getElementById("tab_targets").addEventListener("click", function () { playButtonClickSound(); switchTrainTab("targets"); });
       document.getElementById("tab_assists").addEventListener("click", function () { playButtonClickSound(); switchTrainTab("assists"); });
